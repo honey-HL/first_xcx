@@ -1,0 +1,50 @@
+{
+  "pages": [
+    "pages/calendar/calendar",
+    "pages/finished/finished",
+    "pages/unfinished/unfinished",
+    "pages/publish/publish",
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/batch/batch",
+    "pages/create/create",
+    "component/popup/popup",
+    "pages/authorize/authorize",
+    "pages/my/my"
+  ],
+  "tabBar": {
+    "borderStyle": "white",
+    "position": "bottom",
+    "backgroundColor": "#FFFFFF",
+    "color": "#bce2f9",
+    "selectedColor": "#6ebbf1",
+    "list": [
+      {
+        "pagePath": "pages/calendar/calendar",
+        "text": "台历",
+        "selectedIconPath": "images/icon/rili_lan.png",
+        "iconPath": "images/icon/rili.png"
+      },
+      {
+        "pagePath": "pages/finished/finished",
+        "text": "列表",
+        "selectedIconPath": "images/icon/finished_lan.png",
+        "iconPath": "images/icon/finished.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "selectedIconPath": "images/icon/my_lan.png",
+        "iconPath": "images/icon/my.png"
+      }
+    ]
+  },
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#6ebbf1",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "white"
+  },
+  "sitemapLocation": "sitemap.json",
+  "cloud": true
+}

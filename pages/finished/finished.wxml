@@ -1,0 +1,58 @@
+
+<wxs src="../../utils/filter.wxs" module="filter" />
+
+    
+    <modal show="{{showModal}}" title="{{malTitle}}" height='30%' bindcancel="modalCancel" bindconfirm='yesDelete'>
+        <view class='modal-content'> 
+        <view class="content_inner_time">{{will_delete_item.date}} {{will_delete_item.time}}</view>
+        <view class="content_inner_popup">{{will_delete_item.content}}</view>
+        </view>
+    </modal>
+
+    <view style="height: {{windowHeight}};" class='finished'>
+        <view class='main_container'>
+            <scroll-view 
+            throttle="{{false}}"
+            android:scrollbars="none"
+            class='y'
+            style='overflow: scroll;height: inherit;width:100%;'
+            scroll-y
+            scroll-left = ""
+            data-yuan = "true">
+            <view class='items_box' wx:for-item="list_item" wx:key="{{index}}" wx:for="{{list}}">
+                <div class="card">
+                <view class='date_month'>
+                    <!-- <view class="month {{list_item.type==0?'color_type_0': list_item.type==1?'color_type_1':'color_type_2'}}">{{filter.dateFormat(list_item.date,'day')}}</view> -->
+                </view>
+                <view class="right_box {{list_item.type==0?'purple_type_0':list_item.type==1?'red_type_1':'blue_type_2'}}">
+                    <view class="top_box">
+                        <view class="circle {{list_item.type==0?'circle_type_0':list_item.type==1?'circle_type_1':'circle_type_2'}}">{{filter.dateFormat(list_item.date,'month')}}</view>
+                        <view class='box_top'>
+                            <span class="ri">{{filter.dateFormat(list_item.date,'day')}}日</span>
+                            <span class="days">{{filter.calculateDays(list_item.date)}}</span>
+                            <span>{{filter.timeFormat(list_item.start_time, list_item.end_time)}}</span>
+                        </view>
+                        <view class='operation'>
+                            <view catchtap="delete" data-id="{{list_item.id}}" data-item="{{list_item}}" class='delete'>
+                                <image wx:if="{{list_item.type==0}}" class="img" src="../../images/delete_zi_0.png"/>
+                                <image wx:if="{{list_item.type==1}}" class="img" src="../../images/delete_red_1.png"/>
+                                <image wx:if="{{list_item.type==2}}" class="img" src="../../images/delete_blue_2.png"/>
+                            </view>
+                            <view catchtap="edit" data-id="{{list_item.id}}" data-item="{{list_item}}" class="edit">
+                                <image wx:if="{{list_item.type==0}}" class="img" src="../../images/edit_zi_0.png"/>
+                                <image wx:if="{{list_item.type==1}}" class="img" src="../../images/edit_red_1.png"/>
+                                <image wx:if="{{list_item.type==2}}" class="img" src="../../images/edit_blue_2.png"/>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="content_right">
+                    <view class='content_inner'>{{list_item.content}}
+                        <span class="cost" wx:if="{{list_item.cost}}">{{list_item.cost}}元</span>
+                    </view>
+                    </view>
+                </view>
+                </div>
+            </view>
+            </scroll-view>
+        </view>
+    </view>

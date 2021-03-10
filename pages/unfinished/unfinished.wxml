@@ -1,0 +1,21 @@
+<view>
+
+
+    <swiper
+    bindchange="Change"
+  indicator-dots="{{indicatorDots}}"
+  autoplay="{{autoplay}}"
+  interval="{{interval}}"
+  duration="{{duration}}"
+  current='{{old_cur}}'
+>
+  <block wx:for="{{imgUrls}}">
+    <swiper-item>
+      <view class='box' style=''>{{item}}</view>
+    </swiper-item>
+  </block>
+</swiper>
+
+
+
+</view>

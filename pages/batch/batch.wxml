@@ -1,0 +1,25 @@
+<view>
+    <view class="year_month">
+        <view>{{year}}年</view><view>{{month}}月</view> 
+    </view> 
+    <view class="{{is_sticky? 'sticky':''}}">
+      <view class='week_line'>
+        <div data-index="{{index}}" class="{{(index== 0 || index== 6) ? 'weekend' :null}}" wx:key="{{item}}" wx:for='{{weeks}}'>{{item}}</div>
+      </view>
+    </view>
+    <table class="table">
+        <tbody>
+            <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="line{{index}}">
+                <td catchtap="getCheckDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
+                    <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+                        <span style="height:14px;line-height:14px;font-size:14px;display:block;">{{td_item.date}}</span>
+                        <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                    </a>
+                    <view wx:if="{{td_item.checked}}" class="checked_icon">
+                        <image style="width:100%;height:100%;" src="../../images/checked.png" />
+                    </view>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</view>

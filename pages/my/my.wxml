@@ -1,0 +1,12 @@
+<!--pages/my/my.wxml-->
+<view class='container' style="height: {{windowHeight}}">
+    <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" class="save-btn">授权登录</button>
+    <view class='infor_card'>
+        <view class="userAvatarUrl">
+        <open-data type="userAvatarUrl"></open-data>
+        </view>
+        <view class='nickname'>
+        <open-data type="userNickName"></open-data>
+        </view>
+    </view>
+</view>

@@ -1,0 +1,46 @@
+<!--pages/create/create.wxml-->
+<!-- <view style="width: 100%; height: {{windowHeight}};" class='create_container'> -->
+<view class='create_container'>
+
+  <!-- <view class='create' style='width:100%;height:inherit;'> -->
+  <view class='create'>
+    <!--------已拍照片--------->
+    <cover-image wx:if='{{photo_container}}' class="photo_show" mode="widthFix" src="{{src}}"></cover-image>
+    <cover-view wx:if='{{photo_container}}' class='bar_confirm'>
+      <cover-view class='photo_cancel'>
+        <cover-view catchtap="backToCamera" class='back_to_camera'>
+          <cover-image style="width:100%;height:100%;" src='../../images/back_to_camera.png'></cover-image>
+        </cover-view>
+      </cover-view>
+      <cover-view catchtap='savePhoto' class='photo_save'>
+        <cover-view class='save_photo'>
+          <cover-image style="width:100%;height:100%" src='../../images/save_photo.png'></cover-image>
+        </cover-view>
+      </cover-view>
+    </cover-view>
+    <!--------相机录像--------->
+    <camera wx:if="{{is_camera_show}}" mode="normal" device-position="{{device_position}}" flash="auto" binderror="error" style="width: 100%;height: {{windowHeight}};">
+       <cover-view catchtap="switchCamera" class='device_position'>
+          <cover-image style="width:100%;height:100%;" src='../../images/switch_camera.png'></cover-image>
+        </cover-view>
+      <cover-view class="controls">
+        <cover-view class='tip'>轻触拍照，长按摄像</cover-view>
+        <cover-view class='control_bar'>
+          <cover-view catchtap="goBack" class='down_back'>
+             <cover-image style="width:100%;height:100%;" src='../../images/arrow.png'></cover-image>
+          </cover-view>
+          <cover-view catchtap='takePhoto' class='circle_btn'></cover-view>
+        </cover-view>
+      </cover-view>
+    </camera>
+
+  </view>
+</view>
+
+<!-- <view class="btn-area">
+  <button type="primary" bindtap="startRecord">开始录像</button>
+</view>
+<view class="btn-area">
+  <button type="primary" bindtap="stopRecord">结束录像</button>
+</view>
+<video wx:if="{{videoSrc}}" class="video" src="{{videoSrc}}"></video> -->

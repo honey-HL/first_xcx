@@ -1,0 +1,11 @@
+<view class="container" style="height: {{windowHeight}}">
+    <!-- <view class="login-icon">
+        <image class="login-img" src="/images/bg2.png" style="width:{{windowWidth+'px'}};height:{{windowHeight+'px'}}"></image>
+    </view> -->
+    <!--按钮-->
+    <view class="loginBtnView">
+        <text>申请获取以下权限</text>
+        <text>获取你的公开信息(昵称.头像等)</text>
+        <button class="loginBtn" bindgetuserinfo='getUserInfo'  open-type='getUserInfo'>授权登录</button>
+    </view>
+</view>

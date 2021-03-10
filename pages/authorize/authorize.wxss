@@ -1,0 +1,15 @@
+/* pages/authorize/authorize.wxss */
+
+
+
+
+
+
+.loginBtnView {
+  margin-top:40%;
+}
+.container {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,#6ebbf1 10%,#f5da9b 30%, #eb8779 75%);
+}

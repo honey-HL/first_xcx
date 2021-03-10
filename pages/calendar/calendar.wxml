@@ -1,0 +1,228 @@
+<wxs src="../../utils/filter.wxs" module="filter" />
+
+
+<!-- 需要使用 button 来授权登录 -->
+<!-- <button
+  wx:if="{{canIUse}}"
+  open-type="getUserInfo"
+  bindgetuserinfo="bindGetUserInfo"
+>
+  授权登录
+</button> -->
+
+<view animation="{{animation}}" bindtap="closeList" style="height: {{windowHeight}}" class='container'> 
+  <!-- <view class='nav_bar'>
+    <view >台历</view>
+      <navigator
+      url="/pages/finished/finished"
+      hover-class="navigator-hover"
+    >
+    已办
+    </navigator>
+    <view>已办</view>
+    <view>待办</view>
+  </view> -->
+
+  <view class='cal_top' animation="{{slide_up1}}">
+
+    <view class="{{is_sticky? 'sticky':''}}">
+      <view class='week_line'>
+        <div data-index="{{index}}" class="{{(index== 0 || index== 6) ? 'weekend' :null}}" wx:key="{{item}}" wx:for='{{weeks}}'>{{item}}</div>
+      </view>
+    </view>
+
+    <view class='cal_top_inner'>
+
+      <view wx:if="{{is_show_picker}}" catchtap="closeDialog" class='mask'>
+        <view class='dialog'>
+          <view catchtap="showPicker" class="dialog_today">{{full_year}}年{{cur_month}}月{{cur_date}}日</view>
+            <picker-view catchtap="showPicker" ndicator-style="height: 230rpx;" style="width: 100%;height: 230rpx;" value="{{value}}" bindchange="bindChange">
+              <picker-view-column>
+                <view wx:for="{{year_arr}}" wx:key="year_{{item}}" class="picker_item">{{item}}年</view>
+              </picker-view-column>
+              <picker-view-column>
+                <view wx:for="{{monthArr}}" wx:key="month_{{item}}" class="picker_item">{{item}}月</view>
+              </picker-view-column>
+              <picker-view-column>
+                <view wx:for="{{cur_month_days}}" wx:key="day_{{item}}" class="picker_item">
+                  <span wx:if="{{item !== today}}">{{item}}日</span>
+                  <span wx:if="{{item === today}}">今天</span>
+                </view>
+                <!--<view wx:if="{{item === cur_date}}" wx:for="{{cur_month_days}}">{{item}}</view>-->
+              </picker-view-column>
+            </picker-view>
+            <view class='dialog_footer'>
+              <view catchtap='closeDialog' class="cancel_dialog">取消</view>
+              <view catchtap='confirmSelect' class="confirm_dialog">确定</view>
+            </view>
+        </view>
+      </view>
+
+
+      <view class='view_table' style="width:{{windowWidth*12}}px;">
+        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+          <tbody>
+            <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="index">
+              <td catchtap="changeDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
+                <view class="ear_left {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                <view class="ear_right {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+
+                <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+              
+                  <span class="date_num">{{td_item.date}}</span>
+                  <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                </a>
+                <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
+                <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
+                <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
+                <checkbox wx:if="{{show_checkobx && (!td_item.gray)}}" color="#29e" class="checkbox" value="" checked="{{item.checked}}" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </view>
+
+     <!-- <swiper
+      bindchange="slideChange"
+      current='{{old_cur}}'
+      style="height:248px;"
+    >
+      <block wx:for="{{swiper_month_arr}}" wx:for-item="month_data" wx:key="month{{index}}">
+        <swiper-item>
+           <table class="table">
+            <tbody class="tbody">
+              <tr class="date_tr {{index == (month_data.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_data.list}}" data-index="{{index}}" wx:key="line{{index}}">
+                <td catchtap="changeDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
+                  <view class="ear_left {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                    <view class="ear_right {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                  <a style="height:{{min_height}};" class="td_a {{td_item.is_clicked?'clicked':''}} {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}}">
+                    <span style="height:14px;line-height:14px;font-size:14px;display:block;">{{td_item.date}}</span>
+                    <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                  </a>
+                  <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
+                  <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
+                  <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </swiper-item>
+      </block>
+    </swiper> -->
+
+
+    </view>
+  </view>
+
+  <!-----------选择新建mask----------->
+  <!-- <view catchtap='closeDialog2' wx:if="{{is_show_new_mask}}" class='new_mask'>
+    <view class='middle_box'>
+      <view catchtap='getOperation' data-type="1" class='take_video'>
+        <view>拍摄</view>
+        <view class='sm_text'>照片或视频</view>
+      </view>
+       <view catchtap='getOperation' data-type="2" class='select_picture'>
+        <view>从相册选择</view>
+      </view>
+       <view catchtap='getOperation' data-type="3" class='publish_text'>
+        <view>新建日程</view>
+      </view>
+    </view>
+  </view> -->
+
+  <!---------日历下面的盒子--------->
+  <view class='detail_today' animation="{{slide_up2}}">
+   <!-- <view class='gap1'></view> -->
+    <view class='detail_today_inner'>
+      <view class='show_dates_box'>
+        <view class='big_date inline_block'>{{cur_date}}</view>
+      </view>
+
+      <view class='lunar_detail inline_block'>
+        <view class='lunar_1'>农历{{lunar_arr[1]}} {{zhou_ji}}</view>
+        <view class='lunar_2'>{{lunar_arr[0]}}
+          <view class="jin_box {{show_jin?'block':'none'}}" wx:if="show_jin">
+            <span catchtap="backToday" class="jin">
+              <image style="width:100%;height:100%;" src="../../images/back_today.png"></image>
+            </span>
+          </view>
+        </view>
+      </view>
+
+    </view>
+     <!-- <view class='gap1'></view> -->
+  </view>
+
+  <!---------日程列表--------->
+  <view class='schedule_area' animation="{{slide_up3}}">
+
+    <view wx:if="{{itemList.length > 0}}" class='schedule_box'>
+      <view class='instruction'>
+          <view class="hufu">
+            <view class="dot_in_0"></view>护肤品
+          </view>
+          <view class="hufu">
+            <view class="dot_in_1"></view>衣物
+          </view>
+          <view class="hufu">
+            <view class="dot_in_2"></view>日程
+          </view>
+      </view>
+      <view class="list_box">
+        <view class="list_item_box" wx:for="{{itemList}}" wx:key="item" data-index="{{index}}">
+          <view class="list_item">
+              <view class="smile">
+                <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
+                <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
+                <image wx:if="{{item.type == 2}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
+              </view>
+              <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
+                <span class='content'>
+                  {{item.content}}
+                  <!-- <br/> -->
+                  <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
+                    <span class="yuan">元</span>
+                  </span>
+                </span>
+              </view>
+          </view>
+          <view class="item_time">{{item.date}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class='no_schedule'>
+      <view class='no_schedule_img'>
+        <image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
+      </view>
+      <view class="">暂无今日行程~~</view>
+    </view>
+
+    <!-- <movable-area style="width:100%;height:inherit;position:absolute;top:0;left:0;">
+      <movable-view
+        class='create'
+        x="120"
+        y="-50"
+        direction="all"
+      >
+        <image src="../../images/add.png"></image>
+      </movable-view>
+    </movable-area> -->
+
+  </view>
+
+  <!---操作按钮-->
+  <view catchtap='addSchedule' class='create'>
+      <image class="{{is_show_new_mask?'rotate_img':''}}" src="../../images/add_.png"></image>
+      <!-- <image wx:else src="../../images/cancel.png"></image> -->
+  </view>
+ 
+  <view class='operation_box'>
+    <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
+    <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view>
+    <view class="select_pictures" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="2">相册</view>
+    <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="3">新建</view>
+  </view>
+
+
+</view>

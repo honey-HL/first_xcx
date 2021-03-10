@@ -1,0 +1,56 @@
+.mask{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+.title {
+  display:flex;
+  justify-content:center;
+  font-size:16px;
+  width:100%;
+  margin:20px 0 5px 0;
+  align-items:center;  
+}
+
+.modal-content{
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+  /* height: 80%; */
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.modal-btn-wrapper{
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  line-height: 50px;
+  border-top: 2rpx solid rgba(7,17,27,0.1);
+}
+
+.cancel-btn, .confirm-btn{
+  flex: 1;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.cancel-btn{
+  border-right: 2rpx solid rgba(7,17,27,0.1);
+}
+
+.main-content{
+  flex: 1;
+  height: 100%;
+  overflow-y: hidden; 
+}

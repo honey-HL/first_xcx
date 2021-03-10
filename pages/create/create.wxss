@@ -1,0 +1,107 @@
+
+.create_container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.create {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.noticeTXT{
+  font-size: 10PX;
+  color: rgb(12, 242, 240);
+  text-align: center
+}
+.video {
+  width: 100%;
+  height: 250px;
+  background: yellow;
+}
+.controls {
+  position:absolute;
+  bottom: 30px;
+  width:100%;
+}
+.tip {
+  color: #fff;
+  font-size: 30rpx;
+  text-align: center;
+}
+.control_bar {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  color: #fff;
+  margin-top:40px;
+}
+.circle_big {
+  width:150rpx;
+  height:150rpx;
+  background:#fff;
+  border-radius:50%;
+}
+.circle_btn{
+  width:130rpx;
+  height:130rpx;
+  background:#fff;
+  border:20rpx solid #ddd;
+  border-radius:50%;
+  color: rgba(0,0,0,0);
+}
+.photo_cancel {
+  width:168rpx;
+  height:168rpx;
+  background:#fff;
+  border-radius:50%;
+  margin-right:70px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back_to_camera, .save_photo {
+  width: 60rpx;
+  height: 60rpx;
+}
+.photo_save{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width:168rpx;
+  height:168rpx;
+  background:#fff;
+  border-radius:50%;
+  text-align: center;
+}
+.device_position {
+  position:absolute;
+  width:60rpx;
+  height:60rpx;
+  right:15px;
+  top:20px;
+}
+.down_back {
+  width:70rpx;
+  height:70rpx;
+  position:absolute;
+  left:50px;
+  top:20px;
+}
+.photo_show {
+  width: 100%;
+  height: 100%;
+  /* overflow: hidden; */
+  position: relative;
+}
+.bar_confirm {
+  position: absolute;
+  bottom: 40px;
+  display: flex;
+  flex-direction: row;
+}
+.hidden {
+  visibility: hidden;
+  left: -999px;
+}
