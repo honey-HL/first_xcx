@@ -767,7 +767,7 @@ Page({
     }
 
     // 格式化数据
-    if (dayFirst !== 1) { // 当月第一天不是星期一
+    if (dayFirst !== 7) { // 当月第一天不是星期日就没有上月数据渲染 因为列表是  上月数据 + 当月数据 + 下月数据
       last_month_start = last_days + 2 - dayFirst - 1;
       for (let i = last_month_start; i <= last_days; i++) { // 上个月数据
         if (cur_month == 1) {
