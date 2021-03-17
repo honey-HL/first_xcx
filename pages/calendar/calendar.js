@@ -59,7 +59,7 @@ Page({
     hasUserInfo: false,
     lunar_arr: '',
     animation: '',
-    itemList: '',
+    itemList: [],
     avatarUrl: '',
     nickName: '',
     canIUse: wx.canIUse('button.open-type.getUserInfo')
@@ -419,6 +419,7 @@ Page({
       })
     }
   },
+
   searchSchedule (nian_yue_ri) {
     let _this = this;
     const db = wx.cloud.database()
@@ -426,12 +427,30 @@ Page({
       date: nian_yue_ri.toString()
     }).get({
       success: function(res) {
-        console.log(res)
+     
         let results = res.data.reverse();
-        // debugger
-        console.log('results', results);
+        console.log('results==>',results)
+        let _types = [
+          {data: []},
+          {data: []},
+          {data: []},
+      ]
+        results.forEach(item => {
+          if (Number(item.type) == 0) {
+            _types[0].data.push(item)
+            _types[0].type = 0
+          } else if (Number(item.type) == 1) {
+            _types[1].data.push(item)
+            _types[1].type = 1
+          } else if (Number(item.type) == 2) {
+            _types[2].data.push(item)
+            _types[2].type = 2
+          }
+        })
+        console.log('_types==>',_types)
+      
         _this.setData({
-          itemList: results
+          itemList: _types
         })
       }
     })
@@ -470,7 +489,7 @@ Page({
         if (item.start_time.length > 5) { // 一个一个添加2019-02-21 06:40:00 批量添加21:30 
           date_arr = item.start_time.split(' ')[0].split('-');
           console.log('date_arr==>',date_arr)
-          debugger
+          // debugger
         } else {
           if (item.date) {
             date_arr = item.date.split('-');

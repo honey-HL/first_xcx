@@ -20,7 +20,7 @@ var timeFormat = function (start_time, end_time) {
 }
 
 var calculateDays = function (dates) {
-  var date = dates.split('-');
+  var date = dates && dates.split('-');
   var year = parseInt(date[0]);
   var month = parseInt(date[1]);
   var day = parseInt(date[2]);

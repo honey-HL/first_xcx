@@ -10,7 +10,8 @@
     "pages/create/create",
     "component/popup/popup",
     "pages/authorize/authorize",
-    "pages/my/my"
+    "pages/my/my",
+    "pages/consume/consume"
   ],
   "tabBar": {
     "borderStyle": "white",
@@ -27,7 +28,13 @@
       },
       {
         "pagePath": "pages/finished/finished",
-        "text": "列表",
+        "text": "日程",
+        "selectedIconPath": "images/icon/finished_lan.png",
+        "iconPath": "images/icon/finished.png"
+      },
+      {
+        "pagePath": "pages/consume/consume",
+        "text": "消费",
         "selectedIconPath": "images/icon/finished_lan.png",
         "iconPath": "images/icon/finished.png"
       },

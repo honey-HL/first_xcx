@@ -154,62 +154,76 @@
   </view>
 
   <!---------日程列表--------->
-  <view class='schedule_area' animation="{{slide_up3}}">
+  <view class='swiper_schedule_area'>
+     <swiper circular="{{true}}">
+      <block wx:for="{{itemList}}" wx:for-item="card_item" wx:key="card_item{{index}}">
+        <swiper-item>
+           <view class='schedule_area' animation="{{slide_up3}}">
 
-    <view wx:if="{{itemList.length > 0}}" class='schedule_box'>
-      <view class='instruction'>
-          <view class="hufu">
-            <view class="dot_in_0"></view>护肤品
-          </view>
-          <view class="hufu">
-            <view class="dot_in_1"></view>衣物
-          </view>
-          <view class="hufu">
-            <view class="dot_in_2"></view>日程
-          </view>
-      </view>
-      <view class="list_box">
-        <view class="list_item_box" wx:for="{{itemList}}" wx:key="item" data-index="{{index}}">
-          <view class="list_item">
-              <view class="smile">
-                <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
-                <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
-                <image wx:if="{{item.type == 2}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
+            <view class="schedule_area_inner" wx:if="{{card_item.data.length > 0}}">
+
+              <view class='instruction'>
+                <view wx:if="{{card_item.type == 0}}" class="hufu">
+                  <view class="dot_in_0"></view>护肤品
+                </view>
+                <view wx:if="{{card_item.type == 1}}" class="hufu">
+                  <view class="dot_in_1"></view>衣物
+                </view>
+                <view wx:if="{{card_item.type == 2}}" class="hufu">
+                  <view class="dot_in_2"></view>日程
+                </view>
               </view>
-              <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
-                <span class='content'>
-                  {{item.content}}
-                  <!-- <br/> -->
-                  <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
-                    <span class="yuan">元</span>
-                  </span>
-                </span>
+
+              <view wx:for="{{card_item.data}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
+               
+                <view  class="list_box">
+                  <view class="list_item_box" data-index="{{index}}">
+                    <view class="list_item">
+                        <view class="smile">
+                          <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
+                          <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
+                          <image wx:if="{{item.type == 2}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
+                        </view>
+                        <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
+                          <span class='content'>
+                            {{item.content}}
+                            <!-- <br/> -->
+                            <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
+                              <span class="yuan">元</span>
+                            </span>
+                          </span>
+                        </view>
+                    </view>
+                    <view class="item_time">{{item.date}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
+                  </view>
+                </view>
               </view>
+            
+            </view>
+            <view wx:else class='no_schedule'>
+              <view class='no_schedule_img'>
+                <image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
+              </view>
+              <view class="">暂无今日行程~~</view>
+            </view>
+
+            <!-- <movable-area style="width:100%;height:inherit;position:absolute;top:0;left:0;">
+              <movable-view
+                class='create'
+                x="120"
+                y="-50"
+                direction="all"
+              >
+                <image src="../../images/add.png"></image>
+              </movable-view>
+            </movable-area> -->
+
           </view>
-          <view class="item_time">{{item.date}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
-        </view>
-      </view>
-    </view>
-
-    <view wx:else class='no_schedule'>
-      <view class='no_schedule_img'>
-        <image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
-      </view>
-      <view class="">暂无今日行程~~</view>
-    </view>
-
-    <!-- <movable-area style="width:100%;height:inherit;position:absolute;top:0;left:0;">
-      <movable-view
-        class='create'
-        x="120"
-        y="-50"
-        direction="all"
-      >
-        <image src="../../images/add.png"></image>
-      </movable-view>
-    </movable-area> -->
-
+        </swiper-item>
+      </block>
+    </swiper>
   </view>
+
 
   <!---操作按钮-->
   <view catchtap='addSchedule' class='create'>
