@@ -3,32 +3,21 @@ const app = getApp();
 Page({
     data: {
       slideButtons: [{
-        text: '已完成',
+        text: '编辑',
         extClass: 'finished_btn'
-      },{
-        text: '未完成',
-        extClass: 'unfinished_btn',
-        // src: '/page/weui/cell/icon_star.svg', // icon的路径
-      },{
+      },
+      // {
+      //   text: '未完成',
+      //   extClass: 'unfinished_btn',
+      //   // src: '/page/weui/cell/icon_star.svg', // icon的路径
+      // },
+      {
         type: 'warn',
         text: '删除',
         extClass: 'delete_btn',
           // src: '/page/weui/cell/icon_del.svg', // icon的路径
       }],
-      list: [
-        { create_time: '2018_4_6', finish_time: '2018_15-29', date: 12, items: [
-            { item: '洗了头' }, { item: '逛街' }
-        ]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 13,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 14,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 15,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 16,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 17,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 18,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 19,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 20,items: [{item:'洗了头'}]},
-        {create_time: '2018_4_6', finish_time: '2018_15-29',date: 21,items: [{item:'洗了头'}]}
-      ],
+      list: [],
       malTitle: '您正在删除',
       showModal: false,
       lastX: '',
@@ -65,25 +54,25 @@ Page({
             console.log('results', results);
 
             // debugger
-            // results.map((item, i) => {
-            //   if (temp.indexOf(item.date) === -1) {
-            //     temp.push(item.date);
-            //     end_res.push({
-            //       date: item.date,
-            //       dt: [item]
-            //     })
-            //   } else {
-            //     end_res.forEach(end => {
-            //       if (end.date === item.date) {
-            //         end_res.dt.push(item);
-            //       }
-            //     })
-            //   }
-            // })
+            results.map((item, i) => {
+              if (temp.indexOf(item.date) === -1) {
+                temp.push(item.date);
+                end_res.push({
+                  date: item.date,
+                  dt: [item]
+                })
+              } else {
+                end_res.forEach((end, j) => {
+                  if (end.date === item.date) {
+                      end_res[j].dt.push(item);
+                  }
+                })
+              }
+            })
 
-            // console.log('after==end_res==>',end_res)
+            console.log('after==end_res==>',end_res)
             _this.setData({
-              list: results
+              list: end_res
             })
           }
       })
@@ -193,6 +182,28 @@ Page({
         let id = event.currentTarget.dataset.id;
         let item = event.currentTarget.dataset.item;
         this.getWillDelete(item);
+    },
+
+    onScheduleChange (event) {
+      const _this = this;
+      const cur_item = event.currentTarget.dataset.item;
+      console.log('_cur==>',cur_item)
+      const db = wx.cloud.database();
+      db.collection('todo_list').where({
+        _openid: wx.getStorageSync('openid'),
+        _id: cur_item._id
+      }).update({
+        // data 传入需要局部更新的数据
+        data: {
+          // 表示将 done 字段置为 true
+          schedule_type: cur_item.schedule_type == 1 ? 0: 1,
+          done: true
+        },
+        success: function(res) {
+          console.log(res.data)
+          _this.getList()
+        }
+      })
     },
 
     edit (event) {

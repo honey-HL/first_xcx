@@ -19,7 +19,7 @@
             scroll-y
             scroll-left = ""
             data-yuan = "true">
-            <view class='items_box' wx:for-item="list_item" wx:key="index" wx:for="{{list}}">
+            <view class='items_box' wx:for-item="list_item" wx:key="{{list_item}}index" wx:for="{{list}}">
                 <div class="card">
                 <view class='date_month'>
                   {{filter.dateFormat(list_item.date,'year')}}.{{filter.dateFormat(list_item.date,'month')}}
@@ -30,10 +30,10 @@
                         <view class="circle {{list_item.type==0?'circle_type_0':list_item.type==1?'circle_type_1':'circle_type_2'}}">{{filter.dateFormat(list_item.date,'day')}}</view>
                         <view class='box_top'>
                             <span class="days">{{filter.calculateDays(list_item.date)}}</span>
-                            <span wx:if="list_item.create_time" class="ri">{{filter.getHourMinutes(list_item.create_time)}}</span>
-                            <span>{{filter.timeFormat(list_item.start_time, list_item.end_time)}}</span>
+                            <!-- <span wx:if="list_item.create_time" class="ri">{{filter.getHourMinutes(list_item.create_time)}}</span> -->
+                            <!-- <span>{{filter.timeFormat(list_item.start_time, list_item.end_time)}}</span> -->
                         </view>
-                        <view class='operation'>
+                        <!-- <view class='operation'>
                             <view catchtap="delete" data-id="{{list_item.id}}" data-item="{{list_item}}" class='delete'>
                                 <image wx:if="{{list_item.type==0}}" class="img" src="../../images/delete_zi_0.png"/>
                                 <image wx:if="{{list_item.type==1}}" class="img" src="../../images/delete_red_1.png"/>
@@ -44,15 +44,22 @@
                                 <image wx:if="{{list_item.type==1}}" class="img" src="../../images/edit_red_1.png"/>
                                 <image wx:if="{{list_item.type==2}}" class="img" src="../../images/edit_blue_2.png"/>
                             </view>
-                        </view>
+                        </view> -->
                     </view>
-                    <mp-slideview buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
-                      <view class="content_right">
-                        <view class='content_inner'>{{list_item.content}}
-                            <span class="cost" wx:if="{{list_item.cost}}">{{list_item.cost}}元</span>
+                    <view class="content_wrapper" wx:for-item="day_item" wx:key="{{day_item}}index" wx:for="{{list_item.dt}}">
+                        <view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
+                            <image class="img" src="../../images/gou.png"/>
                         </view>
-                      </view>
-                    </mp-slideview>
+                        <view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view>
+                        <mp-slideview buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
+                            <view class="content_right">
+                                <view class='content_inner'>
+                                    {{day_item.content}}
+                                </view>
+                                <view>{{filter.getHourMinutes(day_item.create_time)}}</view>
+                            </view>
+                        </mp-slideview>
+                    </view>
                 </view>
                 </div>
             </view>
