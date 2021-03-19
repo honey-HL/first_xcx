@@ -1,0 +1,157 @@
+<view class="publish">
+
+  <!-- <view class="save" catchtap='saveItem'>保存</view> -->
+
+  <view wx:if="{{operation_type == 4}}">
+    <view class="year_month">
+      <view>{{year}}年</view><view>{{month}}月</view> 
+    </view> 
+    <view class="{{is_sticky? 'sticky':''}}">
+      <view class='week_line'>
+        <div data-index="{{index}}" class="{{(index== 0 || index== 6) ? 'weekend' :null}}" wx:key="{{item}}" wx:for='{{weeks}}'>{{item}}</div>
+      </view>
+    </view>
+    <table class="table">
+        <tbody>
+            <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="line{{index}}">
+                <td catchtap="getCheckDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
+                    <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+                        <span style="height:14px;line-height:14px;font-size:14px;display:block;">{{td_item.date}}</span>
+                        <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                    </a>
+                    <view wx:if="{{td_item.checked}}" class="checked_icon">
+                        <image style="width:100%;height:100%;" src="../../images/checked.png" />
+                    </view>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </view>
+
+  <view class='inner'>
+
+    <textarea name="evaContent" rows="2" maxlength="500" value="{{evaContent}}" class="textarea" placeholder="这一刻的想法..." bindinput="charChange" /> 
+
+    <view wx:if="{{operation_type != 4}}" class='pictures_area'>
+      <view wx:for="{{pictures}}" wx:key="item" wx:for-item="item" class='pictures'>
+        <image mode="aspectFill" class="photo" src='{{item}}'></image>
+      </view>
+      <view wx:if="{{pictures.length < 9}}" catchtap='addAnotherPhoto' class='add_new'>
+        <image class='add_icon' src="../../images/add_photo.png"></image>
+      </view>
+    </view>
+    <!-----------附加选项----------->
+      <view class='additional_options'>
+
+        <view class="type_group">
+          <view class='location_icon'>
+            <image style="width:100%;height:100%;" src="../../images/type.png"></image>
+          </view>
+          <view class='type_radio'>
+            <radio-group class="radio-group" bindchange="radioChange">
+              <label class="radio" data-index="{{index}}" wx:key="{{index}}" wx:for="{{items}}">
+                <radio color="#29E" value="{{item.name}}" checked="{{item.checked}}" />
+                {{item.value}}
+              </label>
+            </radio-group>
+          </view>
+        </view>
+      
+        <view catchtap='getLocationAuth' class='location'>
+          <view class='location_icon'>
+            <image style="width:100%;height:100%;" src="../../images/location.png"></image>
+          </view>
+          <view class='location_text'>
+            <view class='headline'>{{location}}</view>
+            <view class='location_icon'><image style="width:100%;height:100%;" src="../../images/arrow-right.png"></image></view>
+          </view>
+        </view>
+
+        <view catchtap='' class='start_time'>
+
+          <view catchtap="switchStartBox" data-type="0" class='start_box'>
+            <view class='location_icon'><image style="width:100%;height:100%;" src="../../images/icon_start.png"></image></view>
+            <view class='start_inner'>
+              <view class='headline'>开始时间</view>
+              <view class='accurate_time'>
+              <span wx:if="{{operation_type != 4}}">
+                {{start.full_year}}年{{start.cur_month}}月{{start.cur_date}}日
+              </span>
+             {{start.hour}}:{{start.minute}}</view>
+            </view>
+          </view>
+
+           <picker-view indicator-style="height: 230rpx;" class="{{clicked_start? 'picker_view': 'hide'}}" value="{{picker_value_start}}" data-type='0' bindchange="bindChange">
+              <picker-view-column wx:if="{{operation_type != 4}}" class="line_btm">
+                <view wx:for="{{start.monthArr}}" wx:key="month_{{item}}" class="picker_item">{{item}}月</view>
+              </picker-view-column>
+              <picker-view-column wx:if="{{operation_type != 4}}" class="line_btm">
+                <view wx:for="{{start.datesArr}}" wx:key="date_{{item}}" class="picker_item">
+                  <span wx:if="{{item !== today}}">{{item}}日</span>
+                  <span wx:if="{{item === today}}">今天</span>
+                </view>
+              </picker-view-column>
+              <picker-view-column class="line_btm">
+                <view class="picker_item" wx:for="{{start.hours}}" wx:for-item="hour" wx:key="{{hour}}">{{hour}}</view>
+              </picker-view-column>
+              <picker-view-column class="line_btm">
+                <view class="picker_item" wx:for="{{start.minutes}}" wx:for-item="minute" wx:key="{{minute}}">{{minute}}</view>
+              </picker-view-column>
+            </picker-view>
+
+        </view>
+
+        <view  catchtap='' class='start_time'>
+
+          <view catchtap="switchStartBox" data-type="1" class='start_box'>
+            <view class='location_icon'><image style="width:100%;height:100%;" src="../../images/icon_end.png"></image></view>
+            <view class='start_inner'>
+              <view class='headline'>结束时间</view>
+              <view class='accurate_time'>
+                <span wx:if="{{operation_type != 4}}">{{end.full_year}}年{{end.cur_month}}月{{end.cur_date}}日</span>
+                {{end.hour}}:{{end.minute}}
+              </view>
+            </view>
+          </view>
+
+           <picker-view indicator-style="height: 230rpx;" class="{{clicked_end? 'picker_view': 'hide'}}" value="{{picker_value_end}}" data-type='1' bindchange="bindChange">
+              <picker-view-column wx:if="{{operation_type != 4}}" class="line_btm">
+                <view wx:for="{{end.monthArr}}" wx:key="month_{{item}}" class="picker_item">{{item}}月</view>
+              </picker-view-column>
+              <picker-view-column wx:if="{{operation_type != 4}}" class="line_btm">
+                <view wx:for="{{end.datesArr}}" wx:key="date_{{item}}" class="picker_item">
+                  <span wx:if="{{item !== today}}">{{item}}日</span>
+                  <span wx:if="{{item === today}}">今天</span>
+                </view>
+              </picker-view-column>
+              <picker-view-column class="line_btm">
+                <view class="picker_item" wx:for="{{end.hours}}" wx:for-item="hour" wx:key="{{hour}}">{{hour}}</view>
+              </picker-view-column>
+              <picker-view-column class="line_btm">
+                <view class="picker_item" wx:for="{{end.minutes}}" wx:for-item="minute" wx:key="{{minute}}">{{minute}}</view>
+              </picker-view-column>
+            </picker-view>
+
+        </view>
+
+      </view>
+
+      <view class="last_btn">
+        <view class="last_btn_save" catchtap='saveItem'>保存</view>
+      </view>
+
+      <!-----------附加选项----------->
+     <!-----------弹框----------->  
+      <view wx:if="{{show_mask}}" bindtap='switchMask' class='mask'>
+        <view class='dialog'>
+          <view class='title'>保留此次编辑？</view>
+          <view class='save_or_not'>
+            <view catchtap='moveToTrash' class='cancel'>不保留</view>
+            <view class='save'>保留</view>
+          </view>
+        </view>
+      </view>
+       <!-----------弹框----------->  
+  </view>
+
+</view>

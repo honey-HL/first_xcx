@@ -19,17 +19,18 @@
             scroll-y
             scroll-left = ""
             data-yuan = "true">
-            <view class='items_box' wx:for-item="list_item" wx:key="{{index}}" wx:for="{{list}}">
+            <view class='items_box' wx:for-item="list_item" wx:key="index" wx:for="{{list}}">
                 <div class="card">
                 <view class='date_month'>
+                  {{filter.dateFormat(list_item.date,'year')}}.{{filter.dateFormat(list_item.date,'month')}}
                     <!-- <view class="month {{list_item.type==0?'color_type_0': list_item.type==1?'color_type_1':'color_type_2'}}">{{filter.dateFormat(list_item.date,'day')}}</view> -->
                 </view>
                 <view class="right_box {{list_item.type==0?'purple_type_0':list_item.type==1?'red_type_1':'blue_type_2'}}">
                     <view class="top_box">
-                        <view class="circle {{list_item.type==0?'circle_type_0':list_item.type==1?'circle_type_1':'circle_type_2'}}">{{filter.dateFormat(list_item.date,'month')}}</view>
+                        <view class="circle {{list_item.type==0?'circle_type_0':list_item.type==1?'circle_type_1':'circle_type_2'}}">{{filter.dateFormat(list_item.date,'day')}}</view>
                         <view class='box_top'>
-                            <span class="ri">{{filter.dateFormat(list_item.date,'day')}}日</span>
                             <span class="days">{{filter.calculateDays(list_item.date)}}</span>
+                            <span wx:if="list_item.create_time" class="ri">{{filter.getHourMinutes(list_item.create_time)}}</span>
                             <span>{{filter.timeFormat(list_item.start_time, list_item.end_time)}}</span>
                         </view>
                         <view class='operation'>
@@ -45,11 +46,13 @@
                             </view>
                         </view>
                     </view>
-                    <view class="content_right">
-                    <view class='content_inner'>{{list_item.content}}
-                        <span class="cost" wx:if="{{list_item.cost}}">{{list_item.cost}}元</span>
-                    </view>
-                    </view>
+                    <mp-slideview buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
+                      <view class="content_right">
+                        <view class='content_inner'>{{list_item.content}}
+                            <span class="cost" wx:if="{{list_item.cost}}">{{list_item.cost}}元</span>
+                        </view>
+                      </view>
+                    </mp-slideview>
                 </view>
                 </div>
             </view>

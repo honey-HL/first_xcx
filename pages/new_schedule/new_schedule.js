@@ -16,9 +16,8 @@ Page({
     month: 2,
     month_arr: [],
     items: [
-      {name: '0', value: '护肤品', checked: true},
-      {name: '1', value: '衣物', checked: false},
-      {name: '2', value: '日程',checked: false}
+      {name: '0', value: '未完成', checked: true},
+      {name: '1', value: '已完成', checked: false},
     ],
     checked_type: 0,
     is_range: false,
@@ -122,16 +121,18 @@ Page({
     let obj = {};
     if (this.data.operation_type != 4) {
       obj = {
-        type: this.data.checked_type,
+        schedule_type: this.data.checked_type,
         is_range: this.data.is_range,
         location: this.data.location,
         startTime: start_time,
         endTime: end_time,
         content: this.data.evaContent,
         date: start_riqi,
-        cost: this.data.cost
+        create_time: new Date().getTime(),
+        event_type: this.data.operation_type
       }
       var that = this;
+
       let url = 'http://taili-xcx.com/api/events/'
       let back_url = ''
       if (this.data.is_edit) {
@@ -144,6 +145,7 @@ Page({
         back_url = '../calendar/calendar'
       }
       console.log('wx', wx);
+
       const db = wx.cloud.database()
       db.collection('todo_list').add({
         data: obj,

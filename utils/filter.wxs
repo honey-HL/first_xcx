@@ -1,12 +1,42 @@
 // filter.wxs
 var dateFormat = function (date, type) {
   var dates = date.toString().split('-');
+  if (type == 'year') {
+    return dates[0];
+  }
   if (type == 'month') {
     return dates[1];
   }
   if (type == 'day') {
     return dates[2];
   }
+}
+
+var formatTime = function(time){
+  if (time) {
+   var date = getDate(time); // 初始化日期
+    var year = date.getFullYear(); //获取年份
+    var month = date.getMonth() + 1; // 获取月份
+    var day = date.getDate(); // 获取具体日
+    var hour = date.getHours(); // 获取时
+    var minutes = date.getMinutes(); // 获取分
+    var seconds = date.getSeconds(); // 获取秒
+    return year + '年' + month + '月' + day + '日 ' +  hour + '时' + minutes + '分' + seconds + '秒'
+  }
+  return ''
+}
+
+var getHourMinutes = function(time){
+   if (time) {
+      var date = getDate(time); // 初始化日期
+    var year = date.getFullYear(); //获取年份
+    var month = date.getMonth() + 1; // 获取月份
+    var day = date.getDate(); // 获取具体日
+    var hour = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours(); // 获取时
+    var minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes(); // 获取分
+    return hour + ':' + minutes
+   }
+  return ''
 }
 
 var timeFormat = function (start_time, end_time) { 
@@ -95,6 +125,8 @@ var calculateDays = function (dates) {
  * 导出
  */
 module.exports = {
+  formatTime: formatTime,
+  getHourMinutes: getHourMinutes,
   calculateDays: calculateDays,
   timeFormat: timeFormat,
   dateFormat: dateFormat

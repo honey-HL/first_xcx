@@ -228,23 +228,28 @@ Page({
   },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;
-    if (type == 3 || type == 4) {
+    if (type == 'schedule') {
       wx.navigateTo({
-        url: '../publish/publish?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
+        url: '../new_schedule/new_schedule?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
       })
-      // this.setData({
-      //   is_show_new_mask: false
-      // })
-      // 隐藏
-    } 
-    else{
-      console.log(this.data);
-      if (this.data.hasUserInfo) {
-        wx.navigateTo({
-          url: '../create/create?type=' + type
-        })
-      }
     }
+    // if (type == 3 || type == 4) {
+    //   wx.navigateTo({
+    //     url: '../publish/publish?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
+    //   })
+    //   // this.setData({
+    //   //   is_show_new_mask: false
+    //   // })
+    //   // 隐藏
+    // } 
+    // else{
+    //   console.log(this.data);
+    //   if (this.data.hasUserInfo) {
+    //     wx.navigateTo({
+    //       url: '../create/create?type=' + type
+    //     })
+    //   }
+    // }
     this.hideOperation()
     this.setData({
       is_show_new_mask: false

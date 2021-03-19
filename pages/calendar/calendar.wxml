@@ -14,7 +14,7 @@
   <!-- <view class='nav_bar'>
     <view >台历</view>
       <navigator
-      url="/pages/finished/finished"
+      url="/pages/schedule/schedule"
       hover-class="navigator-hover"
     >
     已办
@@ -234,8 +234,8 @@
   <view class='operation_box'>
     <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
     <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view>
-    <view class="select_pictures" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="2">相册</view>
-    <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="3">新建</view>
+    <view class="select_pictures" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="2">消费</view>
+    <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">日程</view>
   </view>
 
 

@@ -2,6 +2,19 @@ const app = getApp();
 
 Page({
     data: {
+      slideButtons: [{
+        text: '已完成',
+        extClass: 'finished_btn'
+      },{
+        text: '未完成',
+        extClass: 'unfinished_btn',
+        // src: '/page/weui/cell/icon_star.svg', // icon的路径
+      },{
+        type: 'warn',
+        text: '删除',
+        extClass: 'delete_btn',
+          // src: '/page/weui/cell/icon_del.svg', // icon的路径
+      }],
       list: [
         { create_time: '2018_4_6', finish_time: '2018_15-29', date: 12, items: [
             { item: '洗了头' }, { item: '逛街' }
@@ -39,12 +52,36 @@ Page({
     getList () {
       const _this = this;
       const db = wx.cloud.database();
-      db.collection('todo_list').get({
+      let temp = [];
+      let end_res = []
+      db.collection('todo_list').where({
+        event_type: 'schedule',
+        _openid: wx.getStorageSync('openid')
+      }).get({
           success: function(res) {
             console.log(res)
             const results = res.data.reverse();;
-            // debugger
+           
             console.log('results', results);
+
+            // debugger
+            // results.map((item, i) => {
+            //   if (temp.indexOf(item.date) === -1) {
+            //     temp.push(item.date);
+            //     end_res.push({
+            //       date: item.date,
+            //       dt: [item]
+            //     })
+            //   } else {
+            //     end_res.forEach(end => {
+            //       if (end.date === item.date) {
+            //         end_res.dt.push(item);
+            //       }
+            //     })
+            //   }
+            // })
+
+            // console.log('after==end_res==>',end_res)
             _this.setData({
               list: results
             })

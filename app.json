@@ -1,7 +1,7 @@
 {
   "pages": [
     "pages/calendar/calendar",
-    "pages/finished/finished",
+    "pages/schedule/schedule",
     "pages/unfinished/unfinished",
     "pages/publish/publish",
     "pages/index/index",
@@ -11,7 +11,9 @@
     "component/popup/popup",
     "pages/authorize/authorize",
     "pages/my/my",
-    "pages/consume/consume"
+    "pages/consume/consume",
+    "pages/new_schedule/new_schedule",
+    "pages/new_consumption/new_consumption"
   ],
   "tabBar": {
     "borderStyle": "white",
@@ -27,7 +29,7 @@
         "iconPath": "images/icon/rili.png"
       },
       {
-        "pagePath": "pages/finished/finished",
+        "pagePath": "pages/schedule/schedule",
         "text": "日程",
         "selectedIconPath": "images/icon/finished_lan.png",
         "iconPath": "images/icon/finished.png"
@@ -51,6 +53,9 @@
     "navigationBarBackgroundColor": "#6ebbf1",
     "navigationBarTitleText": "",
     "navigationBarTextStyle": "white"
+  },
+  "useExtendedLib": {
+    "weui": true
   },
   "sitemapLocation": "sitemap.json",
   "cloud": true

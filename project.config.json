@@ -10,6 +10,7 @@
     "postcss": true,
     "minified": true,
     "newFeature": true,
+    "nodeModules": true,
     "autoAudits": false,
     "scopeDataCheck": false,
     "checkInvalidKey": true,

@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "modal": "../../component/popup/popup",
+        "mp-slideview": "weui-miniprogram/slideview/slideview"
+    }
+}
