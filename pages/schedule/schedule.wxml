@@ -47,13 +47,17 @@
                         </view> -->
                     </view>
                     <view class="content_wrapper" wx:for-item="day_item" wx:key="{{day_item}}index" wx:for="{{list_item.dt}}">
-                        <view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
+                        <!-- <view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
                             <image class="img" src="../../images/gou.png"/>
                         </view>
-                        <view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view>
+                        <view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view> -->
                         <mp-slideview buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
+                            <view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
+                                    <image class="img" src="../../images/gou.png"/>
+                                </view>
+                            <view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view>
                             <view class="content_right">
-                                <view class='content_inner'>
+                                <view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
                                     {{day_item.content}}
                                 </view>
                                 <view>{{filter.getHourMinutes(day_item.create_time)}}</view>

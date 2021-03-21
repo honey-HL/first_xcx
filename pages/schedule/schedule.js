@@ -18,6 +18,7 @@ Page({
           // src: '/page/weui/cell/icon_del.svg', // icon的路径
       }],
       list: [],
+      changed_list: [],
       malTitle: '您正在删除',
       showModal: false,
       lastX: '',
@@ -184,26 +185,84 @@ Page({
         this.getWillDelete(item);
     },
 
+    updateList () {
+      const db = wx.cloud.database();
+      const changed_list = this.data.changed_list;
+      console.log('changed_list==>',changed_list)
+      const need_update = changed_list.filter(item => (item.schedule_type + '') !== (item.origin_schedule_type + ''));
+      console.log('need_update==>',need_update)
+      need_update.forEach(cur_item => {
+        db.collection('todo_list').where({
+          _openid: wx.getStorageSync('openid'),
+          _id: cur_item._id
+        }).update({
+          // data 传入需要局部更新的数据
+          data: {
+            // 表示将 done 字段置为 true
+            schedule_type: cur_item.schedule_type,
+          },
+          success: function(res) {
+            console.log(res.data)
+            // _this.getList()
+          }
+        })
+      })
+    },
+
+    goDetail (item) {
+      console.log('detail',item)
+    },
+
     onScheduleChange (event) {
       const _this = this;
       const cur_item = event.currentTarget.dataset.item;
+      const _origin_schedule_type = cur_item.schedule_type;
+      const changed_list = this.data.changed_list || [];
       console.log('_cur==>',cur_item)
-      const db = wx.cloud.database();
-      db.collection('todo_list').where({
-        _openid: wx.getStorageSync('openid'),
-        _id: cur_item._id
-      }).update({
-        // data 传入需要局部更新的数据
-        data: {
-          // 表示将 done 字段置为 true
-          schedule_type: cur_item.schedule_type == 1 ? 0: 1,
-          done: true
-        },
-        success: function(res) {
-          console.log(res.data)
-          _this.getList()
+      const _new_list = this.data.list.map(item => {
+        if (item.date === cur_item.date) {
+          const dt = item.dt.map(day => {
+            if (day._id == cur_item._id) {
+              const new_item = {
+                ...day,
+                schedule_type: cur_item.schedule_type == 1 ? 0: 1,
+              }
+              changed_list.push({
+                origin_schedule_type: _origin_schedule_type,
+                ...new_item
+              })
+              return new_item;
+            }
+            return day;
+          })
+          return {
+            date: cur_item.date,
+            dt: dt
+          };
         }
+        return item;
       })
+      console.log('_new_list==>',_new_list)
+      console.log('changed_list==>',changed_list)
+      this.setData({list: _new_list, changed_list})
+   
+
+      // const db = wx.cloud.database();
+      // db.collection('todo_list').where({
+      //   _openid: wx.getStorageSync('openid'),
+      //   _id: cur_item._id
+      // }).update({
+      //   // data 传入需要局部更新的数据
+      //   data: {
+      //     // 表示将 done 字段置为 true
+      //     schedule_type: cur_item.schedule_type == 1 ? 0: 1,
+      //     done: true
+      //   },
+      //   success: function(res) {
+      //     console.log(res.data)
+      //     _this.getList()
+      //   }
+      // })
     },
 
     edit (event) {
@@ -274,7 +333,11 @@ Page({
     },
 
     onShow () {
-        this.getList();
+      this.getList();
+    },
+
+    onHide () {
+      this.updateList()
     },
 
     onLoad: function() {
