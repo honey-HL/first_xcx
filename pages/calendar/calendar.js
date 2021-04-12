@@ -7,6 +7,7 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    chooseSize: false,
     zhou_ji: '',
     batch_text: '批量',
     show_checkobx: false,
@@ -226,12 +227,78 @@ Page({
       new_schedule_animation: animation1.export()
     })
   },
+  // 动画函数
+  chooseSezi: function (e) {
+    // 用that取代this，防止不必要的情况发生
+    var that = this;
+    // 创建一个动画实例
+    var animation = wx.createAnimation({
+      // 动画持续时间
+      duration: 100,
+      // 定义动画效果，当前是匀速
+      timingFunction: 'linear'
+    })
+    // 将该变量赋值给当前动画
+    that.animation = animation
+    // 先在y轴偏移，然后用step()完成一个动画
+    animation.translateY(500).step()
+    // 用setData改变当前动画
+    that.setData({
+      // 通过export()方法导出数据
+      animationData: animation.export(),
+      // 改变view里面的Wx：if
+      chooseSize: true
+    })
+    // 设置setTimeout来改变y轴偏移量，实现有感觉的滑动 滑动时间
+    setTimeout(function () {
+      animation.translateY(0).step()
+      that.setData({
+        animationData: animation.export(),
+        clearcart: false
+      })
+    }, 0)
+  },
+  // 隐藏
+  hideModal: function (e) {
+    var that = this;
+    var animation = wx.createAnimation({
+      duration: 200,
+      timingFunction: 'linear'
+    })
+    that.animation = animation
+    animation.translateY(200).step()
+    that.setData({
+      animationData: animation.export()
+    })
+    setTimeout(function () {
+      animation.translateY(0).step()
+      that.setData({
+        animationData: animation.export(),
+        chooseSize: false
+      })
+      wx.showTabBar();
+    }, 200)
+  },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;
     if (type == 'schedule') {
       wx.navigateTo({
         url: '../new_schedule/new_schedule?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
       })
+    }
+    if (type == 'consume') {
+      // wx.navigateTo({
+      //   url: '../new_consumption/new_consumption?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
+      // })
+
+      if (this.data.chooseSize == false) {
+        this.chooseSezi()
+        wx.hideTabBar()
+      } else {
+        this.hideModal()
+      }
+
+      
     }
     // if (type == 3 || type == 4) {
     //   wx.navigateTo({
@@ -441,7 +508,7 @@ Page({
           {data: []},
       ]
         results.forEach(item => {
-          if (Number(item.type) == 0) {
+          if (item.event_type === "schedule") { // 0 schedule
             _types[0].data.push(item)
             _types[0].type = 0
           } else if (Number(item.type) == 1) {

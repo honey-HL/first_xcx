@@ -2,7 +2,7 @@
 <wxs src="../../utils/filter.wxs" module="filter" />
 
     
-    <modal show="{{showModal}}" title="{{malTitle}}" height='30%' bindcancel="modalCancel" bindconfirm='yesDelete'>
+    <modal show="{{true}}" title="{{malTitle}}" height='30%' bindcancel="modalCancel" bindconfirm='yesDelete'>
         <view class='modal-content'> 
         <view class="content_inner_time">{{will_delete_item.date}} {{will_delete_item.time}}</view>
         <view class="content_inner_popup">{{will_delete_item.content}}</view>
@@ -60,7 +60,7 @@
                                 <view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
                                     {{day_item.content}}
                                 </view>
-                                <view>{{filter.getHourMinutes(day_item.create_time)}}</view>
+                                <view class="create_time">{{filter.getHourMinutes(day_item.create_time)}}</view>
                             </view>
                         </mp-slideview>
                     </view>
