@@ -7,6 +7,8 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    input_numbers: [1,2,3,4,5,6,7,8,9],
+    clicked_num: '',
     chooseSize: false,
     zhou_ji: '',
     batch_text: '批量',
@@ -273,11 +275,34 @@ Page({
     setTimeout(function () {
       animation.translateY(0).step()
       that.setData({
+        clicked_num:'',
         animationData: animation.export(),
         chooseSize: false
       })
       wx.showTabBar();
     }, 200)
+  },
+  getNumber (e) {
+    const old_num = this.data.clicked_num;
+    const new_num = e.currentTarget.dataset.num;
+    const str_num = !old_num ? new_num + '' : (old_num + '' + new_num)
+    this.setData({ clicked_num: str_num })
+  },
+  deleteNum () {
+    const old_num = this.data.clicked_num;
+    if (old_num.length > 0) {
+      const new_num = old_num.slice(0, old_num.length - 1);
+      console.log('new_num==>',new_num)
+      this.setData({ clicked_num: new_num})
+    }
+  },
+  goConfirm() {
+    if (!this.data.clicked_num.length) {
+      wx.showToast({
+        title: '请输入具体金额',
+        icon: 'none'
+      })
+    }
   },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;

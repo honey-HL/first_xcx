@@ -86,7 +86,7 @@
 }
 
 .create_time {
-     position: absolute;
+    position: absolute;
     left: 45px;
     bottom: 5px;
     font-size: 12px;

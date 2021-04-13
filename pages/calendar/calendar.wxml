@@ -234,8 +234,8 @@
   <view wx:if="{{!chooseSize}}" class='operation_box'>
     <!-- <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
     <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view> -->
-    <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">消费</view>
-    <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">日程</view>
+    <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">记账</view>
+    <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">记事</view>
   </view>
 
   <!-- 遮罩层 -->
@@ -244,7 +244,39 @@
   <view class='choosen' wx:if="{{chooseSize}}" animation='{{animationData}}'>
   <!-- 内容 -->
     <view class="container-box">
-      这里为内容
+      <view class="top-bar">
+        <view bindtap='hideModal' class="close">
+          <image class="close-img" src="../../images/close.png"></image>
+        </view>
+      </view>
+      <view class="main">
+        <view class="input-box">
+          <view class="fuhao">¥</view>
+          <view>{{clicked_num}}</view>
+          <text class="cursor-blink" decode='true'>&nbsp;</text>
+        </view>
+        
+        <view class="number-box">
+
+          <view class="input-board">
+            <view catchtap='getNumber' data-num="{{num}}" class="num-item" wx:for="{{input_numbers}}" wx:for-item="num" wx:key="num">{{num}}</view>
+            <view catchtap='getNumber' data-num="0" class="num-item num-zero">0</view>
+            <view catchtap='getNumber' data-num="." class="num-item">.</view>
+          </view>
+
+          <view class="operation">
+            <view catchtap='deleteNum' class="delete-btn">
+              <view class="img">
+                <image src="../../images/close.png"></image>
+              </view>
+            </view>
+            <view style="background: {{!clicked_num.length ? '#c3e1f7':'#7fbaec'}}" catchtap='goConfirm' class="confirm">确定</view>
+          </view>
+          
+        </view>
+      
+
+      </view>
     </view>
   </view>
 
