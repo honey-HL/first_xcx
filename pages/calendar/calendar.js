@@ -285,7 +285,29 @@ Page({
   getNumber (e) {
     const old_num = this.data.clicked_num;
     const new_num = e.currentTarget.dataset.num;
-    const str_num = !old_num ? new_num + '' : (old_num + '' + new_num)
+    let str_num = ''
+    if (!old_num) {
+      if (new_num==='.') {
+        str_num = '0.'
+      } else {
+        str_num = new_num + ''
+      }
+    } else {
+      if ((old_num.indexOf('.') !== -1)) {
+        if (new_num === '.') {
+          str_num = old_num
+        } else {
+          const after = old_num.split('.')[1];
+          if (after.length < 2) {
+            str_num = old_num + '' + new_num
+          } else {
+            str_num = old_num.split('.')[0] + '.' + after.slice(0, 2);
+          }
+        }
+      } else {
+        str_num = old_num + '' + new_num
+      }
+    }
     this.setData({ clicked_num: str_num })
   },
   deleteNum () {
@@ -385,8 +407,8 @@ Page({
       })
     } else {
       // 出现
-      animation1.translate(0,-50).opacity(1).step()
-      animation2.translate(0,-100).opacity(1).step()
+      animation1.translate(0,-60).opacity(1).step()
+      animation2.translate(0,-120).opacity(1).step()
       animation3.translate(0,-150).opacity(1).step()
       animation4.translate(0,-200).opacity(1).step()
       this.setData({

@@ -252,14 +252,16 @@
       <view class="main">
         <view class="input-box">
           <view class="fuhao">¥</view>
-          <view>{{clicked_num}}</view>
+          <view class="clicked_num">{{clicked_num}}</view>
           <text class="cursor-blink" decode='true'>&nbsp;</text>
         </view>
         
         <view class="number-box">
 
           <view class="input-board">
-            <view catchtap='getNumber' data-num="{{num}}" class="num-item" wx:for="{{input_numbers}}" wx:for-item="num" wx:key="num">{{num}}</view>
+            <view catchtap='getNumber' data-num="{{num}}" class="num-item" wx:for="{{input_numbers}}" wx:for-item="num" wx:key="num">
+            {{num}}
+            </view>
             <view catchtap='getNumber' data-num="0" class="num-item num-zero">0</view>
             <view catchtap='getNumber' data-num="." class="num-item">.</view>
           </view>

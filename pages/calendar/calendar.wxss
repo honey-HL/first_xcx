@@ -167,18 +167,20 @@ left:22%;
 -o-transform:rotate(136deg); 
 }
 .new_consumption, .batch_add {
-   width: 100%;
-  height:45px;
-  background: #f7cc60;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 45px;
-  color: #fff;
-  position:absolute;
-  bottom:-45px;
-  transition-duration:0.1s;
-  z-index: 999;
-  opacity: 0;
+  width: 55px;
+    height: 55px;
+    background: #f7cc60;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 55px;
+    font-size: 14px;
+    color: #fff;
+    font-weight: bold;
+    position: absolute;
+    bottom: -45px;
+    right: 0;
+    transition-duration: 0.1s;
+    z-index: 999;
 }
 .photo_video {
   width: 100%;
@@ -211,17 +213,19 @@ left:22%;
   opacity: 0;
 }
 .create {
-  width:45px;
-  height:45px;
+  width:55px;
+  height:55px;
   right:5px;
   bottom:25px;
-  background: pink;
+  /* background: pink; */
+  background: #70baf1;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   position:fixed;
   z-index: 99;
+  box-shadow: 0px 0 10px rgba(0,0,0,.1);
 }
 .create image {
   width: 50%;
@@ -229,20 +233,20 @@ left:22%;
   transition: all 0.5s;
 }
 .new_schedule {
-  width: 100%;
-  height:45px;
-  /* background: orange; */
-  background:rgb(235,95,77);
+  width: 55px;
+  height: 55px;
+  background: rgb(235,95,77);
   border-radius: 50%;
   text-align: center;
-  line-height: 45px;
+  line-height: 55px;
   color: #fff;
-  position:absolute;
-  bottom:-45px;
-  z-index:0;
-  /* transition-delay: 4s; */
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  bottom: -45px;
+  z-index: 0;
+  right: 0px;
   transition-duration: 0.1s;
-  opacity: 0;
 }
 
 .list_box {
@@ -1003,7 +1007,7 @@ left:22%;
 .choosen{
   width: 100%;
   /* height: 68%;  */
-  height: 345px;
+  height: 390px;
   position: fixed;
   bottom: 0;
   background-color: #fff;
@@ -1041,6 +1045,7 @@ left:22%;
     margin: 10px 20px;
     display: flex;
     align-items: center;
+    height: 61px;
   }
 
   .fuhao {
@@ -1052,15 +1057,22 @@ left:22%;
     display: flex;
     background: #f9fafb;
     /* background: red; */
-    padding-bottom: 20px;
+    padding-bottom: 50px;
   }
 
   .input-board {
     display: flex;
     flex-wrap: wrap;
     flex: 1;
-    margin-top: 5px;
+    margin-top: 8px;
     justify-content: space-between;
+  }
+
+  .clicked_num {
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    font-size: 38px;
+    transform: scale(1,1.1);
   }
 
   .num-item {
@@ -1070,8 +1082,12 @@ left:22%;
     line-height: 50px;
     margin-left: 5px;
     background: #fff;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     border-radius: 3px;
+    font-family: Microsoft YaHei;
+    font-weight: bold;
+    font-size: 24px;
+    transform: scale(1,1.1);
   }
 
   .num-zero {
@@ -1079,8 +1095,8 @@ left:22%;
   }
 
   .operation {
-   flex: 0 0 22%;
-    margin-top: 5px;
+    flex: 0 0 22%;
+    margin-top: 8px;
     margin-right: 8px;
     margin-left: 8px;
   }
@@ -1089,17 +1105,18 @@ left:22%;
 
   .delete-btn {
     background: #fff;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     border-radius: 3px;
     height: 50px;
     line-height: 50px;
     display: flex;
     justify-content: center;
+    transform: scale(1,1.1);
   }
 
   .confirm {
     background: #7fbaec;
-    height: calc(100% - 60px);
+    height: calc(100% - 65px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1119,10 +1136,10 @@ left:22%;
 
    .cursor-blink {
         display: inline-block;
-        width: 1px;
+        width: 2px;
         animation: blink 1s infinite steps(1, start);
         margin: 0 8px;
-        height: 26px;
+        height: 30px;
     }
 
     /*这里设置动画blink*/
