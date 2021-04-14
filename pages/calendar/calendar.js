@@ -7,6 +7,8 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    payments: [{name: '支出', type: 'expend',clicked: true}, {name: '收入', type: 'earnings', clicked: false},],
+    checked_payments: 'expend',
     input_numbers: [1,2,3,4,5,6,7,8,9],
     clicked_num: '',
     chooseSize: false,
@@ -272,15 +274,48 @@ Page({
     that.setData({
       animationData: animation.export()
     })
+    const new_payments = this.data.payments.map(item => {
+      if (item.type === 'expend') {
+        return {
+          ...item,
+          clicked: true
+        }
+      } else {
+        return {
+          ...item,
+          clicked: false
+        }
+      }
+    })
     setTimeout(function () {
       animation.translateY(0).step()
       that.setData({
         clicked_num:'',
+        checked_payments: 'expend',
+        payments: new_payments,
         animationData: animation.export(),
         chooseSize: false
       })
       wx.showTabBar();
     }, 200)
+  },
+  getCheckedPayments(e) {
+    const payments_type =  e.currentTarget.dataset.payments;
+    console.log('payments_type===>',payments_type)
+    const new_payments = this.data.payments.map(item => {
+      if (item.type === payments_type) {
+        return {
+          ...item,
+          clicked: true
+        }
+      } else {
+        return {
+          ...item,
+          clicked: false
+        }
+      }
+    })
+    this.setData({ payments: new_payments, checked_payments: payments_type })
   },
   getNumber (e) {
     const old_num = this.data.clicked_num;

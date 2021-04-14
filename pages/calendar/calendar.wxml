@@ -249,6 +249,16 @@
           <image class="close-img" src="../../images/close.png"></image>
         </view>
       </view>
+      <view class="bar-second">
+        <view class="bar-second-left" >
+          <view catchtap='getCheckedPayments' wx:for="{{payments}}" wx:for-item="item" data-payments="{{item.type}}" wx:key="{{item.name}}">
+            <view class="earnings {{(item.type === 'earnings' && item.clicked) ? 'earnings_checked': (item.type === 'expend' && item.clicked) ? 'expend_checked': ''}}">{{item.name}}</view>
+          </view>
+        </view>
+        <view>
+          日期
+        </view>
+      </view>
       <view class="main">
         <view class="input-box">
           <view class="fuhao">¥</view>
@@ -272,7 +282,8 @@
                 <image src="../../images/close.png"></image>
               </view>
             </view>
-            <view style="background: {{!clicked_num.length ? '#c3e1f7':'#7fbaec'}}" catchtap='goConfirm' class="confirm">确定</view>
+            <view class="confirm" wx:if="{{checked_payments === 'expend'}}" style="background: {{!clicked_num.length ? '#c3e1f7':'#7fbaec'}}" catchtap='goConfirm'>确定</view>
+            <view class="confirm"  wx:if="{{checked_payments === 'earnings'}}" style="background: {{!clicked_num.length ? '#efda9f':'#e6b849'}}" catchtap='goConfirm'>确定</view>
           </view>
           
         </view>

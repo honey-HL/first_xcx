@@ -46,8 +46,25 @@ left:22%;
   margin-top:-1px;
   height:18px;
   line-height:18px;
-  font-size:18px;
+  font-size:20px;
   display:block;
+  font-weight: bold;
+  font-family: Microsoft YaHei;
+}
+
+.bar-second {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-top: 20px;
+}
+
+.expend {
+  font-size: 14px;
+}
+
+.bar-second-left {
+  display: flex;
 }
 
 /***************/
@@ -1007,7 +1024,7 @@ left:22%;
 .choosen{
   width: 100%;
   /* height: 68%;  */
-  height: 390px;
+  height: 430px;
   position: fixed;
   bottom: 0;
   background-color: #fff;
@@ -1042,10 +1059,64 @@ left:22%;
 
   .input-box {
     border-bottom: 1px solid #eaebec;
-    margin: 10px 20px;
+    margin: 5px 20px;
     display: flex;
     align-items: center;
     height: 61px;
+  }
+
+  .earnings {
+    font-size: 14px;
+    width: 60px;
+    height: 34px;
+    text-align: center;
+    line-height: 34px;
+    background: #eff0f1;
+    border-radius: 20px;
+    margin-right: 10px;
+    color: #a5a6a7;
+    font-weight: bold;
+  }
+
+  .earnings_checked {
+    border: 1px solid #e6b947;
+    color: #e6b947;
+    background: #fcf7eb;
+    box-sizing:border-box;
+    width: 60px;
+    height: 34px;
+    text-align: center;
+    line-height: 32px;
+  }
+
+   .confirm {
+    height: calc(100% - 65px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 3px;
+  }
+
+  .confirm-earnings {
+    background: #e3eff9;
+    height: calc(100% - 65px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border-radius: 3px;
+  }
+  
+  .expend_checked {
+    border: 1px solid #70baf1;
+    color: #70baf1;
+    background: #e3eff9;
+    box-sizing:border-box;
+    width: 60px;
+    height: 34px;
+    text-align: center;
+    line-height: 32px;
   }
 
   .fuhao {
@@ -1112,16 +1183,6 @@ left:22%;
     display: flex;
     justify-content: center;
     transform: scale(1,1.1);
-  }
-
-  .confirm {
-    background: #7fbaec;
-    height: calc(100% - 65px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    border-radius: 3px;
   }
 
   .delete-btn .img {

@@ -2,12 +2,12 @@
 <wxs src="../../utils/filter.wxs" module="filter" />
 
     
-    <modal show="{{true}}" title="{{malTitle}}" height='30%' bindcancel="modalCancel" bindconfirm='yesDelete'>
+    <!-- <modal show="{{true}}" title="{{malTitle}}" height='30%' bindcancel="modalCancel" bindconfirm='yesDelete'>
         <view class='modal-content'> 
         <view class="content_inner_time">{{will_delete_item.date}} {{will_delete_item.time}}</view>
         <view class="content_inner_popup">{{will_delete_item.content}}</view>
         </view>
-    </modal>
+    </modal> -->
 
     <view style="height: {{windowHeight}};" class='finished'>
         <view class='main_container'>
