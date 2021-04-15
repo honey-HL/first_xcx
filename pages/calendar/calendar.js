@@ -275,17 +275,13 @@ Page({
       animationData: animation.export()
     })
     const new_payments = this.data.payments.map(item => {
+      let new_item = item;
       if (item.type === 'expend') {
-        return {
-          ...item,
-          clicked: true
-        }
+        new_item.clicked = true
       } else {
-        return {
-          ...item,
-          clicked: false
-        }
+        new_item.clicked = false
       }
+      return new_item
     })
     setTimeout(function () {
       animation.translateY(0).step()
@@ -303,17 +299,13 @@ Page({
     const payments_type =  e.currentTarget.dataset.payments;
     console.log('payments_type===>',payments_type)
     const new_payments = this.data.payments.map(item => {
+      let new_item = item;
       if (item.type === payments_type) {
-        return {
-          ...item,
-          clicked: true
-        }
+        new_item.clicked = true
       } else {
-        return {
-          ...item,
-          clicked: false
-        }
+        new_item.clicked = false
       }
+      return new_item
     })
     this.setData({ payments: new_payments, checked_payments: payments_type })
   },
