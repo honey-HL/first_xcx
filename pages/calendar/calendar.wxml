@@ -238,24 +238,15 @@
     <view class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">记事</view>
   </view>
 
-  <!-- 遮罩层 -->
-  <view class="shadow" wx:if="{{chooseSize}}" bindtap='hideModal'></view>
-  <!-- 上滑高度 -->
-  <view class='choosen' wx:if="{{chooseSize}}" animation='{{animationData}}'>
-  <!-- 内容 -->
-    <view class="container-box">
-      <view class="top-bar">
-        <view bindtap='hideModal' class="close">
-          <image class="close-img" src="../../images/close.png"></image>
-        </view>
-      </view>
+    
+    <popup id="myComponent" height="{{'430px'}}" catchtap='hideModal'>
       <view class="bar-second">
         <view class="bar-second-left" >
           <view catchtap='getCheckedPayments' wx:for="{{payments}}" wx:for-item="item" data-payments="{{item.type}}" wx:key="{{item.name}}">
             <view class="earnings {{(item.type === 'earnings' && item.clicked) ? 'earnings_checked': (item.type === 'expend' && item.clicked) ? 'expend_checked': ''}}">{{item.name}}</view>
           </view>
         </view>
-        <view>
+        <view catchtap='showDateModal'>
           日期
         </view>
       </view>
@@ -287,10 +278,12 @@
           </view>
           
         </view>
-      
 
       </view>
-    </view>
-  </view>
+    </popup>
+
+    <popup catchtap='hideDateModal' show="{{show_date_popup}}" height="{{'430px'}}">
+    选择日期
+    </popup>
 
 </view>

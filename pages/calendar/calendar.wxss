@@ -1043,16 +1043,7 @@ left:22%;
   z-index: 98;
 }
 
-  .close {
-    width: 15px;
-    height: 15px;
-    padding: 8px;
-  }
 
-  .close-img {
-    width: 100%;
-    height: 100%;
-  }
 
   .main {
   }

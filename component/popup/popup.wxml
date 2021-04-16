@@ -1,4 +1,4 @@
-<view class='mask' wx:if='{{show}}' bindtap='clickMask'>
+<!-- <view class='mask' wx:if='{{show}}' bindtap='clickMask'>
   <view class='modal-content' style='height:{{height}}'>
     <scroll-view class='main-content'>
       <view class="title">{{title}}</view>
@@ -9,4 +9,19 @@
       <view class='confirm-btn' style='color:#29e;' bindtap='confirm'>确定</view>
     </view>
   </view>
-</view>
+</view> -->
+
+<!-- 遮罩层 -->
+  <view class="shadow" wx:if="{{show}}" bindtap='hideModal'></view>
+  <!-- 上滑高度 -->
+  <view style='height:{{height}}' class='choosen' wx:if="{{show}}" animation='{{animationData}}'>
+  <!-- 内容 -->
+    <view class="container-box">
+      <view class="top-bar">
+        <view bindtap='hideModal' class="close">
+          <image class="close-img" src="../../images/close.png"></image>
+        </view>
+      </view>
+      <slot></slot>
+    </view>
+  </view>

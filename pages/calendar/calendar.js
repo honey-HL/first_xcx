@@ -9,6 +9,7 @@ Page({
   data: {
     payments: [{name: '支出', type: 'expend',clicked: true}, {name: '收入', type: 'earnings', clicked: false},],
     checked_payments: 'expend',
+    show_date_popup: false,
     input_numbers: [1,2,3,4,5,6,7,8,9],
     clicked_num: '',
     chooseSize: false,
@@ -231,70 +232,6 @@ Page({
       new_schedule_animation: animation1.export()
     })
   },
-  // 动画函数
-  chooseSezi: function (e) {
-    // 用that取代this，防止不必要的情况发生
-    var that = this;
-    // 创建一个动画实例
-    var animation = wx.createAnimation({
-      // 动画持续时间
-      duration: 100,
-      // 定义动画效果，当前是匀速
-      timingFunction: 'linear'
-    })
-    // 将该变量赋值给当前动画
-    that.animation = animation
-    // 先在y轴偏移，然后用step()完成一个动画
-    animation.translateY(500).step()
-    // 用setData改变当前动画
-    that.setData({
-      // 通过export()方法导出数据
-      animationData: animation.export(),
-      // 改变view里面的Wx：if
-      chooseSize: true
-    })
-    // 设置setTimeout来改变y轴偏移量，实现有感觉的滑动 滑动时间
-    setTimeout(function () {
-      animation.translateY(0).step()
-      that.setData({
-        animationData: animation.export(),
-        clearcart: false
-      })
-    }, 0)
-  },
-  // 隐藏
-  hideModal: function (e) {
-    var that = this;
-    var animation = wx.createAnimation({
-      duration: 200,
-      timingFunction: 'linear'
-    })
-    that.animation = animation
-    animation.translateY(200).step()
-    that.setData({
-      animationData: animation.export()
-    })
-    const new_payments = this.data.payments.map(item => {
-      let new_item = item;
-      if (item.type === 'expend') {
-        new_item.clicked = true
-      } else {
-        new_item.clicked = false
-      }
-      return new_item
-    })
-    setTimeout(function () {
-      animation.translateY(0).step()
-      that.setData({
-        clicked_num:'',
-        checked_payments: 'expend',
-        payments: new_payments,
-        animationData: animation.export(),
-        chooseSize: false
-      })
-      wx.showTabBar();
-    }, 200)
-  },
   getCheckedPayments(e) {
     const payments_type =  e.currentTarget.dataset.payments;
     console.log('payments_type===>',payments_type)
@@ -353,6 +290,38 @@ Page({
       })
     }
   },
+  showDateModal () {
+    wx.hideTabBar();
+    this.setData({show_date_popup: true, chooseSize: true})
+  },
+  hideDateModal () {
+    if (this.data.chooseSize) {
+      this.setData({
+        chooseSize: true,
+      })
+      wx.hideTabBar();
+    }
+  },
+  hideModal() {
+    const new_payments = this.data.payments.map(item => {
+      let new_item = item;
+      if (item.type === 'expend') {
+        new_item.clicked = true
+      } else {
+        new_item.clicked = false
+      }
+      return new_item
+    })
+    setTimeout(() => {
+      this.setData({
+        chooseSize: false,
+        clicked_num:'',
+        checked_payments: 'expend',
+        payments: new_payments
+      })
+    },200)
+    // wx.showTabBar();
+  },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;
     if (type == 'schedule') {
@@ -364,15 +333,12 @@ Page({
       // wx.navigateTo({
       //   url: '../new_consumption/new_consumption?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
       // })
-
+      const child = this.selectComponent('#myComponent');
       if (this.data.chooseSize == false) {
-        this.chooseSezi()
-        wx.hideTabBar()
-      } else {
-        this.hideModal()
+        console.log(child)
+        child.chooseSezi();
+        this.setData({chooseSize: true})
       }
-
-      
     }
     // if (type == 3 || type == 4) {
     //   wx.navigateTo({
