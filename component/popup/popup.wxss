@@ -99,4 +99,5 @@
   border-radius: 15rpx;
   margin: 0 auto;
   z-index: 98;
+  overflow-y: auto;
 }

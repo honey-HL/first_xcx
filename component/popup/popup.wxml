@@ -17,11 +17,7 @@
   <view style='height:{{height}}' class='choosen' wx:if="{{show}}" animation='{{animationData}}'>
   <!-- 内容 -->
     <view class="container-box">
-      <view class="top-bar">
-        <view bindtap='hideModal' class="close">
-          <image class="close-img" src="../../images/close.png"></image>
-        </view>
-      </view>
+      <slot class="contant-box" name="header"></slot>
       <slot></slot>
     </view>
   </view>

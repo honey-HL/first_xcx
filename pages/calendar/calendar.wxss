@@ -91,6 +91,10 @@ left:22%;
   text-align: center;
   line-height: 55rpx;
 }
+.top-bar {
+  display: flex;
+  align-items: center;
+}
 .yue_box {
   background: #f5efe9;
   color: #f9b430;
@@ -664,6 +668,23 @@ left:22%;
   position: relative;
 }
 
+.close {
+  width: 15px;
+  height: 15px;
+  padding: 8px;
+}
+
+.choose {
+  margin-top: 3px;
+  margin-left: 100px;
+  padding: 8px 0;
+}
+
+.close-img {
+  width: 100%;
+  height: 100%;
+}
+
 .sticky {
   width:100%;
   position: sticky;
@@ -673,6 +694,16 @@ left:22%;
   z-index: 999;
   overflow: hidden;
 }
+
+.sticky_header {
+  width:100%;
+  position: sticky;
+  left:0;
+  top:0;
+  background:#fff;
+  z-index: 999;
+}
+
 .sticky_tr{
   position: sticky;
   left:0;
@@ -1042,8 +1073,16 @@ left:22%;
   margin: 0 auto;
   z-index: 98;
 }
-
-
+.month_item_last {
+  margin-bottom: 30px;
+}
+.month_title {
+  text-align: center;
+  padding: 10px;
+}
+.month_item {
+z-index: 0;
+}
 
   .main {
   }

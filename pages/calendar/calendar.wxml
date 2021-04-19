@@ -239,7 +239,14 @@
   </view>
 
     
-    <popup id="myComponent" height="{{'430px'}}" catchtap='hideModal'>
+    <popup show="{{chooseSize}}" id="myComponent" height="{{'430px'}}">
+      <view slot="header" class="sticky_header">
+        <view class="top-bar">
+          <view catchtap='closeModal' class="close">
+            <image class="close-img" src="../../images/close.png"></image>
+          </view>
+        </view>
+      </view>
       <view class="bar-second">
         <view class="bar-second-left" >
           <view catchtap='getCheckedPayments' wx:for="{{payments}}" wx:for-item="item" data-payments="{{item.type}}" wx:key="{{item.name}}">
@@ -283,7 +290,40 @@
     </popup>
 
     <popup catchtap='hideDateModal' show="{{show_date_popup}}" height="{{'430px'}}">
-    选择日期
+    <view slot="header" class="sticky_header">
+      <view class="top-bar">
+        <view catchtap='closeDateModal' class="close">
+          <image class="close-img" src="../../images/close.png"></image>
+        </view>
+        <view class="choose">选择日期</view>
+      </view>
+      <view class='week_line'>
+        <div data-index="{{index}}" class="{{(index== 0 || index== 6) ? 'weekend' :null}}" wx:key="{{item}}" wx:for='{{weeks}}'>{{item}}</div>
+      </view>
+    </view>
+      <view class="{{index === 2 ? 'month_item_last': 'month_item'}}" data-index="{{index}}" wx:for="{{choose_date_dt}}" wx:for-item="month_arr">
+        <view class="month_title">{{month_arr.year}}年{{month_arr.month}}月</view>
+        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+          <tbody>
+            <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="index">
+              <td catchtap="changeDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
+                <view class="ear_left {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                <view class="ear_right {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+
+                <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+              
+                  <span class="date_num">{{td_item.date}}</span>
+                  <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                </a>
+                <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
+                <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
+                <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
+                <checkbox wx:if="{{show_checkobx && (!td_item.gray)}}" color="#29e" class="checkbox" value="" checked="{{item.checked}}" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </view>
     </popup>
 
 </view>

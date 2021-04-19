@@ -7,6 +7,7 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    choose_date_dt: [],
     payments: [{name: '支出', type: 'expend',clicked: true}, {name: '收入', type: 'earnings', clicked: false},],
     checked_payments: 'expend',
     show_date_popup: false,
@@ -291,8 +292,33 @@ Page({
     }
   },
   showDateModal () {
+    let new_data = []
+    const cur_month = this.data.cur_month
+    const full_year = this.data.full_year
+    const cur_month_data = this.getTableData(cur_month, this.data.full_year);
+    new_data.push(cur_month_data)
+    
+    let cur_dt = {}
+    for(let i = 1; i < 3; i++) {
+      if (cur_month === 1) {
+        cur_dt = this.getTableData(12, full_year - i);
+      } else {
+        cur_dt = this.getTableData(cur_month - i, full_year);
+      }
+      new_data.push(cur_dt)
+    }
+    new_data = new_data.map(item => {
+      const ar = item.id.split('_');
+      return {
+        year: ar[0],
+        month: ar[1],
+        ...item
+      }
+    }).reverse()
+   
+    console.log('new_data==>',new_data)
     wx.hideTabBar();
-    this.setData({show_date_popup: true, chooseSize: true})
+    this.setData({choose_date_dt: new_data,show_date_popup: true, chooseSize: true})
   },
   hideDateModal () {
     if (this.data.chooseSize) {
@@ -302,7 +328,12 @@ Page({
       wx.hideTabBar();
     }
   },
-  hideModal() {
+  closeDateModal() {
+    this.setData({
+      show_date_popup: false,
+    })
+  },
+  closeModal() {
     const new_payments = this.data.payments.map(item => {
       let new_item = item;
       if (item.type === 'expend') {
@@ -320,7 +351,7 @@ Page({
         payments: new_payments
       })
     },200)
-    // wx.showTabBar();
+    // wx.hideTabBar();
   },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;
