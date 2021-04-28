@@ -9,7 +9,8 @@
         </view>
     </modal> -->
 
-    <view style="height: {{windowHeight}};" class='finished'>
+    <!-- <view style="height: {{windowHeight}};" class='finished'> -->
+    <view class='finished'>
         <view class='main_container'>
             <scroll-view 
             throttle="{{false}}"

@@ -17,6 +17,9 @@ Page({
         extClass: 'delete_btn',
           // src: '/page/weui/cell/icon_del.svg', // icon的路径
       }],
+      pageIndex: 1,
+      pageSize: 20,
+      hasMore: false,
       list: [],
       changed_list: [],
       malTitle: '您正在删除',
@@ -40,21 +43,25 @@ Page({
     },
 
     getList () {
+      const {list, pageIndex, pageSize} = this.data;
       const _this = this;
-      const db = wx.cloud.database();
       let temp = [];
       let end_res = []
-      db.collection('todo_list').where({
-        event_type: 'schedule',
-        _openid: wx.getStorageSync('openid')
-      }).get({
-          success: function(res) {
-            console.log(res)
-            const results = res.data.reverse();;
-           
-            console.log('results', results);
-
-            // debugger
+      const openid = wx.getStorageSync('openid')
+      wx.cloud.callFunction({
+        name: 'get_schedule_list',
+        data: {
+          filter: {
+            event_type: 'schedule',
+            _openid: openid,
+          },
+          dbName: 'todo_list',
+          pageIndex,
+          pageSize
+        }
+      }).then((res) => {
+        console.log('res===>',res)
+            const results = res.result.data;
             results.map((item, i) => {
               if (temp.indexOf(item.date) === -1) {
                 temp.push(item.date);
@@ -70,28 +77,36 @@ Page({
                 })
               }
             })
-
             console.log('after==end_res==>',end_res)
             _this.setData({
-              list: end_res
+              pageIndex: !res.result.hasMore ? pageIndex: pageIndex + 1,
+              hasMore: res.result.hasMore,
+              list: !list.length ? end_res: list.concat(list)
             })
-          }
       })
-        // wx.request( {
-        //   url: app.globalData.url + "api/events/list/reverse",
-        //   headder: {
-        //     "Content-Type": "application/x-www-form-urlencoded"
-        //   },
-        //   method: "get", 
-        //   success: function( res ) {
-        //     if (res.statusCode == 200) {
-        //         let results = res.data.data.reverse();
-        //         _this.setData({
-        //             list: results
-        //         })
-        //     }
-        //   }
-        // })
+    },
+
+    onReachBottom () {
+      const {hasMore} = this.data;
+      if (hasMore) {
+        this.getList()
+      } else {
+        wx.showToast({
+          title: '已经到底部了',
+        })
+      }
+      wx.showToast({
+        title: '触发上拉加载',
+      })
+    },
+
+    onPullDownRefresh(){ 
+      this.setData({pageIndex: 1});
+      getList()
+      wx.showToast({
+        title: '下拉刷新',
+      })
+      wx.stopPullDownRefresh()
     },
 
     upper(e) {
@@ -100,9 +115,7 @@ Page({
     lower(e) {
     console.log(e)
     },
-    onPageScroll:function(e){ // 获取滚动条当前位置
-        console.log(e)
-    },
+
     ballClickEvent (e) {
         this.setData({defaut_top: e.detail.y})
         console.log(e)
@@ -299,9 +312,9 @@ Page({
         })
     },
 
-    onPageScroll:function(e){
-        console.log(e);//{scrollTop:99}
-    },
+    // onPageScroll:function(e){
+    //     console.log(e);//{scrollTop:99}
+    // },
 
     touchStart:function(e) {
         this.setData({
