@@ -24,6 +24,8 @@ exports.main = async (event, context) => {
   let res = await db.collection(dbName).orderBy('date','desc').where(filter).skip((pageIndex - 1)*pageSize).limit(pageSize).get();
   res = {
     ...res,
+    total,
+    totalPage,
     hasMore,
     pageIndex,
     pageSize

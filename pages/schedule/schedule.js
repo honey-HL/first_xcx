@@ -20,6 +20,7 @@ Page({
       pageIndex: 1,
       pageSize: 20,
       hasMore: false,
+      raw_list: [],
       list: [],
       changed_list: [],
       malTitle: '您正在删除',
@@ -43,7 +44,7 @@ Page({
     },
 
     getList () {
-      const {list, pageIndex, pageSize} = this.data;
+      const {list, raw_list, pageIndex, pageSize} = this.data;
       const _this = this;
       let temp = [];
       let end_res = []
@@ -61,7 +62,9 @@ Page({
         }
       }).then((res) => {
         console.log('res===>',res)
-            const results = res.result.data;
+
+            const results = !raw_list.length ? res.result.data : raw_list.concat(res.result.data);
+            console.log('results===>',results)
             results.map((item, i) => {
               if (temp.indexOf(item.date) === -1) {
                 temp.push(item.date);
@@ -77,11 +80,13 @@ Page({
                 })
               }
             })
+
             console.log('after==end_res==>',end_res)
             _this.setData({
+              raw_list: res.result.data,
               pageIndex: !res.result.hasMore ? pageIndex: pageIndex + 1,
               hasMore: res.result.hasMore,
-              list: !list.length ? end_res: list.concat(list)
+              list: end_res
             })
       })
     },
