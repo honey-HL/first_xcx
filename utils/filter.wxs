@@ -34,7 +34,8 @@ var getHourMinutes = function(time){
     var day = date.getDate(); // 获取具体日
     var hour = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours(); // 获取时
     var minutes = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes(); // 获取分
-    return hour + ':' + minutes
+    var seconds = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
+    return hour + ':' + minutes + ':' + seconds
    }
   return ''
 }

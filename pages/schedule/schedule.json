@@ -1,6 +1,7 @@
 {
     "usingComponents": {
         "modal": "../../component/popup/popup",
+        "loading": "../../component/loading/loading",
         "mp-slideview": "weui-miniprogram/slideview/slideview"
     },
     "enablePullDownRefresh":true,

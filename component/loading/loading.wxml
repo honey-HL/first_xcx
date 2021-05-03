@@ -1,0 +1,12 @@
+<!--component/loading.wxml-->
+<view wx:if="{{show}}" class="wrapper">
+  <view class="loading">
+    <view class="dot" animation="{{alpha[0]}}"></view>
+    <view class="dot" animation="{{alpha[1]}}"></view>
+    <view class="dot" animation="{{alpha[2]}}"></view>
+    <view class="dot" animation="{{alpha[3]}}"></view>
+    <view class="dot" animation="{{alpha[4]}}"></view>
+    <view class="text">{{text}}</view>
+  </view>
+ 
+</view>

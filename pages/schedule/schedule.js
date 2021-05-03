@@ -19,9 +19,11 @@ Page({
       }],
       pageIndex: 1,
       pageSize: 20,
-      hasMore: false,
+      hasMore: true,
       raw_list: [],
       list: [],
+      showLoading: false,
+      showPullDown: false,
       changed_list: [],
       malTitle: '您正在删除',
       showModal: false,
@@ -83,6 +85,8 @@ Page({
 
             console.log('after==end_res==>',end_res)
             _this.setData({
+              showLoading: false,
+              showPullDown: false,
               raw_list: res.result.data,
               pageIndex: !res.result.hasMore ? pageIndex: pageIndex + 1,
               hasMore: res.result.hasMore,
@@ -94,23 +98,27 @@ Page({
     onReachBottom () {
       const {hasMore} = this.data;
       if (hasMore) {
-        this.getList()
-      } else {
-        wx.showToast({
-          title: '已经到底部了',
+        this.setData({
+          showLoading: true,
+        }, () => {
+          this.getList()
         })
-      }
-      wx.showToast({
-        title: '触发上拉加载',
-      })
+      } 
+      // else {
+        // wx.showToast({
+        //   title: '已经到底部了',
+        // })
+      // }
+      // wx.showToast({
+      //   title: '触发上拉加载',
+      // })
     },
 
     onPullDownRefresh(){ 
-      this.setData({pageIndex: 1});
-      getList()
-      wx.showToast({
-        title: '下拉刷新',
-      })
+      const _this = this;
+      this.setData({pageIndex: 1, showPullDown: true, raw_list: []}, () => {
+        _this.getList()
+      });
       wx.stopPullDownRefresh()
     },
 
@@ -356,6 +364,12 @@ Page({
 
     onHide () {
       this.updateList()
+      this.setData({
+        pageIndex: 1,
+        raw_list: [],
+        list: [],
+        hasMore: true,
+      })
     },
 
     onLoad: function() {
