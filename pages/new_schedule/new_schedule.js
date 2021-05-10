@@ -119,6 +119,7 @@ Page({
     let end_time = this.data.end.full_year +'-'+ (this.data.end.cur_month >= 10 ?this.data.end.cur_month:'0'+this.data.end.cur_month) + '-' + (this.data.end.cur_date>=10?this.data.end.cur_date:'0'+this.data.end.cur_date) + ' '+this.data.end.hour + ':' + this.data.end.minute;
     let start_riqi = this.data.start.full_year +'-'+ (this.data.start.cur_month >= 10 ?this.data.start.cur_month:'0'+this.data.start.cur_month) + '-' + (this.data.start.cur_date>=10?this.data.start.cur_date:'0'+this.data.start.cur_date);
     let obj = {};
+    console.log('this.data.operation_type==>',this.data.operation_type)
     if (this.data.operation_type != 4) {
       obj = {
         schedule_type: this.data.checked_type,
@@ -129,6 +130,7 @@ Page({
         content: this.data.evaContent,
         date: start_riqi,
         create_time: new Date().getTime(),
+        _open_id: wx.getStorageSync('openid'),
         event_type: this.data.operation_type
       }
       var that = this;
@@ -142,24 +144,36 @@ Page({
         back_url = '../schedule/schedule'
       } else { // 增加操作
         url = url + 'add'
-        back_url = '../calendar/calendar'
+        // back_url = '../calendar/calendar'
+        back_url = '../schedule/schedule'
       }
       console.log('wx', wx);
+
+      console.log('obj==>',obj)
+
+      const openid = wx.getStorageSync('openid')
+
+      console.log('openid==>',openid);
+      // wx.switchTab({
+      //   url: '../schedule/schedule'
+      // })
 
       const db = wx.cloud.database()
       db.collection('todo_list').add({
         data: obj,
         success: res => {
-          // 在返回结果中会包含新创建的记录的 _id
-          this.setData({
-            counterId: res._id,
-            count: 1
-          })
-          wx.showToast({
-            title: '新增记录成功',
-          })
+          console.log('add success res ==>',res)
+          // debugger
+          // // 在返回结果中会包含新创建的记录的 _id
+          // this.setData({
+          //   counterId: res._id,
+          //   count: 1
+          // })
+          // wx.showToast({
+          //   title: '新增记录成功',
+          // })
           wx.switchTab({
-            url: back_url
+            url: '../schedule/schedule'
           })
         },
         fail: err => {

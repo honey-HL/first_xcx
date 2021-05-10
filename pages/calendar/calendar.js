@@ -571,6 +571,7 @@ Page({
   },
 
   searchSchedule (nian_yue_ri) {
+    console.log('nian_yue_ri==>',nian_yue_ri.toString())
     let _this = this;
     const db = wx.cloud.database()
     db.collection('todo_list').where({
@@ -1063,7 +1064,7 @@ Page({
     app.slideupshow(this, 'slide_up2', 0, 1)
     app.slideupshow(this, 'slide_up3', 0, 1)
     this.getList();
-    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month > 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
+    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>=10?this.data.cur_date:'0'+this.data.cur_date);
     this.searchSchedule(nian_yue_ri);
     
     // 获取日程列表的高度

@@ -210,72 +210,22 @@ App({
 
   loginAndGetOpenid () {
     let that = this;
-     // 登录
-    wx.login({
-      success: function (res) {
-        if (res.code) {
-          wx.getUserProfile({
-            success: function (resp) {
-              console.log('getUserProfile==>',getUserProfile)
-              wx.cloud.callFunction({
-                name: 'login',
-                data: {
-                  code: res.code,
-                  iv: resp.iv,
-                  encryptedData: resp.encryptedData
-                },
-                success: res => {
-                  // console.log('res==>',res)
-                  console.log('[云函数] [login] user openid: ', res.result.openid)
-                  that.globalData.openid = res.result.openid
-                  wx.setStorageSync('openid', res.result.openid);
-                  wx.showModal({
-                    title: res.result.openid
-                  })
-                },
-                fail: err => {
-                  console.error('[云函数] [login] 调用失败', err)
-                }
-              })
-              // wx.request({
-              //     url: that.globalData.url + 'get/info',
-              //     data: {
-                      // code: res.code,
-                      // iv: resp.iv,
-                      // encryptedData: resp.encryptedData
-              //     },
-              //     success: function (res) {
-              //       res = res.data;
-              //       console.log(res)
-              //       // 保存openId，并将用户信息发送给后端
-                    // if (res.status === 200) {
-                      // wx.showModal({
-                      //   title: res.openid
-                      // })
-              //         wx.setStorageSync('openid', res.openid);
-              //         // that.sendUserInfoToServer();
-      
-              //       } else {
-                      // wx.showModal({
-                      //   title: 'Sorry',
-                      //   content: '用户登录失败~',
-                      // })
-              //       }
-              //     }
-              // })
-            }
-          })
-        }
-      }
+    wx.cloud.callFunction({
+      name:'get_open_id',
+      data: {}
+    }).then(res=>{
+      console.log('[云函数] [get_open_id] user openid: ', res.result.openid)
+      that.globalData.openid = res.result.openid
+      wx.setStorageSync('openid', res.result.openid);
+      wx.showModal({
+        title: res.result.openid
+      })
     })
   },
 
 
   onLaunch: function () {
     var _this=this
-    var userinfo = wx.getStorageSync('user');
-    console.log('userinfo', userinfo);
-    this.checkSessionAndLogin();
 
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
@@ -286,6 +236,9 @@ App({
       })
     }
 
+    var userinfo = wx.getStorageSync('user');
+    console.log('userinfo', userinfo);
+    this.checkSessionAndLogin();
 
     // 获取用户信息
     wx.getSetting({

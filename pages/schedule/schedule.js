@@ -88,6 +88,7 @@ Page({
             })
             console.log('after==end_res==>',end_res)
             _this.setData({
+              isNewUser: false,
               showLoading: false,
               showPullDown: false,
               raw_list: res.result.data,
@@ -376,7 +377,10 @@ Page({
     },
 
     onShow () {
-      this.getList();
+      const _this = this;
+      this.setData({pageIndex: 1, raw_list: []}, () => {
+        _this.getList()
+      });
     },
 
     onHide () {
@@ -390,22 +394,22 @@ Page({
     },
 
     onLoad: function() {
-        wx.setNavigationBarTitle({
-            title: '我的日程'
-        })
-        this.getInnerContentHeight()
-        this.setData({
-            windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
-        })
-        console.log('设备高度',wx.getSystemInfoSync().windowHeight);
-        wx.createSelectorQuery().select('.finished').fields({
-            dataset: true,
-            size: true,
-            scrollOffset: true,
-            properties: ['scrollX', 'scrollY']
-          }, function (res) {
-            console.log(res);
-            res.scrollLeft = 200;
-          }).exec()
+      wx.setNavigationBarTitle({
+          title: '我的日程'
+      })
+      this.getInnerContentHeight()
+      this.setData({
+          windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
+      })
+      console.log('设备高度',wx.getSystemInfoSync().windowHeight);
+      wx.createSelectorQuery().select('.finished').fields({
+        dataset: true,
+        size: true,
+        scrollOffset: true,
+        properties: ['scrollX', 'scrollY']
+      }, function (res) {
+        console.log(res);
+        res.scrollLeft = 200;
+      }).exec()
     }
 })
