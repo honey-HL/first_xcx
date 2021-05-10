@@ -14,6 +14,7 @@ Page({
     input_numbers: [1,2,3,4,5,6,7,8,9],
     clicked_num: '',
     chooseSize: false,
+    showOperation: true,
     zhou_ji: '',
     batch_text: '批量',
     show_checkobx: false,
@@ -318,12 +319,19 @@ Page({
    
     console.log('new_data==>',new_data)
     wx.hideTabBar();
-    this.setData({choose_date_dt: new_data,show_date_popup: true, chooseSize: true})
+    this.setData({choose_date_dt: new_data,show_date_popup: true, chooseSize: true,showOperation: false})
+  },
+  hideJiShiModal () {
+    this.setData({
+      showOperation: true
+    })
+    wx.showTabBar();
   },
   hideDateModal () {
     if (this.data.chooseSize) {
       this.setData({
         chooseSize: true,
+        showOperation: false
       })
       wx.hideTabBar();
     }
@@ -346,6 +354,7 @@ Page({
     setTimeout(() => {
       this.setData({
         chooseSize: false,
+        showOperation: true,
         clicked_num:'',
         checked_payments: 'expend',
         payments: new_payments
@@ -365,11 +374,9 @@ Page({
       //   url: '../new_consumption/new_consumption?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
       // })
       const child = this.selectComponent('#myComponent');
-      if (this.data.chooseSize == false) {
-        console.log(child)
-        child.chooseSezi();
-        this.setData({chooseSize: true})
-      }
+      child.chooseSezi();
+      this.setData({chooseSize: true, showOperation: false})
+      wx.hideTabBar();
     }
     // if (type == 3 || type == 4) {
     //   wx.navigateTo({

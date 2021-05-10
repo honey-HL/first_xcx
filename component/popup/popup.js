@@ -80,7 +80,6 @@ Component({
           clearcart: false
         })
       }, 0)
-      wx.hideTabBar()
     },
     // 隐藏
     hideModal (e) {

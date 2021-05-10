@@ -22,6 +22,7 @@ Page({
       hasMore: true,
       raw_list: [],
       list: [],
+      isNewUser: false,
       showLoading: false,
       showPullDown: false,
       changed_list: [],
@@ -64,8 +65,11 @@ Page({
         }
       }).then((res) => {
         console.log('res===>',res)
-
-            const results = !raw_list.length ? res.result.data : raw_list.concat(res.result.data);
+        if (!res.result.total) {
+          this.setData({isNewUser: true})
+          return
+        } else {
+          const results = !raw_list.length ? res.result.data : raw_list.concat(res.result.data);
             console.log('results===>',results)
             results.map((item, i) => {
               if (temp.indexOf(item.date) === -1) {
@@ -82,7 +86,6 @@ Page({
                 })
               }
             })
-
             console.log('after==end_res==>',end_res)
             _this.setData({
               showLoading: false,
@@ -92,6 +95,7 @@ Page({
               hasMore: res.result.hasMore,
               list: end_res
             })
+        }
       })
     },
 
@@ -114,11 +118,24 @@ Page({
       // })
     },
 
+    goCreate () {
+      const type = 'schedule';
+      const date = new Date();
+      const cur_date = date.getDate();
+      const cur_month = date.getMonth() + 1;
+      const full_year = date.getFullYear();
+      wx.navigateTo({
+        url: '../new_schedule/new_schedule?cur_date=' + cur_date + '&cur_month=' + cur_month + '&' + 'full_year=' + full_year + '&type=' + type
+      })
+    },
+
     onPullDownRefresh(){ 
       const _this = this;
-      this.setData({pageIndex: 1, showPullDown: true, raw_list: []}, () => {
-        _this.getList()
-      });
+      if (!this.data.isNewUser) {
+        this.setData({pageIndex: 1, showPullDown: true, raw_list: []}, () => {
+          _this.getList()
+        });
+      }
       wx.stopPullDownRefresh()
     },
 

@@ -226,12 +226,12 @@
 
 
   <!---操作按钮-->
-  <view  wx:if="{{!chooseSize}}" catchtap='addSchedule' class='create'>
+  <view  wx:if="{{showOperation}}" catchtap='addSchedule' class='create'>
       <image class="{{is_show_new_mask?'rotate_img':''}}" src="../../images/add_.png"></image>
       <!-- <image wx:else src="../../images/cancel.png"></image> -->
   </view>
  
-  <view wx:if="{{!chooseSize}}" class='operation_box'>
+  <view wx:if="{{showOperation}}" class='operation_box'>
     <!-- <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
     <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view> -->
     <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">记账</view>
@@ -239,7 +239,7 @@
   </view>
 
     
-    <popup show="{{chooseSize}}" id="myComponent" height="{{'430px'}}">
+    <popup catchtap='hideJiShiModal' show="{{chooseSize}}" id="myComponent" height="{{'430px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">

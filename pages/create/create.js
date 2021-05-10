@@ -160,7 +160,7 @@ Page({
     wx.setNavigationBarTitle({
       title: '新建日程'
     })
-    wx.getUserInfo({
+    wx.getUserProfile({
       success: function (getuserinfo) {
         that.data.hasuserinfo = true;
         that.setData(that.data);

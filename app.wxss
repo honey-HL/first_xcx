@@ -16,3 +16,15 @@
   color: transparent;
   display: none;
 }
+
+.no_schedule {
+  padding:10px;
+  display:flex;
+  justify-content:center;
+  flex-direction:column;
+  align-items:center;
+}
+.no_schedule_img {
+  width:80px;
+  height: 80px;
+}
