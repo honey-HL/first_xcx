@@ -85,14 +85,16 @@ Page({
       today_month: this.data.cur_month,
       today_year: this.data.full_year
     })
-    this.setData({
-      month_arr:   this.getTableData(this.data.cur_month, this.data.full_year)
+    this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+      this.setData({
+        month_arr: res
+      })
     })
     this.setData({ show_jin: false })
     this.setData({lunar_arr: lunar.showCal(this.data.full_year,this.data.cur_month,this.data.cur_date, 1).split(' ')
       })
-    this.getList();
-    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month > 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
+    // this.getList();
+    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
     this.searchSchedule(nian_yue_ri);
   },
   // 触摸开始事件
@@ -132,16 +134,16 @@ Page({
             } else {
               this.setData({ cur_month: this.data.cur_month + 1 })
             }
-            const _month_arr = this.getTableData(this.data.cur_month, this.data.full_year);
-            console.log('128===_month_arr===>',_month_arr)
-            this.setData({
-              month_arr: _month_arr
+            this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+              this.setData({
+                month_arr: res
+              })
             })
           }
           wx.setNavigationBarTitle({
             title: this.data.full_year + '年' + this.data.cur_month + '月'
           })
-          this.getList()
+          // this.getList()
         }else{ // 右滑  月份减
           console.log('右滑')
           if (this.data.full_year >= 1900 && this.data.full_year <= 2050) {
@@ -152,16 +154,16 @@ Page({
             else {
               this.setData({ cur_month: this.data.cur_month - 1 })
             }
-            const _month_arr = this.getTableData(this.data.cur_month, this.data.full_year)
-            console.log('149===_month_arr===>',_month_arr)
-            this.setData({
-              month_arr: _month_arr
+            this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+              this.setData({
+                month_arr: res
+              })
             })
           }
           wx.setNavigationBarTitle({
             title: this.data.full_year + '年' + this.data.cur_month + '月'
           })
-          this.getList()
+          // this.getList()
         }
         if (this.data.cur_month === date.getMonth() + 1 && this.data.full_year === date.getFullYear()) {
           this.setData({ show_jin: false })   
@@ -360,7 +362,7 @@ Page({
         payments: new_payments
       })
     },200)
-    // wx.hideTabBar();
+    wx.showTabBar();
   },
   getOperation(e) {
     let type = e.currentTarget.dataset.type;
@@ -479,13 +481,18 @@ Page({
       wx.setNavigationBarTitle({
         title: this.data.full_year + '年' + this.data.cur_month + '月'
       })
-      this.setData({
-        month_arr: this.getTableData(this.data.cur_month, this.data.full_year, this.data.cur_date)
+      this.getTableData(this.data.cur_month, this.data.full_year, this.data.cur_date).then(res => {
+        this.setData({
+          month_arr: res
+        })
       })
+      // this.setData({
+      //   month_arr: this.getTableData(this.data.cur_month, this.data.full_year, this.data.cur_date)
+      // })
       this.setData({
         lunar_arr: lunar.showCal(this.data.full_year,this.data.cur_month,this.data.cur_date, 1).split(' ')
       })
-      this.getList();
+      // this.getList();
       console.log('lunar_arr',this.data.lunar_arr);
     }
     let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>=10?this.data.cur_date:'0'+this.data.cur_date);
@@ -550,9 +557,14 @@ Page({
       is_sticky: true,
       is_show_picker: false
     })
-    this.setData({
-      month_arr: this.getTableData(this.data.cur_month, this.data.full_year)
+    this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+      this.setData({
+        month_arr: res
+      })
     })
+    // this.setData({
+    //   month_arr: this.getTableData(this.data.cur_month, this.data.full_year)
+    // })
   },
   bindChange: function(e) {
     const val = e.detail.value
@@ -575,6 +587,7 @@ Page({
     let _this = this;
     const db = wx.cloud.database()
     db.collection('todo_list').where({
+      _openid: wx.getStorageSync('openid'),
       date: nian_yue_ri.toString()
     }).get({
       success: function(res) {
@@ -605,25 +618,6 @@ Page({
         })
       }
     })
-    // wx.request( {
-    //   // url: "http://taili-xcx.com/api/events/search",
-    //   url: app.globalData.url + 'api/events/search',
-    //   headder: {
-    //     "Content-Type": "application/x-www-form-urlencoded"
-    //   },
-    //   method: "get", 
-    //   data: {date: nian_yue_ri.toString()},
-    //   success: function( res ) {
-    //     if (res.statusCode == 200) {
-    //       let results = res.data.data;
-    //       // itemList
-          // _this.setData({
-          //   itemList: results
-          // })
-    //       console.log(results);
-    //     }
-    //   }
-    // })
   },
 
   getList () {
@@ -830,63 +824,47 @@ Page({
     // let cur_swiper_month_arr = []
     // let last_month_data = []
     // let next_month_data = []
-    this.setData({
-      month_arr: this.getTableData(this.data.cur_month, this.data.full_year)
+    this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+      this.setData({
+        month_arr: res
+      })
     })
-    // if (this.data.cur_month == 1) {
-    //   last_month_data = this.getTableData(12, this.data.full_year - 1)
-    //   next_month_data = this.getTableData(this.data.cur_month + 1, this.data.full_year)
-    // } else if (this.data.cur_month == 12) {
-    //   last_month_data = this.getTableData(this.data.cur_month - 1, this.data.full_year)
-    //   next_month_data = this.getTableData(1, this.data.full_year + 1)
-    // } else {
-    //   last_month_data = this.getTableData(this.data.cur_month - 1, this.data.full_year)
-    //   next_month_data = this.getTableData(this.data.cur_month + 1, this.data.full_year)
-    // }
-    // cur_swiper_month_arr.push(last_month_data)
-    // cur_swiper_month_arr.push(this.data.month_arr)
-    // cur_swiper_month_arr.push(next_month_data)
-    // this.setData({
-    //   ['swiper_month_arr']:cur_swiper_month_arr
-    // })
-    // console.log(this.data.swiper_month_arr)
-
-
-
-    // 初始化获取当天日程数据
-    // let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month > 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
-    // this.searchSchedule(nian_yue_ri)
-
-    // console.log(this.data.month_arr);
-    // if (app.globalData.userInfo) {
-    //   this.setData({
-    //     userInfo: app.globalData.userInfo,
-    //     hasUserInfo: true
-    //   })
-    // } else if (this.data.canIUse){
-    //   // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-    //   // 所以此处加入 callback 以防止这种情况
-    //   app.userInfoReadyCallback = res => {
-    //     this.setData({
-    //       userInfo: res.userInfo,
-    //       hasUserInfo: true
-    //     })
-    //   }
-    // } else {
-    //   // 在没有 open-type=getUserInfo 版本的兼容处理
-    //   wx.getUserInfo({
-    //     success: res => {
-    //       app.globalData.userInfo = res.userInfo
-    //       this.setData({
-    //         userInfo: res.userInfo,
-    //         hasUserInfo: true
-    //       })
-    //     }
-    //   })
-    // }
   },
 
-  getTableData(cur_month, cur_year, cur_date, index) {
+
+
+
+  /***
+ * 获取当前显示月份的时间戳范围
+ * 需要知道当前month_arr里面显示的 第一天的日期和最后一天的日期
+ * 获取9月份数据  2021-09-01 00
+ * ****/
+  getMarkSchedule (cur_month) {
+    return new Promise(function(resolve, reject) {
+      let marked_items = []
+      const db = wx.cloud.database()
+      db.collection('todo_list').where({
+        _openid: wx.getStorageSync('openid'),
+        month: cur_month.toString()
+      }).orderBy('month', 'asc').get({
+        success: function(results) {
+          console.log('results===>',results)
+          let mon_filtered = []
+          results.data.map(item => {
+            if (Number(item.month) == Number(cur_month)) {
+              mon_filtered.push(item.date)
+            }
+          })
+          marked_items = [...new Set(mon_filtered)]
+          resolve(marked_items)
+          console.log('891===marked_items===>',marked_items)
+        }
+      })
+    })
+  },
+
+  /*******获取当前显示的月份数据******/
+  async getTableData(cur_month, cur_year, cur_date, index) {
     // 今
     if (cur_month !== date.getMonth() + 1 || cur_year !== date.getFullYear()) {
       this.setData({ show_jin: true })    
@@ -898,7 +876,6 @@ Page({
     let last_days = 1;
     let last_month_start = 1; // 从上个月第几号开始渲染
     let dayFirst = parseInt(new Date(cur_year, cur_month - 1, 1).getDay()) ? new Date(cur_year, cur_month - 1, 1).getDay() : 7; //当月第一天星期几
-
     // 算当月和下月多少天
     if (cur_month == 1 || cur_month == 3 || cur_month == 5 || cur_month == 7 || cur_month == 8 || cur_month == 10 || cur_month == 12) {
       days = 31;
@@ -936,29 +913,83 @@ Page({
       }
     }
 
+    const conmon_data = {
+      is_clicked: false, 
+      checked: false,
+    }
+  
+   
     // 格式化数据
     if (dayFirst !== 7) { // 当月第一天不是星期日就没有上月数据渲染 因为列表是  上月数据 + 当月数据 + 下月数据
       last_month_start = last_days + 2 - dayFirst - 1;
       for (let i = last_month_start; i <= last_days; i++) { // 上个月数据
-        if (cur_month == 1) {
-            total.push({ is_clicked: false, checked: false, date: i, month: 12, year: cur_year - 1, gray: true, status:0, lunar_date: lunar.showCal(cur_year - 1, 12, i) });
-        } else {
-            total.push({ is_clicked: false,  checked: false,date: i, month: cur_month - 1, year: cur_year, gray: true, status:0, lunar_date: lunar.showCal(cur_year, cur_month - 1, i) });
+        let last_month_day_item = {
+         ...conmon_data,
+          gray: true,
+          status:0, 
+          date: i,
+          month: cur_month == 1 ? 12: cur_month - 1,
+          year: cur_month == 1 ? cur_year - 1: cur_year,
+          lunar_date: cur_month == 1 ? lunar.showCal(cur_year - 1, 12, i): lunar.showCal(cur_year, cur_month - 1, i)
         }
+
+        let _last_month_day_item = {
+          ...last_month_day_item,
+          nian_yue_ri: `${last_month_day_item.year+ '-' + (last_month_day_item.month >= 10 ? last_month_day_item.month: '0' +last_month_day_item.month) + '-' + (last_month_day_item.date >= 10 ? last_month_day_item.date: '0' + last_month_day_item.date)}`
+        }
+        total.push(_last_month_day_item)
       }
     }
+    const marked_items = await this.getMarkSchedule(cur_month);
+    console.log('marked_items============>',marked_items)
     for (let j = 1; j <= days; j++) { // 当月数据
-      total.push({ is_clicked: false, checked: false, date: j, month: cur_month, year: cur_year, gray: false, status: 1, lunar_date: lunar.showCal(cur_year, cur_month, j) });
+     
+      let cur_month_day_item = {
+        ...conmon_data,
+         gray: false,
+         status:1, 
+         date: j,
+         month: cur_month, 
+         year: cur_year,
+         lunar_date: lunar.showCal(cur_year, cur_month, j)
+      }
+      let nian_yue_ri = `${cur_month_day_item.year+ '-' + (Number(cur_month_day_item.month) >= 10 ? cur_month_day_item.month: '0' + cur_month_day_item.month) + '-' + (Number(cur_month_day_item.date)>= 10 ? cur_month_day_item.date: '0' + cur_month_day_item.date)}`
+
+      let _cur_month_day_item = {
+        ...cur_month_day_item,
+        nian_yue_ri
+      }
+      for(let d =0; d < marked_items.length; d++) {
+        if (marked_items[d] === nian_yue_ri) {
+          _cur_month_day_item = {
+            ...cur_month_day_item,
+            has_schedule: true
+          }
+        }
+      }
+      total.push(_cur_month_day_item);
     }
     for (let n = 1; n < next_days; n++) { // 下月数据
-        if (cur_month == 12) {
-            total.push({ is_clicked: false,  checked: false,date: n, month: 1, year: cur_year + 1, gray: true, status: 2, lunar_date: lunar.showCal(cur_year + 1, 1, n) });
-        } else {
-            total.push({ is_clicked: false,  checked: false,date: n, month: cur_month + 1, year: cur_year, gray: true, status: 2, lunar_date: lunar.showCal(cur_year, cur_month + 1, n) });
-        }
+      let next_month_day_item = {
+        ...conmon_data,
+        gray: true,
+        status:2, 
+        date: n,
+        month: cur_month == 12 ? 1 : cur_month + 1, 
+        year: cur_year,
+        lunar_date: cur_month == 12 ? lunar.showCal(cur_year + 1, 1, n): lunar.showCal(cur_year, cur_month + 1, n)
+      }
+      const _next_month_day_item = {
+        ...next_month_day_item,
+        nian_yue_ri: `${next_month_day_item.year + (next_month_day_item.month >= 10 ? next_month_day_item.month:'0' +next_month_day_item.month)+'-' + (next_month_day_item.date >= 10 ? next_month_day_item.date: '0' + next_month_day_item.date)}`
+      }
+      total.push(_next_month_day_item)
     }
     let currData = [];
     let allData = [];
+    /***
+     * 应该在这里加上日程标志
+     ****/
     for (let m = 0; m < total.length; m++) {
       total[m].is_clicked = false
       if (total[m].year == cur_year && total[m].month == cur_month && total[m].date == cur_date) {
@@ -974,8 +1005,8 @@ Page({
     }
 
     // 渲染table
-    console.log(total);
-    console.log(allData);
+    console.log('total==>',total);
+    console.log('allData===>',allData);
     let month_arr = new Object();
     month_arr.list = allData
 
@@ -1003,6 +1034,7 @@ Page({
     console.log('this.data.tb_arr===>',this.data.tb_arr);
     console.log('this.data.month_arr===>',this.data.month_arr);
   },
+  
   getYears () {
     let new_arr = []
     let first = "value[" + 0 + "]";
@@ -1060,11 +1092,12 @@ Page({
   },
 
   onShow: function () {
+    const {cur_date, full_year, cur_month} = this.data;
     app.slideupshow(this, 'slide_up1', 0, 1)
     app.slideupshow(this, 'slide_up2', 0, 1)
     app.slideupshow(this, 'slide_up3', 0, 1)
-    this.getList();
-    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>=10?this.data.cur_date:'0'+this.data.cur_date);
+    // this.getList();
+    let nian_yue_ri = full_year + '-' + (cur_month >= 10 ?cur_month:'0'+cur_month) + '-' + (cur_date>=10?cur_date:'0'+cur_date);
     this.searchSchedule(nian_yue_ri);
     
     // 获取日程列表的高度

@@ -16,8 +16,8 @@ Page({
     month: 2,
     month_arr: [],
     items: [
-      {name: '0', value: '未完成', checked: true},
-      {name: '1', value: '已完成', checked: false},
+      {name: '0', value: '未完成', checked: false},
+      {name: '1', value: '已完成', checked: true},
     ],
     checked_type: 0,
     is_range: false,
@@ -128,6 +128,7 @@ Page({
         startTime: start_time,
         endTime: end_time,
         content: this.data.evaContent,
+        month: this.data.start.cur_month,
         date: start_riqi,
         create_time: new Date().getTime(),
         _open_id: wx.getStorageSync('openid'),

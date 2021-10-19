@@ -60,7 +60,7 @@
 
 
       <view class='view_table' style="width:{{windowWidth*12}}px;">
-        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth - 20}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
           <tbody>
             <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="index">
               <td catchtap="changeDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
@@ -70,8 +70,9 @@
                 <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
               
                   <span class="date_num">{{td_item.date}}</span>
-                  <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+                  <span class="lunar_date">{{td_item.lunar_date}}</span>
                 </a>
+                <span wx:if="{{td_item.has_schedule}}" class="mark_schedule {{td_item.date >= 10?'mark_schedule_max':'mark_schedule_min'}}">事</span>
                 <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
                 <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
                 <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
@@ -135,7 +136,13 @@
    <!-- <view class='gap1'></view> -->
     <view class='detail_today_inner'>
       <view class='show_dates_box'>
-        <view class='big_date inline_block'>{{cur_date}}</view>
+      <view class="show_2">{{full_year}}年</view>
+      <view class="show_2">{{cur_month}}月</view>
+      <view class="show_2">{{cur_date}}日</view>
+        <!-- <view class='big_date inline_block'>{{cur_date}}</view>
+        <view class='big_date'>{{cur_month}}
+         <span class="big_mon">Mon</span>
+        </view> -->
       </view>
 
       <view class='lunar_detail inline_block'>

@@ -377,10 +377,11 @@ Page({
     },
 
     onShow () {
-      const _this = this;
-      this.setData({pageIndex: 1, raw_list: []}, () => {
-        _this.getList()
-      });
+      this.getList()
+      // const _this = this;
+      // this.setData({pageIndex: 1, raw_list: []}, () => {
+      //   _this.getList()
+      // });
     },
 
     onHide () {
