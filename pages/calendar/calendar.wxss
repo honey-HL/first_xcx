@@ -125,7 +125,7 @@ left:22%;
 .show_dates_box {
   /* width:120rpx; */
     height: 120rpx;
-    padding: 0 10px;
+    /* padding: 0 10px; */
     overflow: hidden;
     float: left;
     display: flex;

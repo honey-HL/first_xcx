@@ -11,8 +11,12 @@
 
     <!-- <view style="height: {{windowHeight}};" class='finished'> -->
     <view class='finished'>
-        <view class='main_container'>
-            <loading show="{{showPullDown}}"></loading>
+        <view wx:if="{{!isNewUser}}" class='main_container'>
+            <view class="search_box">
+                <input value="{{searchKey}}" bindinput="bindKeyInput" class="search_input"/>
+                <view catchtap="onSearch" class="search_btn">搜索</view>
+            </view>
+            <loading show="{{list.length == 0}}"></loading>
             <scroll-view 
             throttle="{{false}}"
             android:scrollbars="none"

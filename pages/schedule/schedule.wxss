@@ -1,3 +1,30 @@
+/**************搜索框*******************/
+.search_box {
+  width: calc(100% - 24px - 30rpx);
+  /* height: 60rpx;
+  line-height: 60rpx; */
+  border-radius: 35rpx;
+  border: 1px solid #7ea7e4;
+  margin: 10px 12px;
+  padding-left: 15rpx;
+  display: flex;
+  justify-content: space-between;
+}
+.search_input {
+  width: calc(100% - 24px - 30rpx - 100rpx);
+  height: 60rpx;
+}
+.search_btn {
+  margin:4rpx 5rpx;
+  width: 120rpx;
+  text-align: center;
+  height: 56rpx;
+  line-height: 56rpx;
+  /* background-color: #61a1ca; */
+  background:linear-gradient(to right,#a3d2e8,#7ea7e4);
+  color: #fff;
+  border-radius: 305rpx;
+}
 /*********************************/
 .no_schedule1 {
   margin-top: 50px;
@@ -19,14 +46,24 @@
   /* border-bottom: 1px solid #888; */
 }
 
-.finished_btn {
-  background: green;
+.edit_btn {
+  background: #6ca7fa;
   height: 56px;
   top: 0;
 }
 
-.finished_btn view {
-   background: green !important;
+.delete_btn {
+  background: #fd7c89;
+ height: 56px;
+ top: 0;
+}
+
+.edit_btn view {
+   background: #6ca7fa !important;
+}
+
+.delete_btn view {
+  background: #fd7c89 !important;
 }
 
 .unfinished_btn {
@@ -37,12 +74,6 @@
 
 .unfinished_btn view {
   background: yellow !important;
-}
-
-.delete_btn {
-   background: pink;
-  height: 56px;
-  top: 0;
 }
 
 .days, .ri{

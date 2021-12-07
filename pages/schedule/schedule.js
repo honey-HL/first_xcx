@@ -2,9 +2,11 @@ const app = getApp();
 
 Page({
     data: {
+      isSearch: false,  // 是不是搜索功能
+      searchKey: '', // 搜索框输入的关键字
       slideButtons: [{
         text: '编辑',
-        extClass: 'finished_btn'
+        extClass: 'edit_btn'
       },
       // {
       //   text: '未完成',
@@ -46,20 +48,41 @@ Page({
       windowHeight: ''
     },
 
-    getList () {
-      const {list, raw_list, pageIndex, pageSize} = this.data;
+    bindKeyInput: function (e) {
+      this.setData({
+        searchKey:  e.detail.value,
+       })
+    },
+
+    /********搜索数据********/
+    onSearch () {
+      this.setData({isSearch: true, raw_list: [], list: [],pageIndex: 1}, () => {
+        this.getList()
+      })
+    },
+
+    async getList () {
+      const {isSearch, searchKey, raw_list, pageIndex, pageSize} = this.data;
+      const db = wx.cloud.database;
       const _this = this;
       let temp = [];
       let end_res = []
+      let _raw_list = []
+      let results= []
       const openid = wx.getStorageSync('openid')
+      let filters = {
+        event_type: 'schedule',
+        _openid: openid,
+      }
+      console.log('filters==>',filters)
+    
       wx.cloud.callFunction({
         name: 'get_schedule_list',
         data: {
-          filter: {
-            event_type: 'schedule',
-            _openid: openid,
-          },
+          filter: filters,
           dbName: 'todo_list',
+          isSearch,
+          searchKey,
           pageIndex,
           pageSize
         }
@@ -69,7 +92,13 @@ Page({
           this.setData({isNewUser: true})
           return
         } else {
-          const results = !raw_list.length ? res.result.data : raw_list.concat(res.result.data);
+          if (raw_list.length === 0 || isSearch) {
+            _raw_list =  res.result.data
+            results = _raw_list
+          } else {
+            _raw_list = raw_list.concat(res.result.data)
+            results = _raw_list
+          }
             console.log('results===>',results)
             results.map((item, i) => {
               if (temp.indexOf(item.date) === -1) {
@@ -91,7 +120,7 @@ Page({
               isNewUser: false,
               showLoading: false,
               showPullDown: false,
-              raw_list: res.result.data,
+              raw_list:_raw_list,
               pageIndex: !res.result.hasMore ? pageIndex: pageIndex + 1,
               hasMore: res.result.hasMore,
               list: end_res
@@ -169,6 +198,10 @@ Page({
             return start_time + ' ~ ' + end_time
           }
         }
+    },
+
+    slideButtonTap (data) {
+      debugger
     },
 
     getWillDelete (item) { // will_delete_item
@@ -387,6 +420,8 @@ Page({
     onHide () {
       this.updateList()
       this.setData({
+        searchKey: '',
+        isSearch: false,
         pageIndex: 1,
         raw_list: [],
         list: [],

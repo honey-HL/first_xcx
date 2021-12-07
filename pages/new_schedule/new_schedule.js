@@ -19,7 +19,7 @@ Page({
       {name: '0', value: '未完成', checked: false},
       {name: '1', value: '已完成', checked: true},
     ],
-    checked_type: 0,
+    checked_type: 1,
     is_range: false,
     today: date.getDate(),
     location: '所在位置',

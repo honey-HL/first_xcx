@@ -217,9 +217,9 @@ App({
       console.log('[云函数] [get_open_id] user openid: ', res.result.openid)
       that.globalData.openid = res.result.openid
       wx.setStorageSync('openid', res.result.openid);
-      wx.showModal({
-        title: res.result.openid
-      })
+      // wx.showModal({
+      //   title: res.result.openid
+      // })
     })
   },
 
