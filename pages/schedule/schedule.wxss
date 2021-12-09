@@ -1,3 +1,11 @@
+/****删除弹窗*****/
+.modal-text {
+  text-align: center;
+  color: gray;
+  margin-bottom: 18rpx;
+  font-size: 26rpx;
+}
+
 /**************搜索框*******************/
 .search_box {
   width: calc(100% - 24px - 30rpx);

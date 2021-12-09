@@ -731,7 +731,11 @@ left:22%;
   margin-left: 100px;
   padding: 8px 0;
 }
-
+.close {
+  width: 15px;
+  height: 15px;
+  padding: 8px;
+}
 .close-img {
   width: 100%;
   height: 100%;

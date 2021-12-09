@@ -9,6 +9,7 @@
     "pages/batch/batch",
     "pages/create/create",
     "component/popup/popup",
+    "component/modal-delete/modal-delete",
     "pages/authorize/authorize",
     "pages/my/my",
     "pages/consume/consume",

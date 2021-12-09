@@ -2,8 +2,19 @@ const app = getApp();
 
 Page({
     data: {
+      /***即将删除的***/
+      willDeleteItem: "",
+      modal: {
+        show: false,
+        cancelColor: '#fff',
+        confirmColor: '#fff',
+        showCancel: true,
+        content: [{text: '删除了就再也找不回来了～'}],
+        title: '确定删除此记录?'
+      },
       isSearch: false,  // 是不是搜索功能
       searchKey: '', // 搜索框输入的关键字
+      delPopShow: true, // 删除确认弹窗显示
       slideButtons: [{
         text: '编辑',
         extClass: 'edit_btn'
@@ -74,7 +85,6 @@ Page({
         event_type: 'schedule',
         _openid: openid,
       }
-      console.log('filters==>',filters)
     
       wx.cloud.callFunction({
         name: 'get_schedule_list',
@@ -201,8 +211,88 @@ Page({
     },
 
     slideButtonTap (data) {
+      const {slideButtons} = this.data;
+      const cur_item = data.currentTarget.dataset.item;
+      const index = data.detail.index;
+      const text = slideButtons[index].text;
+      if (text === '编辑'){
+        this.onEdit(cur_item)
+      } else if (text === '删除'){
+        this.onDelete(cur_item)
+      }
+    },
+
+    /********编辑*******/
+    onEdit (cur_item) {
       debugger
     },
+
+    /**
+   * 打开弹框
+   */
+  showDelConfirmModal () {
+    let objModal = {
+      show: true,
+      showCancel: true,
+      cancelColor: '#fff',
+      confirmColor: '#fff',
+      title: '确定删除此记录?',
+      content: [{text: '删除了就再也找不回来了～'}]
+      // height: '70%',
+      // confirmText: '我知道了'
+    }
+    this.setData({
+      modal: objModal
+    })
+  },
+
+    /**
+   * 弹框按钮操作事件
+   * @res 取消/确定按钮的相关信息
+   */
+  modalOperate (res) {
+    if (res.detail.res == 'confirm') {
+      this.sureToDelete()
+    } else if (res.detail.res == 'cancel') {
+      console.log('cancel')
+    }
+  },
+
+  async sureToDelete() {
+    const {willDeleteItem, list, raw_list} = this.data;
+    const _this = this;
+    let _list = list
+    let _raw_list = raw_list
+    const db = wx.cloud.database();
+    await db.collection('todo_list').where({
+      _openid: wx.getStorageSync('openid'),
+      _id: willDeleteItem._id
+    }).remove().then(res => {
+      _raw_list = _raw_list.filter(it => it._id !== willDeleteItem._id)
+      _list= _list.map(item => {
+        if (item.date === willDeleteItem.date) {
+          if (item.dt.length > 1) {
+            const remain = item.dt.filter(it => it._id !== willDeleteItem._id)
+            return {date: willDeleteItem.date, dt: remain}
+          } else {
+            return
+          }
+        } else {
+          return item
+        }
+      }).filter(item => item)
+      _this.setData({
+        list: _list,
+        raw_list: _raw_list
+      })
+    })
+  },
+
+     /********删除*******/
+     onDelete (cur_item) {
+       this.showDelConfirmModal()
+       this.setData({willDeleteItem: cur_item})
+     },
 
     getWillDelete (item) { // will_delete_item
         let obj = {};

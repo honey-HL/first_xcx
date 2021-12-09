@@ -59,7 +59,7 @@
                             <image class="img" src="../../images/gou.png"/>
                         </view>
                         <view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view> -->
-                        <mp-slideview buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
+                        <mp-slideview data-item="{{day_item}}" buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
                             <view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
                                     <image class="img" src="../../images/gou.png"/>
                                 </view>
@@ -86,4 +86,9 @@
             <view catchtap="goCreate" class="go_create">现在创建</view>
         </view>
         <view class="hasNoMore" wx:if="{{!hasMore && !isNewUser}}">已经加载完全部啦～</view>
+        <!--删除确认弹窗-->
+        <modal-delete modal="{{modal}}" bindsuccess='modalOperate' catchtouchmove="ture">
+            <view class='modal-text' wx:for="{{modal.content}}">{{item.text}}</view>
+        </modal-delete>
+    
     </view>

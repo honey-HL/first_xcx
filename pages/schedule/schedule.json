@@ -1,6 +1,6 @@
 {
     "usingComponents": {
-        "modal": "../../component/popup/popup",
+        "modal-delete": "../../component/modal-delete/modal-delete",
         "loading": "../../component/loading/loading",
         "mp-slideview": "weui-miniprogram/slideview/slideview"
     },
