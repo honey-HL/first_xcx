@@ -7,6 +7,8 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    clickedRowIndex: '',
+    isShrink: false,
     calWidth: '',
     calHeight:'',
     calPosition: '',
@@ -246,9 +248,11 @@ Page({
           calPosition: 'fixed',
           calTop:'125px',
           calBtmHeight,
+          isShrink: true
         })
       } else { // pull
         this.setData({
+          isShrink: false,
           calWidth: '',
           calHeight:'',
           calPosition: '',
@@ -541,7 +545,11 @@ Page({
       })
     }
   },
-  onClickDate(event) {
+  onClickRow (event) { // 点击行
+    const {index} = event.currentTarget.dataset;
+    this.setData({clickedRowIndex: index})
+  },
+  onClickDate(event) { // 点每一个日期
     let status = event.currentTarget.dataset.item.status;
     let item = event.currentTarget.dataset.item;
     // 多选的时候不能点下一页
@@ -846,10 +854,18 @@ Page({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     })
     const months_arr = app.getTableData(full_year, cur_month)
-    
-
+    //    isShrink: true
+    let curRowIndex;
+    months_arr[1].map((row, index) => {
+     row.map(item => {
+       if (item.isToday) {
+        curRowIndex = index
+       }
+     })
+    })
     this.setData({
       months_arr: months_arr,
+      clickedRowIndex: curRowIndex,
       test_obj: months_arr[0][0],
       month_arr: months_arr[1],
       zhou_ji: days.calculateDays(full_year, cur_month, cur_date),

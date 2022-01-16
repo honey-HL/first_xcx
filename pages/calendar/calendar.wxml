@@ -120,12 +120,12 @@
       <!-- <block wx:for="{{swiper_month_arr}}" wx:for-item="cur_month_dt" wx:key="month{{index}}">
         <swiper-item>{{cur_month_dt.name}}</swiper-item>
       </block> -->
-        <block wx:for="{{months_arr}}" wx:for-item="month_obj" wx:key="month{{index}}">
+        <block wx:for="{{months_arr}}" wx:for-item="month_row" wx:key="month{{index}}">
           <swiper-item>
             <table class="table">
               <tbody class="tbody">
-                <tr wx:for="{{month_obj}}" class="date_tr {{index == 0 ?'tr_fixed':''}}" wx:for-item="tr_week" data-index="{{index}}" wx:key="tr{{index}}">
-                  <td catchtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_week}}">
+                <tr catchtap="onClickRow" wx:for="{{month_row}}" class="date_tr {{(clickedRowIndex == index) && isShrink ? sticky_row: ''}} {{(clickedRowIndex !== index) && isShrink ? 'hide_row':''}}" wx:for-item="tr_week" data-index="{{index}}" wx:key="{{index}}">
+                  <td bindtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_week}}">
                   <view class="ear_left {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
                   <view class="ear_right {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
 
