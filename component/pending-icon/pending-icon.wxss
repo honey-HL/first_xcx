@@ -1,0 +1,6 @@
+/* component/pending-icon/pending-icon.wxss */
+.done_icon {
+  display: inline-block;
+  width: 20rpx;
+  height: 20rpx;
+}

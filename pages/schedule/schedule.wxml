@@ -11,6 +11,7 @@
 
     <!-- <view style="height: {{windowHeight}};" class='finished'> -->
     <view class='finished'>
+      <view style="height: {{navHeight}}px;" class="header_common"></view>
         <view wx:if="{{!isNewUser}}" class='main_container'>
             <view class="search_box">
                 <input value="{{searchKey}}" bindinput="bindKeyInput" class="search_input"/>

@@ -1,0 +1,7 @@
+/* component/done-icon/done-icon.wxss */
+
+.done_icon {
+  display: inline-block;
+  width: 24rpx;
+  height: 24rpx;
+}

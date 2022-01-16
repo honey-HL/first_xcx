@@ -1,119 +1,245 @@
 //app.js
 const date = new Date()
 var lunar = require('./utils/lunar.js')
+const weekDayMap = {
+  '日': 0,
+  '一': 1,
+  '二': 2,
+  '三': 3,
+  '四': 4,
+  '五': 5,
+  '六': 6,
+}
 
 App({
 
-  // 获取目标年月的天数
-  getTableData(cur_month, cur_year, cur_date, index) {
-    // 今
-    console.log('arguments',arguments);
-    let total = [];
-    let days = 1; // 当月有几天
-    let next_days = 7 - total.length % 7;
-    let last_days = 1;
-    let last_month_start = 1; // 从上个月第几号开始渲染
-    let dayFirst = parseInt(new Date(cur_year, cur_month - 1, 1).getDay()) ? new Date(cur_year, cur_month - 1, 1).getDay() : 7; //当月第一天星期几
+  // getMonthData(cur_year, cur_month) { // 获取某一个月份的数据
+  //   let monData = lunar.showCal(cur_year, cur_month)
+  //   monData = this.getWeekData(monData)
+  //   debugger
+  //   return monData
+  // },
 
-    // 算当月和下月多少天
-    if (cur_month == 1 || cur_month == 3 || cur_month == 5 || cur_month == 7 || cur_month == 8 || cur_month == 10 || cur_month == 12) {
-      days = 31;
-      if (cur_month == 1 || cur_month == 8) {
-        last_days = 31;
-      } else if (cur_month == 3) {
-        if (((cur_year % 4) == 0) && ((cur_year % 100) != 0) || ((cur_year % 400) == 0)) { // 闰年二月29天，平年2月28天
-          last_days = 29;
-        } else {
-          last_days = 28;
-        }
-      } else if (cur_month == 5 || cur_month == 7 || cur_month == 10 || cur_month == 12) {
-        last_days = 30;
-      }
-    } else if (cur_month == 4 || cur_month == 6 || cur_month == 9 || cur_month == 11) {
-      days = 30; last_days = 31;
-    } else if (cur_month == 2) {
-      if (((cur_year % 4) == 0) && ((cur_year % 100) != 0) || ((cur_year % 400) == 0)) { // 闰年二月29天，平年2月28天
-        days = 29; last_days = 31;
-      } else {
-        days = 28; last_days = 31;
-      }
-    }
-    let day_arr = []
-    let third = "value[" + 2 + "]";
-    for (let i = 1; i <= days; i++) {
-      day_arr.push(i)
-      // this.setData({
-      //   cur_month_days: day_arr
-      // })
-      // if (i === this.data.cur_date) {
-      //   this.setData({
-      //     [third]: parseInt(i-1)
-      //   })
-      // }
-    }
+  getNextMonthData (next_month_year, next_month) {// 获取下月数据
+    let nextMonData = lunar.showCal(next_month_year, next_month)
+    this.globalData.monthsObj[`${next_month_year}_${next_month}`] = nextMonData
+    return nextMonData;
+  },
 
-    // 格式化数据
-    if (dayFirst !== 1) { // 当月第一天不是星期一
-      last_month_start = last_days + 2 - dayFirst - 1;
-      for (let i = last_month_start; i <= last_days; i++) { // 上个月数据
-        if (cur_month == 1) {
-            total.push({ is_clicked: false, checked: false, date: i, month: 12, year: cur_year - 1, gray: true, status:0, lunar_date: lunar.showCal(cur_year - 1, 12, i) });
-        } else {
-            total.push({ is_clicked: false,  checked: false,date: i, month: cur_month - 1, year: cur_year, gray: true, status:0, lunar_date: lunar.showCal(cur_year, cur_month - 1, i) });
-        }
-      }
-    }
-    for (let j = 1; j <= days; j++) { // 当月数据
-      total.push({ is_clicked: false, checked: false, date: j, month: cur_month, year: cur_year, gray: false, status: 1, lunar_date: lunar.showCal(cur_year, cur_month, j) });
-    }
-    for (let n = 1; n < next_days; n++) { // 下月数据
-        if (cur_month == 12) {
-            total.push({ is_clicked: false,  checked: false,date: n, month: 1, year: cur_year + 1, gray: true, status: 2, lunar_date: lunar.showCal(cur_year + 1, 1, n) });
-        } else {
-            total.push({ is_clicked: false,  checked: false,date: n, month: cur_month + 1, year: cur_year, gray: true, status: 2, lunar_date: lunar.showCal(cur_year, cur_month + 1, n) });
-        }
-    }
-    let currData = [];
-    let allData = [];
-    for (let m = 0; m < total.length; m++) {
-      total[m].is_clicked = false
-      if (total[m].year == cur_year && total[m].month == cur_month && total[m].date == cur_date) {
-        total[m].is_clicked = true
-      }
-      currData.push(total[m]); // cur_month, cur_year, cur_date
-      if ((m != 0 && (m + 1) % 7 === 0) || m === total.length - 1) {
-        if (currData.length === 7) {
-          allData.push(currData);
-        }
-        currData = [];
-      }
-    }
-
-    // 渲染table
-    console.log(total);
-    console.log(allData);
-    let month_arr = new Object();
-    month_arr.list = allData
-    let hang = month_arr.list.length;
-    // this.setData({
-    //   a_margin: Math.ceil(((670-110)/hang - 95)/2) + 'rpx'
-    // })
-    month_arr.id = cur_year + '_' +cur_month;
-    if (arguments[3]) {
-    let index_mon = 'tb_arr['+ index + ']';
-    this.setData({
-      [index_mon]: month_arr
-    })
+  getNextMonYear(cur_year, cur_month) { // 获取下月的年份和月份
+    let next_month_year;let next_month;
+    if (cur_month == 12) {
+      next_month_year = cur_year + 1;
+      next_month = 1;
     } else {
-      return month_arr;
+      next_month_year = cur_year;
+      next_month = cur_month + 1;
     }
-    for (let i = 0; i < 12; i++) {
-      this.setData({
-        ['tb_arr['+ i + ']']: month_arr
+    return {next_month_year, next_month}
+  },
+
+  getNext2MonthData (next_2month_year, next_2month) {// 获取下2月数据
+    let next2MonData = lunar.showCal(next_2month_year, next_2month)
+    this.globalData.monthsObj[`${next_2month_year}_${next_2month}`] = next2MonData
+    return next2MonData;
+  },
+
+  getNext2MonYear(cur_year, cur_month) { // 获取下2月的年份和月份
+    let next_2month_year;let next_2month;
+    if (cur_month + 2 >= 12) {
+      next_2month_year = cur_year + 1;
+      next_2month = (cur_month + 2) % 12;
+    } else {
+      next_2month_year = cur_year;
+      next_2month = cur_month + 2;
+    }
+    return {next_2month_year, next_2month}
+  },
+
+  getLastMonthData (last_month_year, last_month) {// 获取上月数据
+    let lastMonData = lunar.showCal(last_month_year, last_month)
+    this.globalData.monthsObj[`${last_month_year}_${last_month}`] = lastMonData
+    return lastMonData
+  },
+
+  getLastMonYear(cur_year, cur_month) { // 获取上月的年份和月份
+    let last_month_year;let last_month;
+    if (cur_month == 1) {
+      last_month_year = cur_year - 1;
+      last_month = 12;
+    } else {
+      last_month_year = cur_year;
+      last_month = cur_month - 1;
+    }
+    return {last_month_year, last_month}
+  },
+
+
+  getLast2MonthData (last_2month_year, last_2month) {// 获取上2月数据
+    let last2MonData = lunar.showCal(last_2month_year, last_2month)
+    this.globalData.monthsObj[`${last_2month_year}_${last_2month}`] = last2MonData
+    return last2MonData
+  },
+
+  getLast2MonYear(cur_year, cur_month) { // 获取上2月的年份和月份
+    let last_2month_year;let last_2month;
+    if (cur_month - 2 <= 0) {
+      last_2month = 12 + (cur_month - 2)
+      last_2month_year = cur_year - 1
+    } else {
+      last_2month_year = cur_year;
+      last_2month = cur_month - 2;
+    }
+    return {last_2month_year, last_2month}
+  },
+
+
+  // 获取目标年月的天数
+  getTableData(cur_year, cur_month,t_type) {
+    console.log('cur_year, cur_month====>',cur_year, cur_month)
+    const {monthsObj, months_arr} = this.globalData;
+    let currentMonData;let lastMonData;let nextMonData;let last2MonData;let next2MonData; let monthsArr = months_arr;
+    let con_lastMonData;let con_currentMonData;let con_nextMonData 
+   
+    const {last_2month_year, last_2month} = this.getLast2MonYear(cur_year, cur_month)
+    const {last_month_year, last_month} = this.getLastMonYear(cur_year, cur_month)
+    const {next_month_year, next_month} = this.getNextMonYear(cur_year, cur_month);
+    const {next_2month_year, next_2month} = this.getNext2MonYear(cur_year, cur_month);
+
+    // debugger
+
+    if (t_type == undefined) { // 不是左右滑动
+      last2MonData = this.getLast2MonthData(last_2month_year, last_2month)
+      lastMonData = this.getLastMonthData(last_month_year, last_month)
+      currentMonData = lunar.showCal(cur_year, cur_month)
+      nextMonData = this.getNextMonthData(next_month_year, next_month)
+      next2MonData = this.getNext2MonthData(next_2month_year, next_2month)
+      this.globalData.monthsObj[`${cur_year}_${cur_month}`] = currentMonData
+  
+       /********拼接当前月份上一个月末的数据和下一个月初的数据********/ 
+       con_lastMonData = this.getConcatMonth(last2MonData, lastMonData, currentMonData) 
+       con_currentMonData = this.getConcatMonth(lastMonData, currentMonData, nextMonData) 
+       con_nextMonData = this.getConcatMonth(currentMonData, nextMonData, next2MonData)
+
+       /********把数据转化成周数据，7条数据一组********/ 
+       const _lastMonData = this.getWeekData(Array.from(con_lastMonData))
+       const _currentMonData = this.getWeekData(con_currentMonData)
+       const _nextMonData = this.getWeekData(Array.from(con_nextMonData))
+       monthsArr = [_lastMonData, _currentMonData,_nextMonData]
+
+    } else {// 是左右滑动
+      let last_2month_key = `${last_2month_year}_${last_2month}`;
+      let last_month_key = `${last_month_year}_${last_month}`;
+      let cur_month_key = `${cur_year}_${cur_month}`;
+      let next_month_key = `${next_month_year}_${next_month}`;
+      let next_2month_key = `${next_2month_year}_${next_2month}`;
+
+      if (t_type === 'last') { // 右滑
+        if (Array.from(Object.keys(monthsObj)).includes[last_2month_key]) {
+          last2MonData = monthsObj[last_2month_key]
+          lastMonData = monthsObj[last_month_key]
+          currentMonData = monthsObj[cur_month_key]
+        } else {
+          last2MonData = this.getLast2MonthData(last_2month_year, last_2month)
+          this.globalData.monthsObj[`${last_2month_year}_${last_2month}`] = last2MonData
+          lastMonData = monthsObj[last_month_key]
+          currentMonData = monthsObj[cur_month_key]
+        }
+        
+        /********拼接当前月份上一个月末的数据和下一个月初的数据********/ 
+        con_lastMonData = this.getConcatMonth(last2MonData, lastMonData, currentMonData) 
+        const _lastMonData = this.getWeekData(Array.from(con_lastMonData))
+        
+        // if (months_arr.length < 12) {
+        //   monthsArr.unshift(_lastMonData)
+        // }
+        monthsArr.unshift(_lastMonData)
+      }  
+
+      if (t_type === 'next') { // 左滑
+        
+        if (Array.from(Object.keys(monthsObj)).includes[next_2month_key]) {
+          
+          currentMonData = monthsObj[cur_month_key]
+          nextMonData = monthsObj[next_month_key]
+          next2MonData = monthsObj[next_2month_key]
+         
+        } else {
+          currentMonData = monthsObj[cur_month_key]
+          nextMonData = monthsObj[next_month_key]
+          next2MonData = this.getNext2MonthData(next_2month_year, next_2month)
+          this.globalData.monthsObj[`${next_2month_year}_${next_2month}`] = next2MonData
+          
+
+        }
+         /********拼接当前月份上一个月末的数据和下一个月初的数据********/ 
+         con_nextMonData = this.getConcatMonth(currentMonData, nextMonData, next2MonData) 
+         const _nextMonData = this.getWeekData(Array.from(con_nextMonData))
+         
+         // if (months_arr.length < 12) {
+         //   monthsArr.unshift(_lastMonData)
+         // }
+         monthsArr.push(_nextMonData)
+      }
+      
+    }
+
+   
+
+      
+  
+    
+
+      this.globalData.months_arr = monthsArr
+
+      console.log('===this.globalData.monthsObj===>',this.globalData.monthsObj)
+      console.log('monthsArr=========222===>',monthsArr)
+      
+   
+      return monthsArr;
+  },
+
+  getConcatMonth (lastMonData, currentMonData, nextMonData) { // 合并当前月前后的数据
+    let conData = Array.from(currentMonData);
+    const last_show_days = currentMonData.firstWeek
+    const next_show_days = 7- currentMonData.lastWeek -1
+
+    console.log('last_show_days===>',last_show_days, next_show_days)
+
+    if (parseInt(last_show_days) !== 0) {
+      let _lastMonData = Array.from(lastMonData).slice(-last_show_days);
+      _lastMonData = _lastMonData.map(item => {
+        return {
+          ...item,
+          gray: true
+        }
       })
+      conData = _lastMonData.concat(conData)
     }
-    console.log('this.data.tb_arr',this.data.tb_arr);
-    console.log('this.data.month_arr',this.data.month_arr);
+    if (parseInt(next_show_days) !== 0) {
+      let _nextMonData = Array.from(nextMonData).slice(0, next_show_days + 1);
+      _nextMonData = _nextMonData.map(item => {
+        return {
+          ...item,
+          gray: true
+        }
+      })
+      conData = conData.concat(_nextMonData)
+    }
+    return conData;
+  },
+
+  getWeekData (data) {
+    let curArr = []
+    let _currentMonData = []
+    for(let i =0;i < data.length;i++) {
+      curArr.push(data[i])
+      if ((i + 1) % 7 === 0 && curArr.length === 7) {
+        _currentMonData.push(curArr);
+        curArr = [];
+      }
+    }
+    return _currentMonData
   },
 
 
@@ -223,10 +349,31 @@ App({
     })
   },
 
+  getBarInfo() {
+    let menuButtonObject = wx.getMenuButtonBoundingClientRect();
+    wx.getSystemInfo({
+       success: res => {
+         //导航高度
+         let statusBarHeight = res.statusBarHeight,
+          navTop = menuButtonObject.top,
+          navObjWid = res.windowWidth - menuButtonObject.right + menuButtonObject.width, // 胶囊按钮与右侧的距离 = windowWidth - right+胶囊宽度
+          navHeight = statusBarHeight + menuButtonObject.height + (menuButtonObject.top - statusBarHeight) * 2;
+          this.globalData.navHeight = navHeight; //导航栏总体高度
+          this.globalData.navTop = navTop; //胶囊距离顶部距离
+          this.globalData.navObj = menuButtonObject.height; //胶囊高度
+          this.globalData.navObjWid = navObjWid; //胶囊宽度(包括右边距离)
+          // console.log(navHeight,navTop,menuButtonObject.height,navObjWid)
+       },
+       fail(err) {
+         console.log(err);
+       }
+     })
+  },
+
 
   onLaunch: function () {
     var _this=this
-
+    this.getBarInfo()
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力')
     } else {
@@ -274,6 +421,8 @@ App({
     calendar: {
       is_show_new_mask: false,
     },
+    monthsObj: {},
+    months_arr: [],
     show_mask: false,
     pictures_arr: [],
     windowHeight: '',

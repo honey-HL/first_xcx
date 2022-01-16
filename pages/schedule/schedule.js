@@ -4,6 +4,7 @@ Page({
     data: {
       /***即将删除的***/
       willDeleteItem: "",
+      navHeight: app.globalData.navHeight + 30, //导航栏高度
       modal: {
         show: false,
         cancelColor: '#fff',

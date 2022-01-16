@@ -7,6 +7,17 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    calWidth: '',
+    calHeight:'',
+    calPosition: '',
+    calTop:'',
+    navHeight: app.globalData.navHeight + 100, //导航栏高度
+    navTop: app.globalData.navTop, //导航栏距顶部距离
+    navObj: app.globalData.navObj, //胶囊的高度
+    navObjWid: app.globalData.ƒ, //胶囊宽度+距右距离
+    swiper_month_arr: [{name: 'name1'},{name: 'name2'},{name: 'name3'}],
+    swiperCurrent: 1,
+    curMonthIndex: 1,
     choose_date_dt: [],
     payments: [{name: '支出', type: 'expend',clicked: true}, {name: '收入', type: 'earnings', clicked: false},],
     checked_payments: 'expend',
@@ -45,6 +56,8 @@ Page({
     year_show: false,
     color:'red',
     tb_arr: [], 
+    test_obj: {},
+    months_arr: [],
     month_arr: [],
     year_arr:[],
     monthArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -72,33 +85,121 @@ Page({
     nickName: '',
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
+  onPageScroll: function (e) {
+    debugger
+    let _this = this
+    wx.createSelectorQuery().select('#index').boundingClientRect(function (rect) {
+      const scrollTop = e.scrollTop
+      const offsetHeight = e.offsetHeight
+      console.log('scrollTop===>',scrollTop, '   offsetHeight=====>',offsetHeight)
+        // if (e.scrollTop >= rect.height - 555) {
+        //     //已离底部一段距离，下面处理操作
+        // }
+    }).exec()
+  },
+
+  goLastMonth (current) {
+    let _month;
+    let _year;
+    let show_jin;
+    const {full_year, cur_month,curMonthIndex} = this.data;
+    if (cur_month == 1) {
+      _month = 12
+      _year = full_year - 1 
+    } else {
+      _month = cur_month - 1 
+      _year = full_year
+    }
+    let _curMonthIndex = curMonthIndex + 1;
+    if (_month === date.getMonth() + 1 && _year === date.getFullYear()) {
+      show_jin = false  
+    } else {
+      show_jin = true
+    }
+    const arr = app.getTableData(_year, _month, 'last')
+    console.log('_curMonthIndex=========+>',_curMonthIndex)
+    this.setData({show_jin, months_arr: arr,full_year:_year, cur_month: _month, swiperCurrent: current +1, curMonthIndex: _curMonthIndex})
+    wx.setNavigationBarTitle({
+      title: _year + '年' + _month + '月'
+    })
+  },
+
+  goNextMonth (current) {
+    let _month;let _year;let show_jin;
+    const {full_year, cur_month,curMonthIndex, swiperCurrent} = this.data;
+    if (cur_month == 12) {
+      _month = 1
+      _year  = full_year + 1
+    } else {
+      _month = cur_month + 1
+      _year = full_year
+    }
+    if (_month === date.getMonth() + 1 && _year === date.getFullYear()) {
+      show_jin = false  
+    } else {
+      show_jin = true
+    }
+    const arr = app.getTableData(_year, _month, 'next')
+    this.setData({show_jin, months_arr: arr,full_year:_year, cur_month: _month, swiperCurrent: current})
+    wx.setNavigationBarTitle({
+      title: _year + '年' + _month + '月'
+    })
+  },
+
+  swiperChange(e) {
+    let _month;
+    let _year;
+    const {full_year, cur_month,curMonthIndex, swiperCurrent} = this.data;
+    const {monthsObj} = app.globalData;
+    console.log('84-----monthsObj--',monthsObj)
+    
+    const {current, source} = e.detail
+   
+    if(source === 'autoplay' || source === 'touch') {
+      //根据官方 source 来进行判断swiper的change事件是通过什么来触发的，autoplay是自动轮播。touch是用户手动滑动。其他的就是未知问题。抖动问题主要由于未知问题引起的，所以做了限制，只有在自动轮播和用户主动触发才去改变current值，达到规避了抖动bug
+      if (current < swiperCurrent) { // 右滑 获取上一个月数据
+        console.log('右滑')
+        this.goLastMonth(current)
+      }
+      if (current > swiperCurrent) { // 左滑 获取下一个月数据
+        console.log('左滑')
+        this.goNextMonth(current)
+      }
+      // if (_month === date.getMonth() + 1 && _year === date.getFullYear()) {
+      //   this.setData({ show_jin: false })   
+      // } else {
+      //   this.setData({ show_jin: true })   
+      // }
+      // wx.setNavigationBarTitle({
+      //   title: _year + '年' + _month + '月'
+      // })
+    }
+  },
+
   // 今 返回今天
   backToday () {
-    this.setData({ cur_date: new Date().getDate()})
-    this.setData({ cur_month: date.getMonth() + 1 })
-    this.setData({ full_year: date.getFullYear() })
+    const {swiperCurrent, curMonthIndex} = this.data;
+    const cur_month= date.getMonth() + 1 
+    const full_year= date.getFullYear()
+
+    this.setData({
+      full_year, 
+      cur_month, 
+      swiperCurrent: curMonthIndex,
+      show_jin: false,
+      today: this.data.cur_date,
+      today_month: cur_month,
+      today_year: full_year
+    })
+   
     wx.setNavigationBarTitle({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     }) 
-    this.setData({
-      today: this.data.cur_date,
-      today_month: this.data.cur_month,
-      today_year: this.data.full_year
-    })
-    this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
-      this.setData({
-        month_arr: res
-      })
-    })
-    this.setData({ show_jin: false })
-    this.setData({lunar_arr: lunar.showCal(this.data.full_year,this.data.cur_month,this.data.cur_date, 1).split(' ')
-      })
-    // this.getList();
     let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
     this.searchSchedule(nian_yue_ri);
   },
-  // 触摸开始事件
-  touchStart: function(e) {
+
+  touchCalBoxStart(e) {
     this.setData({
       touchDotX: e.touches[0].pageX, // 获取触摸时的原点
       touchDotY: e.touches[0].pageY
@@ -110,66 +211,50 @@ Page({
       })
     }, 100);
   },
-  // 触摸结束事件
-  touchEnd: function(e) {
+  touchCalBoxEnd (e) {
+    console.log(e)
+    const {time, windowHeight} = this.data
+    const {offsetTop} = e.currentTarget;
+    const ele = wx.createSelectorQuery().select('#index');
+    let calBtmHeight =`${(parseInt(windowHeight) - 160)}px`
+
+    console.log('offsetTop===>',offsetTop)
+    console.log('ele===>',ele)
+
+
     let touchMoveX = e.changedTouches[0].pageX;
     let touchMoveY = e.changedTouches[0].pageY;
     let tmX = touchMoveX - this.data.touchDotX;
     let tmY = touchMoveY - this.data.touchDotY;
-    if (this.data.show_checkobx) {
-      return false
-    }
-    if (this.data.time < 20) {
+
+    console.log('touchMoveY===>',touchMoveY)
+
+    // debugger
+    if (time < 20) {
       let absX = Math.abs(tmX);
       let absY = Math.abs(tmY);
       if (absX > 2 * absY) {
         console.log('滑动e',e)
-        if (tmX<0){ // 左滑  月份加
-          console.log('左滑')
-          // debugger
-          if (this.data.full_year >= 1900 && this.data.full_year <= 2050) {
-            if (this.data.cur_month == 12) {
-              this.setData({ cur_month: 1 })
-              this.setData({ full_year: this.data.full_year + 1 })
-            } else {
-              this.setData({ cur_month: this.data.cur_month + 1 })
-            }
-            this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
-              this.setData({
-                month_arr: res
-              })
-            })
-          }
-          wx.setNavigationBarTitle({
-            title: this.data.full_year + '年' + this.data.cur_month + '月'
-          })
-          // this.getList()
-        }else{ // 右滑  月份减
-          console.log('右滑')
-          if (this.data.full_year >= 1900 && this.data.full_year <= 2050) {
-            if (this.data.cur_month == 1) {
-              this.setData({ cur_month: 12 })
-              this.setData({ full_year: this.data.full_year - 1 })
-              }
-            else {
-              this.setData({ cur_month: this.data.cur_month - 1 })
-            }
-            this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
-              this.setData({
-                month_arr: res
-              })
-            })
-          }
-          wx.setNavigationBarTitle({
-            title: this.data.full_year + '年' + this.data.cur_month + '月'
-          })
-          // this.getList()
-        }
-        if (this.data.cur_month === date.getMonth() + 1 && this.data.full_year === date.getFullYear()) {
-          this.setData({ show_jin: false })   
-        }
       }
       if (absY > absX * 2 && tmY<0) { // up and down
+        console.log(' up and down',e)
+        // ele.style.position = 'fixed'
+        // debugger
+        this.setData({ // 
+          calWidth: '96%',
+          calHeight:'55px',
+          calPosition: 'fixed',
+          calTop:'125px',
+          calBtmHeight,
+        })
+      } else { // pull
+        this.setData({
+          calWidth: '',
+          calHeight:'',
+          calPosition: '',
+          calTop:'',
+          calBtmHeight: ''
+        })
       }
     }
     clearInterval(this.data.interval); // 清除setInterval
@@ -177,6 +262,7 @@ Page({
       time: 0
     })
   },
+
   //事件处理函数
   bindViewTap: function() {
     wx.navigateTo({
@@ -192,17 +278,17 @@ Page({
   onReady: function () {
     this.animation = wx.createAnimation()
   },
-  showPicker () {
-    // debugger
-    this.animation.height(this.data.windowHeight).step()
-    this.setData({ animation: this.animation.export() })
-    // wx.hideTabBar({})
-    this.setData({
-      sticky_tr: false,
-      is_sticky: false,
-      is_show_picker: true
-    })
-  },
+  // showPicker () {
+  //   // debugger
+  //   this.animation.height(this.data.windowHeight).step()
+  //   this.setData({ animation: this.animation.export() })
+  //   // wx.hideTabBar({})
+  //   this.setData({
+  //     sticky_tr: false,
+  //     is_sticky: false,
+  //     is_show_picker: true
+  //   })
+  // },
   hideOperation () {
     var animation1 = wx.createAnimation({
       duration: 500,
@@ -455,7 +541,7 @@ Page({
       })
     }
   },
-  changeDate(event) {
+  onClickDate(event) {
     let status = event.currentTarget.dataset.item.status;
     let item = event.currentTarget.dataset.item;
     // 多选的时候不能点下一页
@@ -753,25 +839,40 @@ Page({
 
   
   onLoad: function (options) {
+    const {full_year, cur_month, cur_date} = this.data;
     // console.log(options);
     // console.log(this.data.is_show_new_mask)
     wx.setNavigationBarTitle({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     })
+    const months_arr = app.getTableData(full_year, cur_month)
+    
+
     this.setData({
-      zhou_ji: days.calculateDays(this.data.full_year, this.data.cur_month, this.data.cur_date),
+      months_arr: months_arr,
+      test_obj: months_arr[0][0],
+      month_arr: months_arr[1],
+      zhou_ji: days.calculateDays(full_year, cur_month, cur_date),
       min_height:Math.floor((wx.getSystemInfoSync().windowWidth - 75)/7) + 'px',
       // windowHeight: app.globalData.windowHeight,
       windowWidth: wx.getSystemInfoSync().windowWidth,
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
-    console.log(wx.getSystemInfoSync().windowHeight);
-    clearInterval(this.data.interval);
-    this.getYears();
-    this.setData({
-        lunar_arr: lunar.showCal(this.data.full_year,this.data.cur_month,this.data.cur_date, 1).split(' ')
-    })
 
+    console.log('windowHeight=======>',wx.getSystemInfoSync().windowHeight);
+    // clearInterval(this.data.interval);
+    // this.getYears();
+    // this.setData({
+    //     lunar_arr: lunar.showCal()
+    // }, () => {
+    //   console.log('lunar_arr1111=>',this.data.lunar_arr)
+    // })
+    
+   
+   
+    // this.setData({months_arr: months_arr[0]}, () => {
+    //   console.log('months_arr==>',this.data.months_arr[0].sDay)
+    // })
 
     
 
@@ -824,11 +925,12 @@ Page({
     // let cur_swiper_month_arr = []
     // let last_month_data = []
     // let next_month_data = []
-    this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
-      this.setData({
-        month_arr: res
-      })
-    })
+    // this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+    //   this.setData({
+    //     month_arr: res
+    //   })
+    // })
+
   },
 
 
@@ -842,6 +944,8 @@ Page({
   getMarkSchedule (cur_month) {
     return new Promise(function(resolve, reject) {
       let marked_items = []
+      let temp = []
+      let end_res = []
       const db = wx.cloud.database()
       db.collection('todo_list').where({
         _openid: wx.getStorageSync('openid'),
@@ -852,11 +956,56 @@ Page({
           let mon_filtered = []
           results.data.map(item => {
             if (Number(item.month) == Number(cur_month)) {
-              mon_filtered.push(item.date)
+              mon_filtered.push(item)
             }
           })
           marked_items = [...new Set(mon_filtered)]
-          resolve(marked_items)
+          marked_items.map((item, i) => {
+            if (temp.indexOf(item.date) === -1) {
+              temp.push(item.date);
+              end_res.push({
+                date: item.date,
+                items: [item]
+              })
+            } else {
+              end_res.forEach((end, j) => {
+                if (end.date === item.date) {
+                    end_res[j].items.push(item);
+                }
+              })
+            }
+          })
+          let _marked_items = end_res.map(day => {
+            if (day.items.length > 1) {
+              const undone = day.items.find(item => item.schedule_type == '0');
+              const done = day.items.find(item => item.schedule_type == '1');
+              if (!undone) {
+                return {
+                  date: day.items[0].date,
+                  status: 'done', // 全都是已完成
+                }
+              } else if (!done) {
+                return {
+                  date: day.items[0].date,
+                  status: 'undone', // 全都没完成
+                }
+              } else {
+                return {
+                  date: day.items[0].date,
+                  status: 'pending', // 部分完成
+                }
+              }
+            } else {
+              const status = day.items[0].schedule_type == '1' ? 'done': 'undone'
+              return {
+                date: day.items[0].date,
+                status,
+              }
+            }
+          })
+          console.log('_marked_items===>',_marked_items)
+          resolve(_marked_items)
+          console.log('877 end_res==>',end_res)
           console.log('891===marked_items===>',marked_items)
         }
       })
@@ -960,9 +1109,10 @@ Page({
         nian_yue_ri
       }
       for(let d =0; d < marked_items.length; d++) {
-        if (marked_items[d] === nian_yue_ri) {
+        if (marked_items[d].date === nian_yue_ri) {
           _cur_month_day_item = {
             ...cur_month_day_item,
+            status: marked_items[d].status,
             has_schedule: true
           }
         }
@@ -977,7 +1127,7 @@ Page({
         date: n,
         month: cur_month == 12 ? 1 : cur_month + 1, 
         year: cur_year,
-        lunar_date: cur_month == 12 ? lunar.showCal(cur_year + 1, 1, n): lunar.showCal(cur_year, cur_month + 1, n)
+        // lunar_date: cur_month == 12 ? lunar.showCal(cur_year + 1, 1, n): lunar.showCal(cur_year, cur_month + 1, n)
       }
       const _next_month_day_item = {
         ...next_month_day_item,
@@ -1088,17 +1238,22 @@ Page({
    */
 
   onHide () {
-    this.init()
+    // this.init()
   },
 
   onShow: function () {
     const {cur_date, full_year, cur_month} = this.data;
-    app.slideupshow(this, 'slide_up1', 0, 1)
-    app.slideupshow(this, 'slide_up2', 0, 1)
-    app.slideupshow(this, 'slide_up3', 0, 1)
+    // app.slideupshow(this, 'slide_up1', 0, 1)
+    // app.slideupshow(this, 'slide_up2', 0, 1)
+    // app.slideupshow(this, 'slide_up3', 0, 1)
     // this.getList();
     let nian_yue_ri = full_year + '-' + (cur_month >= 10 ?cur_month:'0'+cur_month) + '-' + (cur_date>=10?cur_date:'0'+cur_date);
     this.searchSchedule(nian_yue_ri);
+    // this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
+    //   this.setData({
+    //     month_arr: res
+    //   })
+    // })
     
     // 获取日程列表的高度
     // const query = wx.createSelectorQuery()

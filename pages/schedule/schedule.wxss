@@ -6,6 +6,14 @@
   font-size: 26rpx;
 }
 
+.header_common {
+  width: 100%;
+  background: #70baf1;
+  position: fixed;
+  top:0;
+  z-index: 99;
+}
+
 /**************搜索框*******************/
 .search_box {
   width: calc(100% - 24px - 30rpx);
@@ -219,6 +227,7 @@
   /* display: block; */
   /* display: grid; */
   grid-template-columns: 1fr;
+  margin-top: 90px;
 }
 .time_line {
   /* float: right; */

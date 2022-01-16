@@ -9,8 +9,19 @@
 >
   授权登录
 </button> -->
+<!-- <view animation="{{animation}}" bindtap="closeList" style="height: {{windowHeight}}"  -->
+<!-- <view bindtap="closeList" style="height:{{windowHeight}}px;overflow-y: auto;" class='container'>  -->
+  <view bindtap="closeList" class='container' style="height:{{windowHeight}}px;overflow-y: auto;"> 
+  <view class="custom_head" style="height:{{navHeight}}px;">
+    <view class="flex-row j_b" style="height:{{navObj}}px;padding-top:{{navTop}}px;padding-right:{{navObjWid+5}}px;display: flex;">
+      <view class="head_store text_ellipsis">{{store_name}}</view>
+      <view class="date_bar">{{full_year}}年{{cur_month}}月</view>
+      <view class="{{show_jin?'block':'none'}}" wx:if="show_jin">
+        <span catchtap="backToday" class="jin">今</span>
+      </view>
+    </view>
+  </view>
 
-<view animation="{{animation}}" bindtap="closeList" style="height: {{windowHeight}}" class='container'> 
   <!-- <view class='nav_bar'>
     <view >台历</view>
       <navigator
@@ -22,13 +33,16 @@
     <view>已办</view>
     <view>待办</view>
   </view> -->
+  <!-- <view style="color: red;width: 100px;height: 20px;">lll===={{test_obj.sDay}}</view> -->
 
-  <view class='cal_top' animation="{{slide_up1}}">
+  <!-- <view class='cal_top' animation="{{slide_up1}}"> -->
+  <view class='cal_top'>
 
-    <view class="{{is_sticky? 'sticky':''}}">
+    <view class="sticky {{!is_sticky? 'sticky':''}}">
       <view class='week_line'>
         <div data-index="{{index}}" class="{{(index== 0 || index== 6) ? 'weekend' :null}}" wx:key="{{item}}" wx:for='{{weeks}}'>{{item}}</div>
       </view>
+      <!-- <view style="background-color: pink;">alall</view> -->
     </view>
 
     <view class='cal_top_inner'>
@@ -59,61 +73,126 @@
       </view>
 
 
-      <view class='view_table' style="width:{{windowWidth*12}}px;">
+      <!-- <view class='view_table' style="width:{{windowWidth*12}}px;">
         <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth - 20}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
           <tbody>
-            <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="index">
+            <tr class="date_tr" wx:for-item="tr_item" wx:for="{{month_arr}}" data-index="{{index}}" wx:key="index">
               <td catchtap="changeDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
-                <view class="ear_left {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
-                <view class="ear_right {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                <view class="ear_left {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                <view class="ear_right {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
 
-                <a style="height:{{min_height}};" class="td_a {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+                <a style="height:{{min_height}};" class="td_a {{td_item.isToday?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
               
-                  <span class="date_num">{{td_item.date}}</span>
-                  <span class="lunar_date">{{td_item.lunar_date}}</span>
+                  <span class="date_num">{{td_item.sDay}}</span>
+                  <span class="lunar_date">{{td_item.lunarDate}}</span>
                 </a>
-                <span wx:if="{{td_item.has_schedule}}" class="mark_schedule {{td_item.date >= 10?'mark_schedule_max':'mark_schedule_min'}}">事</span>
+          
+              
                 <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
                 <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
                 <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
                 <checkbox wx:if="{{show_checkobx && (!td_item.gray)}}" color="#29e" class="checkbox" value="" checked="{{item.checked}}" />
+                <span class="mark_schedule_done">
+                  <done-icon wx:if="{{td_item.status == 'done'}}" />
+                </span>
+                <span class="mark_schedule_undone">
+                  <undone-icon wx:if="{{td_item.status == 'undone'}}" />
+                </span>
+                <span class="mark_schedule_pending">
+                  <pending-icon wx:if="{{td_item.status == 'pending'}}" />
+                </span>
               </td>
             </tr>
           </tbody>
         </table>
-      </view>
+      </view> -->
 
-     <!-- <swiper
-      bindchange="slideChange"
-      current='{{old_cur}}'
-      style="height:248px;"
-    >
-      <block wx:for="{{swiper_month_arr}}" wx:for-item="month_data" wx:key="month{{index}}">
-        <swiper-item>
-           <table class="table">
-            <tbody class="tbody">
-              <tr class="date_tr {{index == (month_data.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_data.list}}" data-index="{{index}}" wx:key="line{{index}}">
-                <td catchtap="changeDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
-                  <view class="ear_left {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
-                    <view class="ear_right {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
-                  <a style="height:{{min_height}};" class="td_a {{td_item.is_clicked?'clicked':''}} {{td_item.date == today && td_item.month == today_month && td_item.year == today_year?'active':''}} {{td_item.gray?'gray':''}}">
-                    <span style="height:14px;line-height:14px;font-size:14px;display:block;">{{td_item.date}}</span>
-                    <span style="padding-top:6rpx;display:block;height:12px;line-height:12px;font-size:10px;">{{td_item.lunar_date}}</span>
+      
+    <view
+     style="height: {{calHeight}};width: {{calWidth}};position: {{calPosition}};top:{{calTop}}" 
+     class="swiper_wrapper">
+      <swiper
+        bindchange="swiperChange"
+        current='{{swiperCurrent}}'
+        class="cal_swiper"
+        style="height: {{months_arr[swiperCurrent].length * 61}}px;"
+      >
+      <!-- <block wx:for="{{swiper_month_arr}}" wx:for-item="cur_month_dt" wx:key="month{{index}}">
+        <swiper-item>{{cur_month_dt.name}}</swiper-item>
+      </block> -->
+        <block wx:for="{{months_arr}}" wx:for-item="month_obj" wx:key="month{{index}}">
+          <swiper-item>
+            <table class="table">
+              <tbody class="tbody">
+                <tr wx:for="{{month_obj}}" class="date_tr {{index == 0 ?'tr_fixed':''}}" wx:for-item="tr_week" data-index="{{index}}" wx:key="tr{{index}}">
+                  <td catchtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_week}}">
+                  <view class="ear_left {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+                  <view class="ear_right {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
+
+                  <a style="height:{{min_height}};" class="td_a {{td_item.isToday?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
+                
+                    <span class="date_num">{{td_item.sDay}}</span>
+                    <span class="lunar_date">{{td_item.lunarDate}}</span>
                   </a>
-                  <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
-                  <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
-                  <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </swiper-item>
-      </block>
-    </swiper> -->
+                    <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
+                    <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
+                    <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </swiper-item>
+          
+        </block>
+      </swiper>
+    </view>
+   
 
+    <view catchtap='onCalShrink' class="arrow_row">
+      <view class="arrow_expand">
+        <image src="../../images/arrow.png"></image>
+      </view>
+    </view>
+
+    <view 
+      style="height: {{calBtmHeight}};"
+      bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box">
+      <view class="bottom_box_inner">
+        <view>
+          <view class="empty_box">
+            <image class="bgImg" src="../../images/empty.png"></image>
+          </view>
+          <view>今天没有人无语</view>
+          <view>今天没有人无语</view>
+        </view>
+      </view>
+      <view class="empty_box2">
+        <image class="bgImg" src="../../images/empty.png"></image>
+      </view>
+    </view>
 
     </view>
+   
   </view>
+
+  <!-- <view class="cal_bottom_box">
+    <view class="bottom_box_inner">
+      <view>
+        <view class="empty_box">
+          <image class="bgImg" src="../../images/empty.png"></image>
+        </view>
+        <view>今天没有人无语</view>
+        <view>今天没有人无语</view>
+      </view>
+    </view>
+    <view class="empty_box2">
+      <image class="bgImg" src="../../images/empty.png"></image>
+    </view>
+  </view> -->
+  
+  <!-- <view class="schedule_area">
+   
+  </view> -->
 
   <!-----------选择新建mask----------->
   <!-- <view catchtap='closeDialog2' wx:if="{{is_show_new_mask}}" class='new_mask'>
@@ -129,22 +208,16 @@
         <view>新建日程</view>
       </view>
     </view>
-  </view> -->
+  </view>
 
   <!---------日历下面的盒子--------->
-  <view class='detail_today' animation="{{slide_up2}}">
-   <!-- <view class='gap1'></view> -->
+  <!-- <view class='detail_today' animation="{{slide_up2}}">
     <view class='detail_today_inner'>
       <view class='show_dates_box'>
-      <view class="show_2">{{full_year}}年</view>
-      <view class="show_2">{{cur_month}}月</view>
-      <view class="show_2">{{cur_date}}日</view>
-        <!-- <view class='big_date inline_block'>{{cur_date}}</view>
-        <view class='big_date'>{{cur_month}}
-         <span class="big_mon">Mon</span>
-        </view> -->
+        <view class="show_2">{{full_year}}年</view>
+        <view class="show_2">{{cur_month}}月</view>
+        <view class="show_2">{{cur_date}}日</view>
       </view>
-
       <view class='lunar_detail inline_block'>
         <view class='lunar_1'>农历{{lunar_arr[1]}} {{zhou_ji}}</view>
         <view class='lunar_2'>{{lunar_arr[0]}}
@@ -155,30 +228,27 @@
           </view>
         </view>
       </view>
-
     </view>
-     <!-- <view class='gap1'></view> -->
-  </view>
+  </view> -->
 
   <!---------日程列表--------->
-  <view class='swiper_schedule_area'>
+  <!-- <view class='schedule_area1'>
      <swiper circular="{{true}}">
       <block wx:for="{{itemList}}" wx:for-item="card_item" wx:key="card_item{{index}}">
         <swiper-item>
-           <view class='schedule_area' animation="{{slide_up3}}">
-
+            <view class='schedule_area'>
             <view class="schedule_area_inner" wx:if="{{card_item.data.length > 0}}">
 
               <view class='instruction'>
                 <view wx:if="{{card_item.event_type === 'schedule'}}" class="hufu">
                   <view class="dot_in_0"></view>日程
                 </view>
-                <!-- <view wx:if="{{card_item.type == 0}}" class="hufu">
+                 <view wx:if="{{card_item.type == 0}}" class="hufu">
                   <view class="dot_in_0"></view>护肤品
                 </view>
                 <view wx:if="{{card_item.type == 1}}" class="hufu">
                   <view class="dot_in_1"></view>衣物
-                </view> -->
+                </view> 
               </view>
 
               <view wx:for="{{card_item.data}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
@@ -194,10 +264,9 @@
                         <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
                           <span class='content'>
                             {{item.content}}
-                            <!-- <br/> -->
-                            <!-- <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
+                            <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
                               <span class="yuan">元</span>
-                            </span> -->
+                            </span>
                           </span>
                         </view>
                     </view>
@@ -214,7 +283,7 @@
               <view class="">暂无今日行程~~</view>
             </view>
 
-            <!-- <movable-area style="width:100%;height:inherit;position:absolute;top:0;left:0;">
+             <movable-area style="width:100%;height:inherit;position:absolute;top:0;left:0;">
               <movable-view
                 class='create'
                 x="120"
@@ -223,13 +292,13 @@
               >
                 <image src="../../images/add.png"></image>
               </movable-view>
-            </movable-area> -->
+            </movable-area>
 
           </view>
         </swiper-item>
       </block>
     </swiper>
-  </view>
+  </view> -->
 
 
   <!---操作按钮-->
@@ -310,7 +379,7 @@
     </view>
       <view class="{{index === 2 ? 'month_item_last': 'month_item'}}" data-index="{{index}}" wx:for="{{choose_date_dt}}" wx:for-item="month_arr">
         <view class="month_title">{{month_arr.year}}年{{month_arr.month}}月</view>
-        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth}}px;" bindtouchstart="touchStart" bindtouchend="touchEnd">
+        <table class="table"  animation="{{calendar_x_animation}}" style="width:{{windowWidth}}px;" bindtouchstart="touchStart" bindtouchend="touchCalBoxEnd">
           <tbody>
             <tr class="date_tr {{index == (month_arr.list.length-1)?(sticky_tr?'sticky_tr': ''):''}}" wx:for-item="tr_item" wx:for="{{month_arr.list}}" data-index="{{index}}" wx:key="index">
               <td catchtap="changeDate" data-id="{{index}}" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_item}}">
