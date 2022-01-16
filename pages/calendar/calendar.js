@@ -13,7 +13,7 @@ Page({
     calHeight:'',
     calPosition: '',
     calTop:'',
-    navHeight: app.globalData.navHeight + 100, //导航栏高度
+    navHeight: app.globalData.navHeight + 80, //导航栏高度
     navTop: app.globalData.navTop, //导航栏距顶部距离
     navObj: app.globalData.navObj, //胶囊的高度
     navObjWid: app.globalData.ƒ, //胶囊宽度+距右距离
@@ -244,7 +244,7 @@ Page({
         // debugger
         this.setData({ // 
           calWidth: '96%',
-          calHeight:'55px',
+          calHeight:'65px',
           calPosition: 'fixed',
           calTop:'125px',
           calBtmHeight,

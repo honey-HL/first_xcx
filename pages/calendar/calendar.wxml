@@ -15,8 +15,11 @@
   <view class="custom_head" style="height:{{navHeight}}px;">
     <view class="flex-row j_b" style="height:{{navObj}}px;padding-top:{{navTop}}px;padding-right:{{navObjWid+5}}px;display: flex;">
       <view class="head_store text_ellipsis">{{store_name}}</view>
-      <view class="date_bar">{{full_year}}年{{cur_month}}月</view>
-      <view class="{{show_jin?'block':'none'}}" wx:if="show_jin">
+      <view class="date_bar">{{full_year}}<span class="sm_font">年</span>{{cur_month}}<span class="sm_font">月</span>16<span class="sm_font">日</span>
+        <span class="title_lunar">辛丑牛<span class="sm_font">年</span></span>
+        <span class="title_week">星期天</span>
+      </view>
+      <view class="{{show_jin?'inline-block':'none'}}" wx:if="show_jin">
         <span catchtap="backToday" class="jin">今</span>
       </view>
     </view>
@@ -148,15 +151,15 @@
     </view>
    
 
-    <view catchtap='onCalShrink' class="arrow_row">
+    <!-- <view catchtap='onCalShrink' class="arrow_row">
       <view class="arrow_expand">
-        <image src="../../images/arrow.png"></image>
+        <image src="../../images/arrow_down.png"></image>
       </view>
-    </view>
+    </view> -->
 
     <view 
       style="height: {{calBtmHeight}};"
-      bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box">
+      bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}">
       <view class="bottom_box_inner">
         <view>
           <view class="empty_box">
