@@ -1,0 +1,2 @@
+<!--component/com-header.wxml-->
+<view style="height: {{navHeight}}px;" class="header_common"></view>

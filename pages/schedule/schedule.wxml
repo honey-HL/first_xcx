@@ -11,14 +11,15 @@
 
     <!-- <view style="height: {{windowHeight}};" class='finished'> -->
     <view class='finished'>
-      <view style="height: {{navHeight}}px;" class="header_common"></view>
-        <view wx:if="{{!isNewUser}}" class='main_container'>
+			<com-header/>
+      <view class='main_container'>
             <view class="search_box">
                 <input value="{{searchKey}}" bindinput="bindKeyInput" class="search_input"/>
                 <view catchtap="onSearch" class="search_btn">搜索</view>
             </view>
             <loading show="{{list.length == 0}}"></loading>
             <scroll-view 
+						wx:if="{{!isNoData}}"
             throttle="{{false}}"
             android:scrollbars="none"
             class='y'
@@ -77,16 +78,16 @@
                 </div>
             </view>
             </scroll-view>
+						<view wx:else style="margin-top: {{navHeight}}px;" class='no_schedule no_schedule1'>
+								<view class='no_schedule_img'>
+								<image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
+								</view>
+								<view class="">您还没有日程~~</view>
+								<view catchtap="goCreate" class="go_create">现在创建</view>
+						</view>
             <loading show="{{showLoading}}"></loading>
         </view>
-        <view wx:if="{{isNewUser}}" class='no_schedule no_schedule1'>
-            <view class='no_schedule_img'>
-            <image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
-            </view>
-            <view class="">您还没有日程~~</view>
-            <view catchtap="goCreate" class="go_create">现在创建</view>
-        </view>
-        <view class="hasNoMore" wx:if="{{!hasMore && !isNewUser}}">已经加载完全部啦～</view>
+        <view class="hasNoMore" wx:if="{{!hasMore && !isNoData}}">已经加载完全部啦～</view>
         <!--删除确认弹窗-->
         <modal-delete modal="{{modal}}" bindsuccess='modalOperate' catchtouchmove="ture">
             <view class='modal-text' wx:for="{{modal.content}}">{{item.text}}</view>

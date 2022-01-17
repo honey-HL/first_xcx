@@ -1,0 +1,9 @@
+/* component/com-header.wxss */
+.header_common {
+  width: 100%;
+  background: #70baf1;
+  /* position: fixed;
+  top:0;
+  left:0; */
+  z-index: 99;
+}

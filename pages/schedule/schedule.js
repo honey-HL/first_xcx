@@ -4,7 +4,7 @@ Page({
     data: {
       /***即将删除的***/
       willDeleteItem: "",
-      navHeight: app.globalData.navHeight + 30, //导航栏高度
+      navHeight: app.globalData.navHeight + 10, //导航栏高度
       modal: {
         show: false,
         cancelColor: '#fff',
@@ -100,7 +100,7 @@ Page({
       }).then((res) => {
         console.log('res===>',res)
         if (!res.result.total) {
-          this.setData({isNewUser: true})
+          // this.setData({isNewUser: true})
           return
         } else {
           if (raw_list.length === 0 || isSearch) {

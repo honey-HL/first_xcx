@@ -7,6 +7,7 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    recordsList: [],
     clickedRowIndex: '',
     isShrink: false,
     calWidth: '',
@@ -706,8 +707,11 @@ Page({
           }
         })
         console.log('_types==>',_types)
+        // debugger
+
       
         _this.setData({
+          recordsList: results,
           itemList: _types
         })
       }

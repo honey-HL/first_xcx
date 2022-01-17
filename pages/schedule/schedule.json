@@ -2,6 +2,7 @@
     "usingComponents": {
         "modal-delete": "../../component/modal-delete/modal-delete",
         "loading": "../../component/loading/loading",
+        "com-header": "../../component/com-header/com-header",
         "mp-slideview": "weui-miniprogram/slideview/slideview"
     },
     "enablePullDownRefresh":true,

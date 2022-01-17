@@ -161,15 +161,38 @@
       style="height: {{calBtmHeight}};"
       bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}">
       toptoptoptoptoptoptoptoptoptop
-      <view class="bottom_box_inner">
-        <view>
+      <view wx:if="{{recordsList.length >0}}">
+            <view wx:for="{{recordsList}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
+               <view  class="list_box">
+                 <view class="list_item_box" data-index="{{index}}">
+                   <view class="list_item">
+                       <view class="smile">
+                         <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
+                         <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
+                         <image wx:if="{{item.event_type === 'schedule'}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
+                       </view>
+                       <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
+                         <span class='content'>
+                           {{item.content}}
+                           <!-- <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
+                             <span class="yuan">元</span>
+                           </span> -->
+                         </span>
+                       </view>
+                   </view>
+                   <view class="item_time">{{item.date}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
+                 </view>
+               </view>
+            </view>
+      </view>
+      <view wx:else class="bottom_box_inner">
           <view class="empty_box">
             <image class="bgImg" src="../../images/empty.png"></image>
           </view>
           <view class="empty_tip">今天没有记录～</view>
           <view class="tip_add">点击“+”创建记录</view>
-        </view>
       </view>
+
       <view class="empty_box2">
         <image class="bgImg" src="../../images/empty.png"></image>
       </view>
@@ -237,12 +260,12 @@
   </view> -->
 
   <!---------日程列表--------->
-  <!-- <view class='schedule_area1'>
+  <view class='schedule_area1'>
      <swiper circular="{{true}}">
       <block wx:for="{{itemList}}" wx:for-item="card_item" wx:key="card_item{{index}}">
         <swiper-item>
             <view class='schedule_area'>
-            <view class="schedule_area_inner" wx:if="{{card_item.data.length > 0}}">
+            <view wx:if="{{card_item.data.length > 0}}" class="schedule_area_inner">
 
               <view class='instruction'>
                 <view wx:if="{{card_item.event_type === 'schedule'}}" class="hufu">
@@ -303,7 +326,7 @@
         </swiper-item>
       </block>
     </swiper>
-  </view> -->
+  </view>
 
 
   <!---操作按钮-->
