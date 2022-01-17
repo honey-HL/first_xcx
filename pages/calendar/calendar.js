@@ -218,7 +218,7 @@ Page({
     const {time, windowHeight} = this.data
     const {offsetTop} = e.currentTarget;
     const ele = wx.createSelectorQuery().select('#index');
-    let calBtmHeight =`${(parseInt(windowHeight) - 160)}px`
+    let calBtmHeight =`${(parseInt(windowHeight) - 127 - 65)}px`
 
     console.log('offsetTop===>',offsetTop)
     console.log('ele===>',ele)
@@ -257,7 +257,7 @@ Page({
           calHeight:'',
           calPosition: '',
           calTop:'',
-          calBtmHeight: ''
+          calBtmHeight: '320px'
         })
       }
     }

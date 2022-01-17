@@ -160,18 +160,20 @@
     <view 
       style="height: {{calBtmHeight}};"
       bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}">
+      toptoptoptoptoptoptoptoptoptop
       <view class="bottom_box_inner">
         <view>
           <view class="empty_box">
             <image class="bgImg" src="../../images/empty.png"></image>
           </view>
-          <view>今天没有人无语</view>
-          <view>今天没有人无语</view>
+          <view class="empty_tip">今天没有记录～</view>
+          <view class="tip_add">点击“+”创建记录</view>
         </view>
       </view>
       <view class="empty_box2">
         <image class="bgImg" src="../../images/empty.png"></image>
       </view>
+      bottombottombottombottombottombottombottom
     </view>
 
     </view>
