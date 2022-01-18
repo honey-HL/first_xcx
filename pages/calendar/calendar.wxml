@@ -186,8 +186,10 @@
             </view>
       </view>
       <view wx:else class="bottom_box_inner">
-          <view class="empty_box">
-            <image class="bgImg" src="../../images/empty.png"></image>
+          <view class="empty_row">
+            <view class="empty_box">
+                <image class="bgImg" src="../../images/empty.png"></image>
+              </view>
           </view>
           <view class="empty_tip">今天没有记录～</view>
           <view class="tip_add">点击“+”创建记录</view>

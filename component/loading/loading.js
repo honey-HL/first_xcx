@@ -27,7 +27,7 @@ Component({
       var self = this;
       var _index = 0;
       var _alpha = self.data.alpha;
-      var _speed = 250;
+      var _speed = 150;
       var timer = setInterval(function () {
         var an_show = wx.createAnimation({});
         var an_hide = wx.createAnimation({});

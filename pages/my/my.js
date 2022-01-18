@@ -5,7 +5,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    windowHeight: ''
+    windowHeight: '',
+    mainHeight:''
   },
 
   /**
@@ -13,6 +14,7 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
+      mainHeight: wx.getSystemInfoSync().windowHeight - app.globalData.navHeight - 10 +'px',
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
     console.log(' wx.cloud==>', wx)

@@ -1421,6 +1421,12 @@ z-index: 0;
 }
 .bottom_box_inner {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.empty_row {
+  width: 100%;
+  display: flex;
   justify-content: center;
 }
 .empty_box {

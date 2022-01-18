@@ -1,7 +1,7 @@
 <view class="publish">
 
   <!-- <view class="save" catchtap='saveItem'>保存</view> -->
-
+  <com-header/>
   <view wx:if="{{operation_type == 4}}">
     <view class="year_month">
       <view>{{year}}年</view><view>{{month}}月</view> 

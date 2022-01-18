@@ -5,6 +5,7 @@
         "com-header": "../../component/com-header/com-header",
         "mp-slideview": "weui-miniprogram/slideview/slideview"
     },
-    "enablePullDownRefresh":true,
+    "enablePullDownRefresh": false,
+    "disableScroll":true,
     "onReachBottomDistance": 50
 }

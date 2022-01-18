@@ -1,7 +1,7 @@
 <!--pages/my/my.wxml-->
 <view style="height: {{windowHeight}}">
 	<com-header/>
-    <view class='container' >
+    <view style="height: {{mainHeight}};" class='container' >
         <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" class="save-btn">授权登录</button>
         <view class='infor_card'>
             <view class="userAvatarUrl">

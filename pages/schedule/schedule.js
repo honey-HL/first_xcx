@@ -4,6 +4,7 @@ Page({
     data: {
       /***即将删除的***/
       willDeleteItem: "",
+      mainHeight: '',
       navHeight: app.globalData.navHeight + 10, //导航栏高度
       modal: {
         show: false,
@@ -36,7 +37,7 @@ Page({
       hasMore: true,
       raw_list: [],
       list: [],
-      isNewUser: false,
+      isNoData: false,
       showLoading: false,
       showPullDown: false,
       changed_list: [],
@@ -100,7 +101,7 @@ Page({
       }).then((res) => {
         console.log('res===>',res)
         if (!res.result.total) {
-          // this.setData({isNewUser: true})
+          this.setData({isNoData: true})
           return
         } else {
           if (raw_list.length === 0 || isSearch) {
@@ -128,7 +129,7 @@ Page({
             })
             console.log('after==end_res==>',end_res)
             _this.setData({
-              isNewUser: false,
+              isNoData: false,
               showLoading: false,
               showPullDown: false,
               raw_list:_raw_list,
@@ -172,7 +173,7 @@ Page({
 
     onPullDownRefresh(){ 
       const _this = this;
-      if (!this.data.isNewUser) {
+      if (!this.data.isNoData) {
         this.setData({pageIndex: 1, showPullDown: true, raw_list: []}, () => {
           _this.getList()
         });
@@ -526,7 +527,8 @@ Page({
       })
       this.getInnerContentHeight()
       this.setData({
-          windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
+        mainHeight: wx.getSystemInfoSync().windowHeight - app.globalData.navHeight - 10 +'px',
+        windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
       })
       console.log('设备高度',wx.getSystemInfoSync().windowHeight);
       wx.createSelectorQuery().select('.finished').fields({
