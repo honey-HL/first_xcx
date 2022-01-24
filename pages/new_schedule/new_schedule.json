@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "ccom-header":"../../component/com-header/com-header"
+    "com-header":"../../component/com-header/com-header"
   }
 }

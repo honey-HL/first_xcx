@@ -7,7 +7,9 @@ var days = require('../../utils/calculate_days.js')
 
 Page({
   data: {
+    activeDate: {},
     recordsList: [],
+    defaultClickedRowIndex: '',// 默认值不会变的
     clickedRowIndex: '',
     isShrink: false,
     calWidth: '',
@@ -17,7 +19,7 @@ Page({
     navHeight: app.globalData.navHeight + 80, //导航栏高度
     navTop: app.globalData.navTop, //导航栏距顶部距离
     navObj: app.globalData.navObj, //胶囊的高度
-    navObjWid: app.globalData.ƒ, //胶囊宽度+距右距离
+    navObjWid: app.globalData.navObjWid, //胶囊宽度+距右距离
     swiper_month_arr: [{name: 'name1'},{name: 'name2'},{name: 'name3'}],
     swiperCurrent: 1,
     curMonthIndex: 1,
@@ -102,10 +104,13 @@ Page({
   },
 
   goLastMonth (current) {
+    console.log('107============current===========>',current)
+    // debugger
     let _month;
     let _year;
     let show_jin;
     const {full_year, cur_month,curMonthIndex} = this.data;
+    const {savedMonkeys} = app.globalData;
     if (cur_month == 1) {
       _month = 12
       _year = full_year - 1 
@@ -113,21 +118,51 @@ Page({
       _month = cur_month - 1 
       _year = full_year
     }
-    let _curMonthIndex = curMonthIndex + 1;
+    let _curMonthIndex = curMonthIndex + 1; //当前月在月份数组中的索引
     if (_month === date.getMonth() + 1 && _year === date.getFullYear()) {
       show_jin = false  
     } else {
       show_jin = true
     }
     const arr = app.getTableData(_year, _month, 'last')
+    console.log('globalData=======>',app.globalData)
+    // debugger
+    // debugger
+    const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
+    let curRowIndex;let activeDate;
+    const findItem = curMonData.find(item => item.isToday)
+    if (findItem) {
+      const curMonArr = arr[_curMonthIndex]
+      activeDate = findItem
+      curMonArr.map((row,index) => {
+        row.map(item => {
+          if (item.isToday) curRowIndex = index;
+        })
+      })
+    } else {
+      curRowIndex = 0
+      activeDate = curMonData[0]
+    }
     console.log('_curMonthIndex=========+>',_curMonthIndex)
-    this.setData({show_jin, months_arr: arr,full_year:_year, cur_month: _month, swiperCurrent: current +1, curMonthIndex: _curMonthIndex})
+    let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+    this.setData({
+      activeDate,
+      clickedRowIndex: curRowIndex,
+      show_jin,
+      months_arr: arr,
+      full_year:_year, 
+      cur_month: _month, 
+      swiperCurrent: current == 0 ? current +1 : current, 
+      curMonthIndex: _curMonthIndex
+    })
     wx.setNavigationBarTitle({
       title: _year + '年' + _month + '月'
     })
   },
 
   goNextMonth (current) {
+    console.log('107============current===========>',current)
     let _month;let _year;let show_jin;
     const {full_year, cur_month,curMonthIndex, swiperCurrent} = this.data;
     if (cur_month == 12) {
@@ -143,7 +178,35 @@ Page({
       show_jin = true
     }
     const arr = app.getTableData(_year, _month, 'next')
-    this.setData({show_jin, months_arr: arr,full_year:_year, cur_month: _month, swiperCurrent: current})
+    console.log('arr==============>',arr)
+    let _curMonthIndex = arr.length - 2;
+    const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
+    let curRowIndex;let activeDate;
+    const findItem = curMonData.find(item => item.isToday)
+    if (findItem) {
+      const curMonArr = arr[_curMonthIndex]
+      activeDate = findItem
+      curMonArr.map((row,index) => {
+        row.map(item => {
+          if (item.isToday) curRowIndex = index;
+        })
+      })
+    } else {
+      curRowIndex = 0
+      activeDate = curMonData[0]
+    }
+    console.log('194====================current===>',current)
+    let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+    this.setData({
+      clickedRowIndex: curRowIndex,
+      activeDate,
+      show_jin,
+      months_arr: arr,
+      full_year:_year, 
+      cur_month: _month, 
+      swiperCurrent: current
+    })
     wx.setNavigationBarTitle({
       title: _year + '年' + _month + '月'
     })
@@ -181,17 +244,24 @@ Page({
 
   // 今 返回今天
   backToday () {
-    const {swiperCurrent, curMonthIndex} = this.data;
+    const {defaultClickedRowIndex, curMonthIndex} = this.data;
+    const {savedMonkeys} = app.globalData;
     const cur_month= date.getMonth() + 1 
     const full_year= date.getFullYear()
+    const curMonData =  Array.from(app.globalData.monthsObj[`${full_year}_${cur_month}`])
+    const findItem = curMonData.find(item => item.isToday)
+    const skipSwiperIndex = savedMonkeys.indexOf(`${full_year}_${cur_month}`);
 
     this.setData({
       full_year, 
       cur_month, 
+      clickedRowIndex :defaultClickedRowIndex,
+      activeDate: findItem,
       swiperCurrent: curMonthIndex,
       show_jin: false,
       today: this.data.cur_date,
       today_month: cur_month,
+      swiperCurrent: skipSwiperIndex,
       today_year: full_year
     })
    
@@ -199,7 +269,7 @@ Page({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     }) 
     let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>10?this.data.cur_date:'0'+this.data.cur_date);
-    this.searchSchedule(nian_yue_ri);
+    this.getRecordList(nian_yue_ri);
   },
 
   touchCalBoxStart(e) {
@@ -551,56 +621,22 @@ Page({
     this.setData({clickedRowIndex: index})
   },
   onClickDate(event) { // 点每一个日期
+    const {cur_month, full_year, } = this.data;
     let status = event.currentTarget.dataset.item.status;
     let item = event.currentTarget.dataset.item;
-    // 多选的时候不能点下一页
-    if (this.data.show_checkobx) {
-      return false
+    const nian_yue_ri = `${item.sYear}-${parseInt(item.sMonth)>= 10 ?item.sMonth: '0' + item.sMonth}-${item.sDay}`;
+    console.log('=====activeDate=====>', item);
+    console.log('cur_month=====>',cur_month)
+    this.getRecordList(nian_yue_ri);
+    if (item.isToday) return;
+    if (cur_month !== item.sMonth) {
+      // 移动月份
     }
-    console.log(item);
-    this.setData({ cur_date: event.currentTarget.dataset.item.date })
-    if(this.data.full_year >= 1900 && this.data.full_year <=2050){
-      if (this.data.cur_month == 1 && status == 0) { // 当前是1月  点了上个月
-        this.setData({ cur_month: 12, full_year: this.data.full_year - 1 })
-      } else if (this.data.cur_month == 12 && status == 2) { // 当前是12月  点了
-        this.setData({ cur_month: 1, full_year: this.data.full_year + 1 })
-      } else {
-        if (status == 0) { // 上月
-          this.setData({ cur_month: this.data.cur_month - 1 })
-        } else if (status == 2) { // 下月
-          this.setData({ cur_month: this.data.cur_month + 1 })
-        }
-      }
-    }
-    if (status !== 1) { // 如果点的不是当前月份才更新
-      wx.setNavigationBarTitle({
-        title: this.data.full_year + '年' + this.data.cur_month + '月'
-      })
-      this.getTableData(this.data.cur_month, this.data.full_year, this.data.cur_date).then(res => {
-        this.setData({
-          month_arr: res
-        })
-      })
-      // this.setData({
-      //   month_arr: this.getTableData(this.data.cur_month, this.data.full_year, this.data.cur_date)
-      // })
-      this.setData({
-        lunar_arr: lunar.showCal(this.data.full_year,this.data.cur_month,this.data.cur_date, 1).split(' ')
-      })
-      // this.getList();
-      console.log('lunar_arr',this.data.lunar_arr);
-    }
-    let nian_yue_ri = this.data.full_year + '-' + (this.data.cur_month >= 10 ?this.data.cur_month:'0'+this.data.cur_month) + '-' + (this.data.cur_date>=10?this.data.cur_date:'0'+this.data.cur_date);
-    this.setData({
-      zhou_ji: days.calculateDays(this.data.full_year, this.data.cur_month, this.data.cur_date)
-    })
-    console.log(nian_yue_ri);
-    this.searchSchedule(nian_yue_ri);
     // 去掉clicked
     this.getStyle(status);
-    if (this.data.cur_month === date.getMonth() + 1 && this.data.full_year === date.getFullYear()) {
-      this.setData({ show_jin: false })    
-    }
+    this.setData({
+      activeDate: item
+    })
   },
   getStyle (status) {
     let arr = this.data.month_arr.list;
@@ -677,7 +713,7 @@ Page({
     }
   },
 
-  searchSchedule (nian_yue_ri) {
+  getRecordList (nian_yue_ri) {
     console.log('nian_yue_ri==>',nian_yue_ri.toString())
     let _this = this;
     const db = wx.cloud.database()
@@ -854,22 +890,26 @@ Page({
     const {full_year, cur_month, cur_date} = this.data;
     // console.log(options);
     // console.log(this.data.is_show_new_mask)
+    console.log('globalData=======>',app.globalData)
+    // debugger
     wx.setNavigationBarTitle({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     })
     const months_arr = app.getTableData(full_year, cur_month)
     //    isShrink: true
-    let curRowIndex;
+    let clickedRowIndex;
     months_arr[1].map((row, index) => {
      row.map(item => {
        if (item.isToday) {
-        curRowIndex = index
+        clickedRowIndex = index
+        this.setData({activeDate: item})
        }
      })
     })
     this.setData({
       months_arr: months_arr,
-      clickedRowIndex: curRowIndex,
+      clickedRowIndex: clickedRowIndex,
+      defaultClickedRowIndex: clickedRowIndex,
       test_obj: months_arr[0][0],
       month_arr: months_arr[1],
       zhou_ji: days.calculateDays(full_year, cur_month, cur_date),
@@ -1268,7 +1308,7 @@ Page({
     // app.slideupshow(this, 'slide_up3', 0, 1)
     // this.getList();
     let nian_yue_ri = full_year + '-' + (cur_month >= 10 ?cur_month:'0'+cur_month) + '-' + (cur_date>=10?cur_date:'0'+cur_date);
-    this.searchSchedule(nian_yue_ri);
+    this.getRecordList(nian_yue_ri);
     // this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
     //   this.setData({
     //     month_arr: res

@@ -5,7 +5,10 @@
   height: 0;
   color: transparent;
 }
-
+.lunar_year {
+  position: absolute;
+  top: 20px;
+}
 .custom_head {
   width: 750rpx;
   /* background: #7ED1AC; */

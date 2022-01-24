@@ -5,6 +5,8 @@ var solarTerm = new Array("小寒", "大寒", "立春", "雨水", "惊蛰", "春
 var solarMonth = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 var weekString = "日一二三四五六";
 var sx = "鼠牛虎兔龙蛇马羊猴鸡狗猪";
+var tgString = "甲乙丙丁戊己庚辛壬癸";
+var dzString = "子丑寅卯辰巳午未申酉戌亥";
 var cYear, cMonth, cDay, TheDate;
 var lunarInfo = new Array(
   0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,
@@ -63,7 +65,8 @@ var lFtv = new Array(
 }
 
  //记录公历和农历某天的日期
- function calElement(sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap, lunarDate) {
+ function calElement(sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap, lunarDate, zodiacSign) {
+  this.zodiacSign = zodiacSign // 生肖
   this.isToday = false;
   //公历
   this.sYear = sYear;
@@ -251,6 +254,7 @@ function calendar(y, m) {
     sD = i - this.firstWeek;
   // debugger
     let lunarDate;
+    let  zodiacSign='';
       if (lD > lX) {
           sDObj = new Date(y, m, i + 1);    //当月第一天的日期
           lDObj = new Dianaday(sDObj);     //农历
@@ -263,8 +267,11 @@ function calendar(y, m) {
           if (n == 0) firstLM = lM;
           lDPOS[n++] = i - lD + 1;
       }
+      zodiacSign += tgString.charAt((lY - 4) % 10);
+      zodiacSign += dzString.charAt((lY - 4) % 12);
+      zodiacSign += sx.charAt((lY - 4) % 12);
       lunarDate = nongliDay(lM, lD,m, i + 1, sD, fat, mat)
-      this[i] = new calElement(y, m + 1, i + 1, nStr1[(i + this.firstWeek) % 7], lY, lM, lD++, lL, lunarDate);
+      this[i] = new calElement(y, m + 1, i + 1, nStr1[(i + this.firstWeek) % 7], lY, lM, lD++, lL, lunarDate, zodiacSign);
       if ((i + this.firstWeek) % 7 == 0) {
           this[i].color = 'red';  //周日颜色
       }

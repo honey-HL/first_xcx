@@ -66,12 +66,15 @@
 																<image class="img" src="../../images/gou.png"/>
 														</view>
 												<view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view>
-												<view class="content_right">
-														<view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
-																{{day_item.content}}
-														</view>
-														<view class="create_time">{{day_item.date}} {{filter.getHourMinutes(day_item.create_time)}}</view>
+												<view>
+													<view class="content_right">
+															<view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
+																	{{day_item.content}}
+															</view>
+													</view>
+													<view class="create_time">{{day_item.date}} {{filter.getHourMinutes(day_item.create_time)}}</view>
 												</view>
+						
 										</mp-slideview>
 								</view>
 						</view>

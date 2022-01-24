@@ -129,30 +129,31 @@
   font-size: 14px;
   font-weight: bolder;
   margin-left: 35px;
-  overflow:hidden;
+  /* overflow:hidden;
   text-overflow:ellipsis;
   display:-webkit-box;
   -webkit-line-clamp:1;
-  -webkit-box-orient:vertical;
+  -webkit-box-orient:vertical; */
 }
 
 .content_right {
   display: flex;
   width: 100%;
-  min-height:50px;
   border-top:1px solid #fff;
-  padding-bottom:10px;
   align-items:center;
   margin:0 10px;
   width: calc(100% - 20px);
+  padding-top: 10px;
 }
 
 .create_time {
-    position: absolute;
+    /* position: absolute;
     left: 45px;
-    bottom: 5px;
+    bottom: 5px; */
     font-size: 12px;
     color: #918d8e;
+    padding-bottom:10px;
+    margin-left: 45px;
 }
 
 .cost {

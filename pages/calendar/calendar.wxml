@@ -13,14 +13,16 @@
 <!-- <view bindtap="closeList" style="height:{{windowHeight}}px;overflow-y: auto;" class='container'>  -->
   <view bindtap="closeList" class='container' style="height:{{windowHeight}}px;overflow-y: auto;"> 
   <view class="custom_head" style="height:{{navHeight}}px;">
-    <view class="flex-row j_b" style="height:{{navObj}}px;padding-top:{{navTop}}px;padding-right:{{navObjWid+5}}px;display: flex;">
+    <view class="flex-row j_b" style="width:100%;height:{{navObj}}px;padding-top:{{navTop}}px;padding-right:{{navObjWid+5}}px;display: flex;align-items: center;">
       <view class="head_store text_ellipsis">{{store_name}}</view>
-      <view class="date_bar">{{full_year}}<span class="sm_font">年</span>{{cur_month}}<span class="sm_font">月</span>16<span class="sm_font">日</span>
-        <span class="title_lunar">辛丑牛<span class="sm_font">年</span></span>
-        <span class="title_week">星期天</span>
+      <view class="date_bar">{{full_year}}<span class="sm_font">年</span>{{cur_month}}<span class="sm_font">月</span>{{activeDate.sDay}}<span class="sm_font">日</span>
+        <span class="title_week">周{{activeDate.week}}</span>
       </view>
       <view class="{{show_jin?'inline-block':'none'}}" wx:if="show_jin">
         <span catchtap="backToday" class="jin">今</span>
+      </view>
+      <view style="position: absolute;right:{{navObjWid}}px;height: 26px;line-height: 26px;">
+        <span class="title_lunar">[{{activeDate.zodiacSign}}]</span>
       </view>
     </view>
   </view>
@@ -129,14 +131,15 @@
               <tbody class="tbody">
                 <tr catchtap="onClickRow" wx:for="{{month_row}}" class="date_tr {{(clickedRowIndex == index) && isShrink ? sticky_row: ''}} {{(clickedRowIndex !== index) && isShrink ? 'hide_row':''}}" wx:for-item="tr_week" data-index="{{index}}" wx:key="{{index}}">
                   <td bindtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="item" wx:for-item="td_item" wx:for="{{tr_week}}">
-                  <view class="ear_left {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
-                  <view class="ear_right {{td_item.isToday?'active_ear':''}} {{td_item.is_clicked?'clicked_ear':''}}"></view>
 
-                  <a style="height:{{min_height}};" class="td_a {{td_item.isToday?'active':''}} {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked':''}}">
-                
-                    <span class="date_num">{{td_item.sDay}}</span>
-                    <span class="lunar_date">{{td_item.lunarDate}}</span>
-                  </a>
+                    <view class="ear_left {{td_item.isToday?'active_ear':''}} {{td_item.sDay == activeDate.sDay ?'clicked_ear':''}}"></view>
+                    <view class="ear_right {{td_item.isToday?'active_ear':''}} {{td_item.sDay == activeDate.sDay ?'clicked_ear':''}}"></view>
+
+                    <a style="height:{{min_height}};" class="td_a {{td_item.gray?'gray':''}} {{td_item.sDay == activeDate.sDay && !td_item.isToday?'clicked':''}} {{td_item.isToday?'active':''}}" >
+                  
+                      <span class="date_num">{{td_item.sDay}}</span>
+                      <span class="lunar_date">{{td_item.lunarDate}}</span>
+                    </a>
                     <view wx:if="{{td_item.type == 0}}" class="dot_0"></view>
                     <view wx:if="{{td_item.type == 1}}" class="dot_1"></view>
                     <view wx:if="{{td_item.type == 2}}" class="dot_2"></view>
@@ -160,7 +163,7 @@
     <view 
       style="height: {{calBtmHeight}};"
       bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}">
-      toptoptoptoptoptoptoptoptoptop
+      <!-- toptoptoptoptoptoptoptoptoptop -->
       <view wx:if="{{recordsList.length >0}}">
             <view wx:for="{{recordsList}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
                <view  class="list_box">
@@ -195,10 +198,10 @@
           <view class="tip_add">点击“+”创建记录</view>
       </view>
 
-      <view class="empty_box2">
+      <!-- <view class="empty_box2">
         <image class="bgImg" src="../../images/empty.png"></image>
-      </view>
-      bottombottombottombottombottombottombottom
+      </view> -->
+      <!-- bottombottombottombottombottombottombottom -->
     </view>
 
     </view>
@@ -262,7 +265,7 @@
   </view> -->
 
   <!---------日程列表--------->
-  <view class='schedule_area1'>
+  <!-- <view class='schedule_area1'>
      <swiper circular="{{true}}">
       <block wx:for="{{itemList}}" wx:for-item="card_item" wx:key="card_item{{index}}">
         <swiper-item>
@@ -328,7 +331,7 @@
         </swiper-item>
       </block>
     </swiper>
-  </view>
+  </view> -->
 
 
   <!---操作按钮-->

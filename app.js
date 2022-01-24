@@ -46,7 +46,7 @@ App({
 
   getNext2MonYear(cur_year, cur_month) { // 获取下2月的年份和月份
     let next_2month_year;let next_2month;
-    if (cur_month + 2 >= 12) {
+    if (cur_month + 2 > 12) {
       next_2month_year = cur_year + 1;
       next_2month = (cur_month + 2) % 12;
     } else {
@@ -97,16 +97,25 @@ App({
   // 获取目标年月的天数
   getTableData(cur_year, cur_month,t_type) {
     console.log('cur_year, cur_month====>',cur_year, cur_month)
-    const {monthsObj, months_arr} = this.globalData;
+    const {monthsObj, savedMonkeys,  months_arr} = this.globalData;
     let currentMonData;let lastMonData;let nextMonData;let last2MonData;let next2MonData; let monthsArr = months_arr;
-    let con_lastMonData;let con_currentMonData;let con_nextMonData 
+    let con_lastMonData;let con_currentMonData;let con_nextMonData;let _savedMonkeys = savedMonkeys;
    
+
     const {last_2month_year, last_2month} = this.getLast2MonYear(cur_year, cur_month)
     const {last_month_year, last_month} = this.getLastMonYear(cur_year, cur_month)
     const {next_month_year, next_month} = this.getNextMonYear(cur_year, cur_month);
     const {next_2month_year, next_2month} = this.getNext2MonYear(cur_year, cur_month);
 
     // debugger
+
+    let last_2month_key = `${last_2month_year}_${last_2month}`;
+    let last_month_key = `${last_month_year}_${last_month}`;
+    let cur_month_key = `${cur_year}_${cur_month}`;
+    let next_month_key = `${next_month_year}_${next_month}`;
+    let next_2month_key = `${next_2month_year}_${next_2month}`;
+
+    // if (savedMonkeys.includes(last_2month_key)) return monthsArr;
 
     if (t_type == undefined) { // 不是左右滑动
       last2MonData = this.getLast2MonthData(last_2month_year, last_2month)
@@ -127,14 +136,15 @@ App({
        const _nextMonData = this.getWeekData(Array.from(con_nextMonData))
        monthsArr = [_lastMonData, _currentMonData,_nextMonData]
 
+       _savedMonkeys = [last_month_key, cur_month_key, next_month_key]
+       
     } else {// 是左右滑动
-      let last_2month_key = `${last_2month_year}_${last_2month}`;
-      let last_month_key = `${last_month_year}_${last_month}`;
-      let cur_month_key = `${cur_year}_${cur_month}`;
-      let next_month_key = `${next_month_year}_${next_month}`;
-      let next_2month_key = `${next_2month_year}_${next_2month}`;
+     
 
       if (t_type === 'last') { // 右滑
+        
+        if (savedMonkeys.includes(last_month_key)) return monthsArr;
+
         if (Array.from(Object.keys(monthsObj)).includes[last_2month_key]) {
           last2MonData = monthsObj[last_2month_key]
           lastMonData = monthsObj[last_month_key]
@@ -149,7 +159,9 @@ App({
         /********拼接当前月份上一个月末的数据和下一个月初的数据********/ 
         con_lastMonData = this.getConcatMonth(last2MonData, lastMonData, currentMonData) 
         const _lastMonData = this.getWeekData(Array.from(con_lastMonData))
-        
+
+        _savedMonkeys.unshift(last_month_key);
+       
         // if (months_arr.length < 12) {
         //   monthsArr.unshift(_lastMonData)
         // }
@@ -157,6 +169,8 @@ App({
       }  
 
       if (t_type === 'next') { // 左滑
+
+        if (savedMonkeys.includes(next_month_key)) return monthsArr;
         
         if (Array.from(Object.keys(monthsObj)).includes[next_2month_key]) {
           
@@ -175,7 +189,9 @@ App({
          /********拼接当前月份上一个月末的数据和下一个月初的数据********/ 
          con_nextMonData = this.getConcatMonth(currentMonData, nextMonData, next2MonData) 
          const _nextMonData = this.getWeekData(Array.from(con_nextMonData))
-         
+
+         _savedMonkeys.push(next_month_key);
+      
          // if (months_arr.length < 12) {
          //   monthsArr.unshift(_lastMonData)
          // }
@@ -191,11 +207,13 @@ App({
     
 
       this.globalData.months_arr = monthsArr
+      this.globalData.savedMonkeys = _savedMonkeys;
 
       console.log('===this.globalData.monthsObj===>',this.globalData.monthsObj)
+      console.log('_savedMonkeys=========666=====>', _savedMonkeys)
       console.log('monthsArr=========222===>',monthsArr)
       
-   
+      
       return monthsArr;
   },
 
@@ -206,7 +224,7 @@ App({
 
     console.log('last_show_days===>',last_show_days, next_show_days)
 
-    if (parseInt(last_show_days) !== 0) {
+    if (last_show_days && parseInt(last_show_days) !== 0) {
       let _lastMonData = Array.from(lastMonData).slice(-last_show_days);
       _lastMonData = _lastMonData.map(item => {
         return {
@@ -216,7 +234,7 @@ App({
       })
       conData = _lastMonData.concat(conData)
     }
-    if (parseInt(next_show_days) !== 0) {
+    if (next_show_days && parseInt(next_show_days) !== 0) {
       let _nextMonData = Array.from(nextMonData).slice(0, next_show_days + 1);
       _nextMonData = _nextMonData.map(item => {
         return {
@@ -423,9 +441,11 @@ App({
     },
     monthsObj: {},
     months_arr: [],
+    savedMonkeys:[],
     show_mask: false,
     pictures_arr: [],
     windowHeight: '',
+    navObjWid:'',
     userInfo: null
   }
 
