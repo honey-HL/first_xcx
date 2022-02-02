@@ -171,9 +171,11 @@
     <view 
       style="height: {{calBtmHeight}};"
       bindtouchstart="touchCalBoxStart"  bindtouchend="touchCalBoxEnd" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}">
+      <!-- <view 
+      style="height: {{calBtmHeight}};" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}"> -->
       <!-- toptoptoptoptoptoptoptoptoptop -->
-      <view wx:if="{{recordsList.length >0}}">
-            <view wx:for="{{recordsList}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
+      <!-- <view wx:if="{{recordsList.length >0}}"> -->
+            <view wx:if="{{recordsList.length >0}}" wx:for="{{recordsList}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
                <view  class="list_box">
                  <view class="list_item_box" data-index="{{index}}">
                    <view class="list_item">
@@ -195,8 +197,8 @@
                  </view>
                </view>
             </view>
-      </view>
-      <view wx:else class="bottom_box_inner">
+      <!-- </view> -->
+      <view wx:if="{{recordsList.length == 0}}"  class="bottom_box_inner">
           <view class="empty_row">
             <view class="empty_box">
                 <image class="bgImg" src="../../images/empty.png"></image>
@@ -351,7 +353,7 @@
   <view wx:if="{{showOperation}}" class='operation_box'>
     <!-- <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
     <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view> -->
-    <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">记账</view>
+    <!-- <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">记账</view> -->
     <view data-active="{{activeDate}}" class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">记事</view>
   </view>
 

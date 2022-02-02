@@ -1,4 +1,12 @@
 //app.js
+
+//  "pages/view/view",
+// {
+//   "pagePath": "pages/view/view",
+//   "text": "视图",
+//   "selectedIconPath": "images/icon/finished_lan.png",
+//   "iconPath": "images/icon/finished.png"
+// },
 const date = new Date()
 var lunar = require('./utils/lunar.js')
 const weekDayMap = {

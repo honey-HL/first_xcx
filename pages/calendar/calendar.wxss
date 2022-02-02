@@ -366,7 +366,7 @@ left:22%;
   padding:0 5px;
   width:100%;
   height:100%;
-  overflow:hidden;
+  overflow-x:hidden;
   display:flex;
   flex-direction:column;
   padding-bottom:6px;
@@ -615,7 +615,7 @@ left:22%;
   /* padding: 0 5px;
   width: calc(100% - 10px); */
   height: calc(100% - 19px);
-  overflow:hidden;
+  /* overflow:hidden; */
   position: relative;
 }
 
@@ -1477,7 +1477,7 @@ z-index: 0;
   border-top-left-radius: 10px;
   margin-top: 100px;
    width: 96%;
-   overflow: hidden;
+   /* overflow: hidden; */
    z-index: 999;
    /* margin: 10px 8px 10px; */
    /* background: rgba(223, 127, 127,0.5); */
@@ -1506,6 +1506,7 @@ z-index: 0;
   /* background-color: yellow; */
   z-index: 999;
     overflow-x: hidden;
+    overflow-y: auto;
   /* position: fixed;
   overflow: auto;
   top: 500px; */

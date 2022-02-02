@@ -336,7 +336,7 @@ Page({
   },
    touchCalTopEnd (e) {
     console.log(e)
-    const {calTop,full_year, cur_month,hasSchedule, activeDate, months_arr, swiperCurrent,curMonthIndex, windowHeight} = this.data
+    const {calTop,full_year,isStretch, cur_month,hasSchedule, activeDate, months_arr, swiperCurrent,curMonthIndex, windowHeight} = this.data
     const {offsetTop} = e.currentTarget;
     const ele = wx.createSelectorQuery().select('#index');
     let calBtmHeight =`${(parseInt(windowHeight) - 127 - 65)}px`
@@ -345,7 +345,7 @@ Page({
     let curMonArr = months_arr[swiperCurrent];
 
     console.log('calTop==>',calTop)
-    // debugger
+    
     if (calTop) { // 日历折叠成一行
       this.setData({
         isShrink: false,
@@ -375,14 +375,28 @@ Page({
       console.log('滑动e',e)
     }
     if (absY > absX && tmY < 0) { // up and down 日历上拉
+      // debugger
       console.log(' up and down',e)
       const calHeight = months_arr[swiperCurrent].length * 60 + 'px';
-      this.setData({ // 
-        calHeight,
-        isStretch: false,
-        rowHeight: calHeight / rowLen + 'px'
-      })
- 
+      if(!calTop && !isStretch) {
+        this.setData({ // 
+          calWidth: '96%',
+          calHeight:'65px',
+          calPosition: 'fixed',
+          calTop:'125px',
+          calBtmHeight,
+          isShrink: true
+        })
+      } else {
+        this.setData({ // 
+          calHeight,
+          isStretch: false,
+          rowHeight: calHeight / rowLen + 'px'
+        })
+   
+      }
+     
+      
       console.log('cur_month=====>',cur_month)
       this.getRecordList(nian_yue_ri);
     } 
@@ -391,11 +405,22 @@ Page({
       if (!hasSchedule[nian_yue]) {
         this.getScheIntoMonArr()
       }
-      this.setData({
-        calHeight,
-        isStretch: true,
-        rowHeight
-      })
+      if(calTop && !isStretch) {
+      
+        this.setData({ // 
+          // calHeight,
+          isStretch: false,
+          rowHeight: calHeight / rowLen + 'px'
+        })
+      }
+      
+      if(!calTop && !isStretch)  {
+        this.setData({
+          calHeight,
+          isStretch: true,
+          rowHeight
+        })
+      }
     }
   },
 
@@ -468,16 +493,17 @@ Page({
           calBtmHeight,
           isShrink: true
         })
-      } else { // pull
-        this.setData({
-          isShrink: false,
-          calWidth: '',
-          calHeight:months_arr[swiperCurrent].length * 60 + 'px',
-          calPosition: '',
-          calTop:'',
-          calBtmHeight: '320px'
-        })
-      }
+      } 
+      // else { // pull
+      //   this.setData({
+      //     isShrink: false,
+      //     calWidth: '',
+      //     calHeight:months_arr[swiperCurrent].length * 60 + 'px',
+      //     calPosition: '',
+      //     calTop:'',
+      //     calBtmHeight: '320px'
+      //   })
+      // }
     }
     clearInterval(this.data.interval); // 清除setInterval
     this.setData({
