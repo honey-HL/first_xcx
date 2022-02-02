@@ -6,6 +6,37 @@
   font-size: 26rpx;
 }
 
+/* .bottom_box_inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.empty_row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}*/
+.tip_add {
+  font-size: 14px;
+  color: #9f9f9f;
+  font-weight: bold;
+  text-align: center;
+}
+.empty_tip {
+  color: #5a595d;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+.empty_box {
+  margin-top: 40px;
+  width: 150px;
+  height: 150px;
+} 
+.bgImg {
+  width: 100%;
+  height: 100%;
+}
 
 /**************搜索框*******************/
 .search_box {

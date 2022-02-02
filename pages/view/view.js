@@ -1,4 +1,4 @@
-// pages/consume/consume.js
+// pages/consume.js
 Page({
 
   /**

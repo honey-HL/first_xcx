@@ -15,7 +15,7 @@
     "component/pending-icon/pending-icon",
     "pages/authorize/authorize",
     "pages/my/my",
-    "pages/consume/consume",
+    "pages/view/view",
     "pages/new_schedule/new_schedule",
     "pages/new_consumption/new_consumption"
   ],
@@ -39,8 +39,8 @@
         "iconPath": "images/icon/finished.png"
       },
       {
-        "pagePath": "pages/consume/consume",
-        "text": "消费",
+        "pagePath": "pages/view/view",
+        "text": "视图",
         "selectedIconPath": "images/icon/finished_lan.png",
         "iconPath": "images/icon/finished.png"
       },

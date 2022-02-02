@@ -1,4 +1,5 @@
 const app = getApp();
+const {bus} = require('../../utils/bus.js');
 
 Page({
     data: {
@@ -93,8 +94,9 @@ Page({
         data: {
           filter: filters,
           dbName: 'todo_list',
+          key: 'content',
           isSearch,
-          searchKey,
+          searchKey: '',
           pageIndex,
           pageSize
         }
@@ -283,6 +285,8 @@ Page({
           return item
         }
       }).filter(item => item)
+      debugger
+      bus.emit('goDelete', {delItem: willDeleteItem})
       _this.setData({
         list: _list,
         raw_list: _raw_list
@@ -313,37 +317,7 @@ Page({
             will_delete_item: obj
         })
     },
-
-    yesDelete () {
-        let _this = this
-        wx.request( {
-          url: app.globalData.url +"api/events/delete",
-            headder: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            },
-            method: "get", 
-            data: {id: _this.data.will_delete_item.id},
-            success: function( res ) {
-              if (res.data.status == 200) {
-                wx.showToast({
-                    title: '删除成功',
-                    icon: 'none',
-                    duration: 1000,
-                    mask:true
-                })
-                _this.getList();
-              } else {
-                wx.showToast({
-                    title: res.data.msg,
-                    icon: 'none',
-                    duration: 1000,
-                    mask:true
-                })
-              }
-            } 
-        })
-    },
-
+    
     delete (event) {
         let _this = this
         this.setData({
@@ -518,6 +492,12 @@ Page({
         raw_list: [],
         list: [],
         hasMore: true,
+      })
+    },
+
+    goRun () {
+      wx.navigateTo({
+        url: 'https://www.microsoft.com/',
       })
     },
 

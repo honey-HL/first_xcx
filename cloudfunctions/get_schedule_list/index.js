@@ -11,11 +11,12 @@ exports.main = async (event, context) => {
   const dbName = event.dbName;
   const isSearch = event.isSearch;
   const searchKey = event.searchKey;
+  const _key = event.key;
   let filter = event.filter ? event.filter: null;
   if (isSearch && searchKey) {
     filter = {
       ...filter,
-      content: db.RegExp({
+      [_key]: db.RegExp({
         regexp: searchKey,
         options: 'i',
       })
@@ -32,8 +33,11 @@ exports.main = async (event, context) => {
   } else {
     hasMore = true;
   }
+  console.log('filter=====>',filter)
+  // debugger
+  
   let res = await db.collection(dbName).orderBy('date','desc').where(filter).skip((pageIndex - 1)*pageSize).limit(pageSize).get();
-
+  // debugger
   // console.log('get_schedule_list res===>',res)
 
   res = {

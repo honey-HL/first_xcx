@@ -1,2 +1,6 @@
 <!--component/com-header.wxml-->
-<view style="height: {{navHeight}}px;" class="header_common"></view>
+<view style="height: {{navHeight}}px;" class="header_common">
+  <view catchtap="goBack" style="margin-top:{{navTop- 13}}px;" wx:if="{{show}}" class="back">
+    <image src="../../images/arrow-left.png"></image>
+  </view>
+</view>

@@ -2,8 +2,17 @@
 .header_common {
   width: 100%;
   background: #70baf1;
-  /* position: fixed;
-  top:0;
-  left:0; */
+  display: flex;
+  align-items: center;
   z-index: 99;
+  padding-left: 20rpx;
+}
+.back {
+  width:20px;
+  height: 20px;
+  padding: 5px;
+}
+.back image {
+  width: 100%;
+  height: 100%;
 }

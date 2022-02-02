@@ -1,6 +1,7 @@
 // pages/publish/publish.js
 const app = getApp()
 const date = new Date()
+const {bus} = require('../../utils/bus.js');
 
 Page({
 
@@ -8,6 +9,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    activeData: {},
     id: '',
     is_edit: false,
     operation_type: '',
@@ -115,9 +117,10 @@ Page({
   },
 
   saveItem () {
+    const {activeData} = this.data;
     let start_time = this.data.start.full_year +'-'+ (this.data.start.cur_month >= 10 ?this.data.start.cur_month:'0'+this.data.start.cur_month) + '-' + (this.data.start.cur_date>=10?this.data.start.cur_date:'0'+this.data.start.cur_date) + ' '+this.data.start.hour + ':' + this.data.start.minute;
     let end_time = this.data.end.full_year +'-'+ (this.data.end.cur_month >= 10 ?this.data.end.cur_month:'0'+this.data.end.cur_month) + '-' + (this.data.end.cur_date>=10?this.data.end.cur_date:'0'+this.data.end.cur_date) + ' '+this.data.end.hour + ':' + this.data.end.minute;
-    let start_riqi = this.data.start.full_year +'-'+ (this.data.start.cur_month >= 10 ?this.data.start.cur_month:'0'+this.data.start.cur_month) + '-' + (this.data.start.cur_date>=10?this.data.start.cur_date:'0'+this.data.start.cur_date);
+    let start_riqi = activeData.sYear +'-'+ (activeData.sMonth >= 10 ?activeData.sMonth:'0'+activeData.sMonth) + '-' + (activeData.sDay>=10?activeData.sDay:'0'+activeData.sDay);
     let obj = {};
     console.log('this.data.operation_type==>',this.data.operation_type)
     if (this.data.operation_type != 4) {
@@ -128,11 +131,11 @@ Page({
         startTime: start_time,
         endTime: end_time,
         content: this.data.evaContent,
-        month: this.data.start.cur_month,
+        month: activeData.sMonth,
         date: start_riqi,
         create_time: new Date().getTime(),
         _open_id: wx.getStorageSync('openid'),
-        event_type: this.data.operation_type
+        event_type: 'schedule'// this.data.operation_type
       }
       var that = this;
 
@@ -174,8 +177,11 @@ Page({
           //   title: '新增记录成功',
           // })
           wx.switchTab({
-            url: '../schedule/schedule'
+            url: '../calendar/calendar'
+            // url: '../schedule/schedule'
           })
+          // 更新表格的数据
+          bus.emit('onUpdate', {_id: res._id, activeData})
         },
         fail: err => {
           wx.showToast({
@@ -476,7 +482,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-   
+    const activeData = JSON.parse(options.activeData)
+    // debugger
     let start_month_index = 'picker_value_start[' + 0 + "]";
     let end_month_index = 'picker_value_end[' + 0 + "]";
     let start_date_index = 'picker_value_start[' + 1 + "]";
@@ -486,14 +493,15 @@ Page({
     let start_minute_index = 'picker_value_start[' + 3 + "]";
     let end_minute_index = 'picker_value_end[' + 3 + "]";
     this.setData({
-      year: options.full_year,
-      month: options.cur_month,
+      year: activeData.sYear,
+      month: activeData.sMonth,
+      activeData,
       // month_arr: app.getTableData(2, 2019),
-      month_arr: app.getTableData(options.cur_month, options.full_year),
-      ['start.cur_month']: options.cur_month,
-      ['start.cur_date']: options.cur_date,
-      ['end.cur_month']: options.cur_month,
-      ['end.cur_date']: options.cur_date,
+      // month_arr: app.getCalTableData(options.cur_month, options.full_year),
+      ['start.cur_month']: activeData.sMonth,
+      ['start.cur_date']: activeData.sDay,
+      ['end.cur_month']:activeData.sMonth,
+      ['end.cur_date']: activeData.sDay,
     })
 
     if (options.type) {

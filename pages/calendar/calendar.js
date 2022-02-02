@@ -4,10 +4,14 @@ const app = getApp()
 const date = new Date()
 var lunar = require('../../utils/lunar.js')
 var days = require('../../utils/calculate_days.js')
+const {bus} = require('../../utils/bus.js');
 
 Page({
   data: {
+    rowHeight: '',
+    isStretch: false,
     activeDate: {},
+    hasSchedule: {},
     recordsList: [],
     defaultClickedRowIndex: '',// 默认值不会变的
     clickedRowIndex: '',
@@ -16,6 +20,7 @@ Page({
     calHeight:'',
     calPosition: '',
     calTop:'',
+    months_arr: app.globalData.months_arr,
     navHeight: app.globalData.navHeight + 80, //导航栏高度
     navTop: app.globalData.navTop, //导航栏距顶部距离
     navObj: app.globalData.navObj, //胶囊的高度
@@ -54,15 +59,18 @@ Page({
     show_jin: false,
     touchDotX: 0,//X按下时坐标
     touchDotY: 0,//y按下时坐标
+    touchDotX1: 0,//X按下时坐标
+    touchDotY1: 0,//y按下时坐标
     interval: '',//计时器
+    interval1: '',//计时器
     time:0,//从按下到松开共多少时间*100
+    time1:0,//从按下到松开共多少时间*100
     confirmColor:"#f4be51",
     is_show_picker: false,
     year_show: false,
     color:'red',
     tb_arr: [], 
     test_obj: {},
-    months_arr: [],
     month_arr: [],
     year_arr:[],
     monthArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -124,25 +132,15 @@ Page({
     } else {
       show_jin = true
     }
-    const arr = app.getTableData(_year, _month, 'last')
+    const arr = app.getCalTableData(_year, _month, 'last')
     console.log('globalData=======>',app.globalData)
     // debugger
     // debugger
     const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
     let curRowIndex;let activeDate;
-    const findItem = curMonData.find(item => item.isToday)
-    if (findItem) {
-      const curMonArr = arr[_curMonthIndex]
-      activeDate = findItem
-      curMonArr.map((row,index) => {
-        row.map(item => {
-          if (item.isToday) curRowIndex = index;
-        })
-      })
-    } else {
-      curRowIndex = 0
-      activeDate = curMonData[0]
-    }
+    curRowIndex = 0
+    activeDate = curMonData[0]
+
     console.log('_curMonthIndex=========+>',_curMonthIndex)
     let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
@@ -177,24 +175,14 @@ Page({
     } else {
       show_jin = true
     }
-    const arr = app.getTableData(_year, _month, 'next')
+    const arr = app.getCalTableData(_year, _month, 'next')
     console.log('arr==============>',arr)
     let _curMonthIndex = arr.length - 2;
     const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
     let curRowIndex;let activeDate;
-    const findItem = curMonData.find(item => item.isToday)
-    if (findItem) {
-      const curMonArr = arr[_curMonthIndex]
-      activeDate = findItem
-      curMonArr.map((row,index) => {
-        row.map(item => {
-          if (item.isToday) curRowIndex = index;
-        })
-      })
-    } else {
-      curRowIndex = 0
-      activeDate = curMonData[0]
-    }
+    curRowIndex = 0
+    activeDate = curMonData[0]
+
     console.log('194====================current===>',current)
     let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
@@ -215,7 +203,7 @@ Page({
   swiperChange(e) {
     let _month;
     let _year;
-    const {full_year, cur_month,curMonthIndex, swiperCurrent} = this.data;
+    const {full_year,hasSchedule, cur_month,curMonthIndex, swiperCurrent} = this.data;
     const {monthsObj} = app.globalData;
     console.log('84-----monthsObj--',monthsObj)
     
@@ -231,6 +219,8 @@ Page({
         console.log('左滑')
         this.goNextMonth(current)
       }
+      console.log('hasSchedule====>',hasSchedule)
+      this.getScheIntoMonArr()
       // if (_month === date.getMonth() + 1 && _year === date.getFullYear()) {
       //   this.setData({ show_jin: false })   
       // } else {
@@ -284,9 +274,166 @@ Page({
       })
     }, 100);
   },
+  touchCalTopStart (e) {
+    this.setData({
+      touchDotX1: e.touches[0].pageX, // 获取触摸时的原点
+      touchDotY1: e.touches[0].pageY
+    })
+  },
+  async getMonthSchedule ({nian_yue}) {
+    const db = wx.cloud.database;
+    return new Promise((resolve, reject) => {
+      let temp = [];
+      let end_res = []
+      let results= []
+      const openid = wx.getStorageSync('openid')
+      let filters = {
+        event_type: 'schedule',
+        _openid: openid,
+      }
+      wx.cloud.callFunction({
+        name: 'get_schedule_list',
+        data: {
+          filter: filters,
+          dbName: 'todo_list',
+          key: 'date',
+          isSearch: true,
+          searchKey: nian_yue,
+          // pageIndex,
+          pageSize: 100
+        }
+      }).then((res) => {
+          if (res.result.total > 0) {
+            const data = res.result.data;
+              console.log('results===>',results)
+              data.map((item, i) => {
+                if (temp.indexOf(item.date) === -1) {
+                  temp.push(item.date);
+                  end_res.push({
+                    date: item.date,
+                    dt: [item]
+                  })
+                } else {
+                  end_res.forEach((end, j) => {
+                    if (end.date === item.date) {
+                        end_res[j].dt.push(item);
+                    }
+                  })
+                }
+              })
+              // debugger
+              console.log('end_res===>',end_res)
+              // debugger
+              // console.log('_cld====>',_cld)
+             
+             
+              resolve(end_res)
+          } else {
+             resolve([])
+          }
+      })
+    })
+  },
+   touchCalTopEnd (e) {
+    console.log(e)
+    const {calTop,full_year, cur_month,hasSchedule, activeDate, months_arr, swiperCurrent,curMonthIndex, windowHeight} = this.data
+    const {offsetTop} = e.currentTarget;
+    const ele = wx.createSelectorQuery().select('#index');
+    let calBtmHeight =`${(parseInt(windowHeight) - 127 - 65)}px`
+    const nian_yue = `${full_year}-${cur_month>=10?cur_month:'0'+cur_month}`
+    const nian_yue_ri = `${activeDate.sYear}-${parseInt(activeDate.sMonth)>= 10 ?activeDate.sMonth: '0' + activeDate.sMonth}-${activeDate.sDay >=10?activeDate.sDay:'0'+activeDate.sDay}`;
+    let curMonArr = months_arr[swiperCurrent];
+
+    console.log('calTop==>',calTop)
+    // debugger
+    if (calTop) { // 日历折叠成一行
+      this.setData({
+        isShrink: false,
+        calWidth: '',
+        calHeight:months_arr[swiperCurrent].length * 60 + 'px',
+        calPosition: '',
+        calTop:'',
+        calBtmHeight: '320px'
+      })
+    }
+
+    let touchMoveX = e.changedTouches[0].pageX;
+    let touchMoveY = e.changedTouches[0].pageY;
+    let tmX = touchMoveX - this.data.touchDotX1;
+    let tmY = touchMoveY - this.data.touchDotY1;
+    const calHeight = `${(parseInt(windowHeight) - 140 + 27)}px`;
+    // debugger
+    const rowLen = months_arr[swiperCurrent].length;
+    let rowHeight = `${((parseInt(calHeight) - 22) / rowLen)}px`
+    console.log(' rowHeight',rowHeight)
+
+    console.log('touchMoveY===>',touchMoveY)
+
+    let absX = Math.abs(tmX);
+    let absY = Math.abs(tmY);
+    if (absX > 2 * absY) {
+      console.log('滑动e',e)
+    }
+    if (absY > absX && tmY < 0) { // up and down 日历上拉
+      console.log(' up and down',e)
+      const calHeight = months_arr[swiperCurrent].length * 60 + 'px';
+      this.setData({ // 
+        calHeight,
+        isStretch: false,
+        rowHeight: calHeight / rowLen + 'px'
+      })
+ 
+      console.log('cur_month=====>',cur_month)
+      this.getRecordList(nian_yue_ri);
+    } 
+    if (absY > absX && tmY > 0) { // pull 日历下拉
+      
+      if (!hasSchedule[nian_yue]) {
+        this.getScheIntoMonArr()
+      }
+      this.setData({
+        calHeight,
+        isStretch: true,
+        rowHeight
+      })
+    }
+  },
+
+  async getScheIntoMonArr () {
+    const {full_year, cur_month,hasSchedule, min_height, months_arr, swiperCurrent,curMonthIndex, windowHeight} = this.data
+    const nian_yue = `${full_year}-${cur_month>=10?cur_month:'0'+cur_month}`
+    let curMonArr = months_arr[swiperCurrent];
+    let _hasSchedule = hasSchedule;
+    // debugger
+    await this.getMonthSchedule({nian_yue}).then(s_list => {
+      console.log('s_list===>',s_list)
+      s_list.map(schedule => {
+        curMonArr.map((row,r) => {
+          row.map((item,i) => {
+            const date = `${item.sYear}-${item.sMonth >=10?item.sMonth:'0'+item.sMonth}-${item.sDay >=10?
+              item.sDay:'0'+item.sDay}`
+            if (date === schedule.date) {
+              let _schedule = schedule;
+              _schedule.dt.reverse();
+              curMonArr[r][i].sList = _schedule;
+            }
+          })
+        })
+      })
+      console.log('curMonArr===>',curMonArr)
+      let _months_arr = months_arr
+      _months_arr[swiperCurrent] = curMonArr;
+      _hasSchedule[nian_yue] = true;
+      this.setData({
+        hasSchedule: _hasSchedule,
+        months_arr:_months_arr,
+      })
+    })
+  },
+
   touchCalBoxEnd (e) {
     console.log(e)
-    const {time, windowHeight} = this.data
+    const {time,min_height, months_arr, swiperCurrent, windowHeight} = this.data
     const {offsetTop} = e.currentTarget;
     const ele = wx.createSelectorQuery().select('#index');
     let calBtmHeight =`${(parseInt(windowHeight) - 127 - 65)}px`
@@ -325,7 +472,7 @@ Page({
         this.setData({
           isShrink: false,
           calWidth: '',
-          calHeight:'',
+          calHeight:months_arr[swiperCurrent].length * 60 + 'px',
           calPosition: '',
           calTop:'',
           calBtmHeight: '320px'
@@ -526,10 +673,11 @@ Page({
     wx.showTabBar();
   },
   getOperation(e) {
-    let type = e.currentTarget.dataset.type;
+    const {type, active} = e.currentTarget.dataset
+    let activeData = JSON.stringify(active)
     if (type == 'schedule') {
       wx.navigateTo({
-        url: '../new_schedule/new_schedule?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
+        url: '../new_schedule/new_schedule?activeData=' + activeData + '&type=' + type
       })
     }
     if (type == 'consume') {
@@ -621,21 +769,24 @@ Page({
     this.setData({clickedRowIndex: index})
   },
   onClickDate(event) { // 点每一个日期
-    const {cur_month, full_year, } = this.data;
+    const {cur_month, isStretch,clickedRowIndex } = this.data;
     let status = event.currentTarget.dataset.item.status;
     let item = event.currentTarget.dataset.item;
-    const nian_yue_ri = `${item.sYear}-${parseInt(item.sMonth)>= 10 ?item.sMonth: '0' + item.sMonth}-${item.sDay}`;
-    console.log('=====activeDate=====>', item);
+    // debugger
+    const nian_yue_ri = `${item.sYear}-${parseInt(item.sMonth)>= 10 ?item.sMonth: '0' + item.sMonth}-${item.sDay >=10?item.sDay:'0'+item.sDay}`;
     console.log('cur_month=====>',cur_month)
-    this.getRecordList(nian_yue_ri);
-    if (item.isToday) return;
+    if(!isStretch) this.getRecordList(nian_yue_ri);
+    // if (item.isToday) return;
     if (cur_month !== item.sMonth) {
       // 移动月份
     }
     // 去掉clicked
     this.getStyle(status);
     this.setData({
+      clickedRowIndex: item.rowIndex,
       activeDate: item
+    }, () => {
+      console.log('=====activeDate=====>', this.data.activeDate);
     })
   },
   getStyle (status) {
@@ -885,32 +1036,105 @@ Page({
       })
   },
 
+  deleteMonthData(params) { // 从某月某日的行程数组里面删除那条行程数据
+    const {months_arr, swiperCurrent} = this.data;
+    const {delItem: {date}} = params;
+    let _months_arr = months_arr;
+    const cur = date.split('-');
+    const cur_year = parseInt(cur[0]);
+    const cur_month = parseInt(cur[1]);
+    const cur_day = parseInt(cur[2]);
+    let curCol;
+    
+    months_arr[swiperCurrent].map((rows, rowIn) => {
+      rows.map((col, colIn) => {
+        console.log(rowIn, colIn)
+        if (col.sYear == cur_year && col.sMonth == cur_month && col.sDay == cur_day) {
+          curCol = col
+        }
+      })
+    })
+    const {rowIndex, colIndex} = curCol;
+  
+    let curSList = _months_arr[swiperCurrent][rowIndex][colIndex].sList;
+    const _dt = curSList.dt.filter(d => d._id !== params.delItem._id)
+  
+    _months_arr[swiperCurrent][rowIndex][colIndex].sList = {
+      ...curSList,
+      dt: _dt
+    }
+   
+    console.log('_months_arr======>',_months_arr)
+    this.setData({months_arr: _months_arr})
+  },
+
+  // 获取到新增的那条数据，加到当前的数组里面
+  updateMonthData (params) {
+    const {_id, activeData: {rowIndex, colIndex, sYear, sMonth, sDay}} = params;
+    const {months_arr,hasSchedule, swiperCurrent} = this.data;
+    const nian_yue_ri = `${sYear}-${sMonth>=10?sMonth:'0'+sMonth}-${sDay>=10?sDay:'0'+sDay}`
+
+    // if (hasSchedule[nian_yue]) {// 添加过sList
+      let _months_arr = months_arr;
+      let cur_month_data = _months_arr[swiperCurrent];
+      const rowColData = cur_month_data[rowIndex][colIndex];
+      
+      let curSList = !rowColData.sList? {...rowColData, sList:{date:nian_yue_ri, dt: []}}:rowColData.sList;
+      let dt = !curSList.dt?[]:curSList.dt;
+
+      const openid = wx.getStorageSync('openid')
+      let filters = {
+        event_type: 'schedule',
+        _openid: openid,
+      }
+      wx.cloud.callFunction({
+        name: 'get_schedule_list',
+        data: {
+          filter: filters,
+          dbName: 'todo_list',
+          key: '_id',
+          isSearch: true,
+          searchKey: _id,
+        }
+      }).then((res) => {
+        const cur_item = res.result.data[0];
+        dt.unshift(cur_item);
+     
+        _months_arr[swiperCurrent][rowIndex][colIndex].sList = {...curSList, dt}
+          console.log('_months_arr======>',_months_arr)
+        this.setData({months_arr: _months_arr})
+      })
+    // } else {// 没有添加过sList
+    //   this.getScheIntoMonArr();
+    // }
+  },
   
   onLoad: function (options) {
     const {full_year, cur_month, cur_date} = this.data;
-    // console.log(options);
-    // console.log(this.data.is_show_new_mask)
+    app.getCalTableData(full_year, cur_month);
+    const {months_arr} = app.globalData;
+    
     console.log('globalData=======>',app.globalData)
-    // debugger
+
     wx.setNavigationBarTitle({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     })
-    const months_arr = app.getTableData(full_year, cur_month)
+   
+    
     //    isShrink: true
     let clickedRowIndex;
-    months_arr[1].map((row, index) => {
-     row.map(item => {
+    months_arr[1].map((row, rowIndex) => {
+     row.map((item, colIndex) => {
        if (item.isToday) {
-        clickedRowIndex = index
+        clickedRowIndex = rowIndex
         this.setData({activeDate: item})
        }
      })
     })
     this.setData({
-      months_arr: months_arr,
+      months_arr,
       clickedRowIndex: clickedRowIndex,
       defaultClickedRowIndex: clickedRowIndex,
-      test_obj: months_arr[0][0],
       month_arr: months_arr[1],
       zhou_ji: days.calculateDays(full_year, cur_month, cur_date),
       min_height:Math.floor((wx.getSystemInfoSync().windowWidth - 75)/7) + 'px',
@@ -919,6 +1143,18 @@ Page({
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
 
+    console.log('bus===>',bus)
+    bus.on('onUpdate',(params) => {
+      console.log('onUpdate')
+      this.updateMonthData(params)
+    })
+    bus.on('goDelete',(params) => {
+      console.log('goDelete')
+      this.deleteMonthData(params)
+    })
+
+    this.getScheIntoMonArr(); // 给months_arr添加sList
+    
     console.log('windowHeight=======>',wx.getSystemInfoSync().windowHeight);
     // clearInterval(this.data.interval);
     // this.getYears();

@@ -71,6 +71,8 @@
 															<view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
 																	{{day_item.content}}
 															</view>
+															<!-- <web-view src="https://juejin.cn/user/1978776660216136"></web-view> -->
+
 													</view>
 													<view class="create_time">{{day_item.date}} {{filter.getHourMinutes(day_item.create_time)}}</view>
 												</view>
@@ -84,11 +86,14 @@
 				<view class="hasNoMore" wx:if="{{!hasMore && !isNoData}}">已经加载完全部啦～</view>
 			</scroll-view>
 			<view wx:else style="margin-top: {{navHeight}}px;" class='no_schedule no_schedule1'>
-					<view class='no_schedule_img'>
-					<image style="width:100%;height:100%;" src="../../images/tanshou.png"></image>
-					</view>
-					<view class="">您还没有日程~~</view>
-					<view catchtap="goCreate" class="go_create">现在创建</view>
+				<!-- <view catchtap="goCreate"  class="bottom_box_inner"> -->
+						<view class="empty_row">
+							<view class="empty_box">
+									<image class="bgImg" src="../../images/empty.png"></image>
+								</view>
+						</view>
+						<view class="empty_tip">今天没有记录～</view>
+						<view catchtap="goCreate" class="tip_add">点击“+”创建记录</view>
 			</view>
 
 			<!--删除确认弹窗-->

@@ -13,13 +13,6 @@ const weekDayMap = {
 
 App({
 
-  // getMonthData(cur_year, cur_month) { // 获取某一个月份的数据
-  //   let monData = lunar.showCal(cur_year, cur_month)
-  //   monData = this.getWeekData(monData)
-  //   debugger
-  //   return monData
-  // },
-
   getNextMonthData (next_month_year, next_month) {// 获取下月数据
     let nextMonData = lunar.showCal(next_month_year, next_month)
     this.globalData.monthsObj[`${next_month_year}_${next_month}`] = nextMonData
@@ -95,7 +88,7 @@ App({
 
 
   // 获取目标年月的天数
-  getTableData(cur_year, cur_month,t_type) {
+  getCalTableData(cur_year, cur_month,t_type) {
     console.log('cur_year, cur_month====>',cur_year, cur_month)
     const {monthsObj, savedMonkeys,  months_arr} = this.globalData;
     let currentMonData;let lastMonData;let nextMonData;let last2MonData;let next2MonData; let monthsArr = months_arr;
@@ -257,6 +250,17 @@ App({
         curArr = [];
       }
     }
+    _currentMonData = _currentMonData.map((rowItem, row) => {
+      return rowItem.map((colItem, col) => {
+        return {
+          ...colItem,
+          rowIndex: row,
+          colIndex: col
+        }
+      })
+     
+    })
+    console.log('_currentMonData===>',_currentMonData)
     return _currentMonData
   },
 

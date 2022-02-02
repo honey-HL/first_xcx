@@ -1,4 +1,2 @@
-<!--pages/consume.wxml-->
-<view>
-  <com-header/>
-</view>
+<!--pages/consume/consume.wxml-->
+<text>pages/consume/consume.wxml</text>
