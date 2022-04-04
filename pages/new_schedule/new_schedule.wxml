@@ -32,14 +32,14 @@
 
     <textarea name="evaContent" rows="2" maxlength="500" value="{{evaContent}}" class="textarea" placeholder="这一刻的想法..." bindinput="charChange" /> 
 
-    <view wx:if="{{operation_type != 4}}" class='pictures_area'>
+    <!-- <view wx:if="{{operation_type != 4}}" class='pictures_area'>
       <view wx:for="{{pictures}}" wx:key="item" wx:for-item="item" class='pictures'>
         <image mode="aspectFill" class="photo" src='{{item}}'></image>
       </view>
       <view wx:if="{{pictures.length < 9}}" catchtap='addAnotherPhoto' class='add_new'>
         <image class='add_icon' src="../../images/add_photo.png"></image>
       </view>
-    </view>
+    </view> -->
     <!-----------附加选项----------->
       <view class='additional_options'>
 
@@ -57,7 +57,7 @@
           </view>
         </view>
       
-        <view catchtap='getLocationAuth' class='location'>
+        <!-- <view catchtap='getLocationAuth' class='location'>
           <view class='location_icon'>
             <image style="width:100%;height:100%;" src="../../images/location.png"></image>
           </view>
@@ -65,7 +65,7 @@
             <view class='headline'>{{location}}</view>
             <view class='location_icon'><image style="width:100%;height:100%;" src="../../images/arrow-right.png"></image></view>
           </view>
-        </view>
+        </view> -->
 
         <view catchtap='' class='start_time'>
 
@@ -136,9 +136,7 @@
 
       </view>
 
-      <view class="last_btn">
-        <view class="last_btn_save" catchtap='saveItem'>保存</view>
-      </view>
+      
 
       <!-----------附加选项----------->
      <!-----------弹框----------->  
@@ -152,6 +150,10 @@
         </view>
       </view>
        <!-----------弹框----------->  
+  </view>
+
+  <view class="last_btn">
+    <view class="last_btn_save" catchtap='saveItem'>保存</view>
   </view>
 
 </view>

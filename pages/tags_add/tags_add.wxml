@@ -1,0 +1,72 @@
+<!--pages/tags_add/tags_add.wxml-->
+<view style="height: {{windowHeight}}">
+	<com-header title="{{title}}" show="{{true}}"/>
+    <view style="height: {{mainHeight}};overflow-y: auto;" class='container-tag' >
+      <view style="margin-top:15px;margin-bottom: 10px;">
+        <span class="has-tags">已有标签</span>
+        <view class="all-tags">
+          <view catchtap='onTagsDelete' class="tag_item" style="background-color: {{item.tag_color}};" wx:for="{{tags}}" data-item="{{item}}" wx:key="{{item}}">
+            {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
+            <view class="del-btn">
+              <image class="del-img" src="../../images/close.png"></image>
+            </view>
+          </view>
+        </view>
+        <span>标签名称</span>
+        <view class="tag weui-cell weui-cell_input" style="background: {{tagColor?tagColor:palette[0]}};">
+            <input value="{{tagValue}}" bindinput="bindKeyInput" class="weui-input" placeholder="输入标签名称"/>
+          </view>
+      </view>
+      <view class="picker" id="color-picker">
+        <span>选择标签背景颜色</span>
+        <view class="color-box">
+          <view catchtap="changeColor" data-color="{{color}}" wx:for="{{palette}}" wx:for-item="color" wx:key="{{index}}" class="color-item">
+            <span class="color-span" style="background-color: {{color}};"></span>
+          </view>
+        </view>
+       
+      </view>
+      <view class="daka_group">
+        <view class='daka_title'>
+          是否需要累计打卡
+          </view>
+          <view class='type_radio'>
+            <radio-group class="radio-group" bindchange="radioChange">
+              <label class="radio" data-index="{{index}}" wx:key="{{index}}" wx:for="{{count_daka_opt}}">
+                <radio color="#29E" value="{{item.value}}" checked="{{item.checked}}" />
+                {{item.name}}
+              </label>
+            </radio-group>
+          </view>
+          <view wx:if="{{needCalDaka == 1}}">
+            <view class='daka_title'>
+            打卡基数
+            </view>
+            <view class="baseNum weui-cell weui-cell_input" style="">
+              <input value="{{dakaDaseNum}}" bindinput="bindBaseInput" class="weui-input" placeholder="请输入打卡基数"/>
+            </view>
+          </view>
+          <!-- <view class='daka_title'>
+          打卡累计方式
+          </view>
+          <view class='type_radio'>
+            <radio-group class="radio-group" bindchange="radioChange">
+              <label class="radio" data-index="{{index}}" wx:key="{{index}}" wx:for="{{daka_count_type}}">
+                <radio color="#29E" value="{{item.name}}" checked="{{item.checked}}" />
+                {{item.value}}
+              </label>
+            </radio-group>
+          </view> -->
+        </view>
+      <!-- <view>
+        <span>是否累计习惯打卡次数</span>
+      </view> -->
+      <!-- <view class="bottom_save">
+        <view class="btn_save">保存</view>
+      </view> -->
+    </view>
+    <view class="last_btn">
+      <view class="last_btn_save" catchtap='saveItem'>完 成</view>
+    </view>
+</view>
+

@@ -2,15 +2,17 @@
 
 /*************/
 .last_btn {
-  display:flex;
-  justify-content:center;
-  margin:20px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 100px;
+  width: 100%;
 }
 .last_btn_save {
   padding:10px 60px;
   background:#29e;
   color:#fff;
-  border-radius:4px;
+  border-radius:25px;
 }
 
 /*************/
@@ -134,7 +136,7 @@ position:relative;
 }
 .inner {
   margin-top: 20px;
-  padding:0 50rpx;
+  padding:0 36rpx;
   width:calc(100%-30px);
   height: 100%;
 }
@@ -146,7 +148,7 @@ position:relative;
   color: #292929;
   font-size: 14px/1.5;
   width:inherit;
-  height:76px;
+  height:200px;
 }
 .photo {
   width:204rpx;
@@ -188,7 +190,7 @@ position:relative;
 
 .additional_options {
   width: 100%;
-  margin-top:35px;
+  margin-top:20px;
   color: #333;
   font-size: 16px/1.5;
   font-weight: 400;
@@ -203,6 +205,7 @@ position:relative;
 }
 .type_group,.range_box {
   border-top:1px solid #d9d9d9;
+  border-bottom:1px solid #d9d9d9;
   display: grid;
   align-items: center;
   grid-template-columns: 0fr 2fr ;

@@ -3,4 +3,5 @@
   <view catchtap="goBack" style="margin-top:{{navTop- 13}}px;" wx:if="{{show}}" class="back">
     <image src="../../images/arrow-left.png"></image>
   </view>
+  <view style="margin-top:{{navTop- 13}}px;" class="title" wx:if="{{title}}">{{title}}</view>
 </view>

@@ -213,6 +213,7 @@ App({
       console.log('===this.globalData.monthsObj===>',this.globalData.monthsObj)
       console.log('_savedMonkeys=========666=====>', _savedMonkeys)
       console.log('monthsArr=========222===>',monthsArr)
+      // debugger
       
       
       return monthsArr;

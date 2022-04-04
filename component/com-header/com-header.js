@@ -8,7 +8,11 @@ Component({
     show: {
       type: Boolean,
       value: false
-    }
+    },
+    title:  {
+      type: String,
+      value: ''
+    },
   },
 
   /**
@@ -24,15 +28,15 @@ Component({
    */
   methods: {
     goBack () {
-      wx.switchTab({
-        url: '../calendar/calendar'
-      })
-      // var pages = getCurrentPages();
-      // var beforePage = pages[pages.length - 2];
-      // beforePage.onLoad(beforePage.options);
-      // wx.navigateBack({
-      //    delta: 1,
-      // })      
+      // wx.switchTab({
+      //   url: '../calendar/calendar'
+      // })
+      var pages = getCurrentPages();
+      var beforePage = pages[pages.length - 2];
+      beforePage.onLoad(beforePage.options);
+      wx.navigateBack({
+         delta: 1,
+      })      
     }
   }
 })

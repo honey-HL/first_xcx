@@ -1,15 +1,36 @@
 <!--pages/my/my.wxml-->
 <view style="height: {{windowHeight}}">
 	<com-header/>
-    <view style="height: {{mainHeight}};" class='container' >
+    <view style="height: {{mainHeight}};" class='container-my' >
         <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" class="save-btn">授权登录</button>
         <view class='infor_card'>
-            <view class="userAvatarUrl">
-            <open-data type="userAvatarUrl"></open-data>
+          <button class="userAvatarUrl" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+            <image class="avatar" src="{{avatarUrl}}"></image>
+          </button> 
+            <view>
+              <view class='nickname'>
+               <input type="nickname" class="weui-input" placeholder="请输入昵称"/>
+              </view>
+              <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
             </view>
-            <view class='nickname'>
-            <open-data type="userNickName"></open-data>
+        </view>
+        <view class="tags-box">
+          <view class="habit-tag">我的打卡标签</view>
+          <view class="tags_wrapper">
+              <view catchtap='onClickTag' class="tag_item" style="background-color: {{item.tag_color}};" wx:for="{{tags}}" data-item="{{item}}" wx:key="{{item}}">
+              {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
+              <!-- <view catchtap='onTagsDelete' class="del-btn">
+                <image class="del-img" src="../../images/close.png"></image>
+              </view> -->
             </view>
+            <view catchtap='onTagsAdd' class="add-tag">
+              <image class="add-img" src="../../images/add_.png"></image>
+            </view>
+            <!-- <view catchtap='onTagsAdd' class="add-tag">
+              <image class="add-img" src="../../images/add_.png"></image>
+            </view> -->
+          </view>
+         
         </view>
     </view>
 </view>

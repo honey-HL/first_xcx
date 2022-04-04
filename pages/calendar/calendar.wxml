@@ -41,7 +41,7 @@
   <!-- <view style="color: red;width: 100px;height: 20px;">lll===={{test_obj.sDay}}</view> -->
 
   <!-- <view class='cal_top' animation="{{slide_up1}}"> -->
-  <view class='cal_top'>
+  <view class="cal_top">
 
     <view class="sticky {{!is_sticky? 'sticky':''}}">
       <view class='week_line'>
@@ -133,18 +133,22 @@
               <tbody style="overflow: hidden;display: flex;flex-direction: column;" class="tbody">
                 <tr style="flex-grow: 1;border-top: {{isStretch ? '1px solid #eee':''}};" catchtap="onClickRow" wx:for="{{month_row}}" class="date_tr {{(clickedRowIndex == index) && isShrink ? sticky_row: ''}} {{(clickedRowIndex !== index) && isShrink ? 'hide_row':''}}" wx:for-item="tr_week" mark:row="{{index}}" data-index="{{index}}" wx:key="{{index}}">
                   <td style="border-right: {{isStretch && (index % 6 !== 0 || index == 0) ? '1px solid #eee':''}};" bindtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="{{index}}" data-col="{{index}}" wx:for-item="td_item" wx:for="{{tr_week}}">
-                    <view class="ear_left {{td_item.sMonth == cur_month && td_item.sDay == activeDate.sDay?'active_ear':'is_clicked'}} {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked_ear':''}}"></view>
+                    <view class="ear_left {{td_item.sMonth == cur_month && td_item.sDay == activeDate.sDay?'active_ear':'is_clicked'}} {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked_ear':''}}">
+                    </view>
                     <view class="ear_right {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked_ear':''}} {{td_item.sMonth == cur_month &&td_item.sDay == activeDate.sDay ?'active_ear':''}}"></view>
 
                     <a style="height:{{min_height}}px;" class="td_a {{td_item.gray?'gray':''}} {{td_item.sMonth == cur_month && td_item.sDay == activeDate.sDay?'active':'is_clicked'}} {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked':''}}" >
                   
-                      <span class="date_num">{{td_item.sDay}}</span>
-                      <span class="lunar_date">{{td_item.lunarDate}}</span>
+                      <span class="date_num">
+                        <span class="offday" wx:if="{{td_item.offday}}">休</span>
+                        <span class="workday" wx:if="{{td_item.workday}}">班</span>
+                      {{td_item.sDay}}</span>
+                      <span class="lunar_date">{{td_item.solarTerms || td_item.lunarDate}}</span>
                     </a>
-                    <view class="" wx:if="{{isStretch}}">
-                      <view class="date_tip" wx:for="{{td_item.sList.dt}}" wx:key="date" wx:for-item="it">
+                    <view class="stretch-content" wx:if="{{isStretch}}">
+                      <view class="date_tip" style="background-color: {{it.tag_color}};" wx:for="{{td_item.sList.dt}}" wx:key="date" wx:for-item="it">
                         <view class="content">
-                        {{it.content}}
+                        {{it.event_type === "daka" ? it.tag_value + (it.needCalDaka?it.dakaDaseNum:'') : it.content}}
                         </view>
                       </view>
                     </view>
@@ -174,31 +178,48 @@
       <!-- <view 
       style="height: {{calBtmHeight}};" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}"> -->
       <!-- toptoptoptoptoptoptoptoptoptop -->
-      <!-- <view wx:if="{{recordsList.length >0}}"> -->
-            <view wx:if="{{recordsList.length >0}}" wx:for="{{recordsList}}" wx:for-item="item" wx:key="item{{index}}" class='schedule_box'>
-               <view  class="list_box">
-                 <view class="list_item_box" data-index="{{index}}">
-                   <view class="list_item">
-                       <view class="smile">
-                         <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
-                         <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
-                         <image wx:if="{{item.event_type === 'schedule'}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
-                       </view>
-                       <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
-                         <span class='content'>
-                           {{item.content}}
-                           <!-- <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
-                             <span class="yuan">元</span>
-                           </span> -->
-                         </span>
-                       </view>
-                   </view>
-                   <view class="item_time">{{item.date}} {{filter.getHourMinutes(item.create_time)}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
-                 </view>
-               </view>
+      <!-- <view wx:if="{{scheRecords.length >0}}"> -->
+      <view  bindtouchend="touchCalTopEnd"
+    bindtouchstart="touchCalTopStart" wx:if="{{dakaRecords.length > 0}}" class='daka_box'>
+        <span>今日已打卡</span>
+        <view class="tag_daka" wx:for="{{dakaRecords}}" wx:for-item="item" wx:key="item{{index}}">
+          <view class="schedule_1">
+            <image class="img" src="../../images/gou.png"/>
+          </view>
+          <view>
+            <view class="tag_item" style="background-color: {{item.tag_color}};">{{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum: item.content}}</view>
+            <view class="item_time daka_time">{{item.date}} {{filter.getHourMinutes(item.create_time)}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
+          </view>
+        
+        </view>
+      </view>
+      <view wx:if="{{scheRecords.length >0}}" class='schedule_box'>
+        <span>今日日程/心得</span>
+        <view wx:for="{{scheRecords}}" wx:for-item="item" wx:key="item{{index}}">
+          <view  class="list_box">
+            <view class="list_item_box" data-index="{{index}}">
+              <view class="list_item">
+                  <view class="smile">
+                    <image wx:if="{{item.type == 0}}" style="width:100%;height:100%;" src="../../images/zi_smile.png"></image>
+                    <image wx:if="{{item.type == 1}}" style="width:100%;height:100%;" src="../../images/red_smile.png"></image>
+                    <image wx:if="{{item.event_type === 'schedule' || 'data'}}" style="width:100%;height:100%;" src="../../images/blue_smile.png"></image>
+                  </view>
+                  <view class="{{item.type == 0?'describe_zi':item.type == 1?'describe_red':'describe_blue'}}">
+                    <span class='content'>
+                      {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum: item.content}}
+                      <!-- <span wx:if="{{item.cost !== '' && item.cost !== null}}" class="{{item.type == 0?'cost_zi':'cost_red'}}"> {{item.cost}}
+                        <span class="yuan">元</span>
+                      </span> -->
+                    </span>
+                  </view>
+              </view>
+              <view class="item_time">{{item.date}} {{filter.getHourMinutes(item.create_time)}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
             </view>
+          </view>
+        </view>
+      </view>
       <!-- </view> -->
-      <view wx:if="{{recordsList.length == 0}}"  class="bottom_box_inner">
+      <view wx:if="{{scheRecords.length == 0}}"  class="bottom_box_inner">
           <view class="empty_row">
             <view class="empty_box">
                 <image class="bgImg" src="../../images/empty.png"></image>
@@ -354,11 +375,12 @@
     <!-- <view class="batch_add" animation="{{batch_add_animation}}" catchtap='getOperation' data-type="4">{{batch_text}}</view>
     <view class="photo_video" animation="{{photo_video_animation}}" catchtap='getOperation' data-type="1">拍摄</view> -->
     <!-- <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="consume">记账</view> -->
+    <view class="new_consumption" animation="{{select_pictures_animation}}" catchtap='getOperation' data-type="daka">打卡</view>
     <view data-active="{{activeDate}}" class="new_schedule" animation="{{new_schedule_animation}}" catchtap='getOperation' data-type="schedule">记事</view>
   </view>
 
     
-    <popup catchtap='hideJiShiModal' show="{{chooseSize}}" id="myComponent" height="{{'430px'}}">
+    <popup catchtap='hideJiShiModal' show="{{chooseSize}}" id="myComponent1" height="{{'430px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">
@@ -405,6 +427,39 @@
           
         </view>
 
+      </view>
+    </popup>
+
+      
+    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'230px'}}">
+      <view slot="header" class="sticky_header">
+        <view class="top-bar">
+          <view catchtap='closeModal' class="close">
+            <image class="close-img" src="../../images/close.png"></image>
+          </view>
+        </view>
+      </view>
+    
+      <view class="main">
+        <view class="selected_tag">选择今日打卡标签：</view>
+        <view class="tags_wrapper">
+          <view wx:for="{{tags}}" wx:key="{{item}}">
+            <view class="tag_item_popup" style="background-color: {{item.tag_color}};padding: {{item.clicked?'':'6px 10px'}}">
+              <view catchtap='onClickTag' data-item="{{item}}" style="padding:{{item.clicked?'6px 10px;':'0'}}" class="{{item.clicked ? 'tag_cover':''}}">
+                {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="add_box" wx:if="{{curClickedTag.needCalDaka == 1}}">
+          请输入增加值：
+          <view class="baseNum weui-cell weui-cell_input" style="">
+            <input bindinput="bindAddInput" class="weui-input" auto-focus placeholder="请输入增加值"/>
+          </view>
+        </view>
+        <view class="last_btn">
+          <view style="margin-top: {{curClickedTag.needCalDaka?'25px':'50px'}};" class="last_btn_save" catchtap='saveDakaTag'>保存</view>
+        </view>
       </view>
     </popup>
 

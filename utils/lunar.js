@@ -25,7 +25,12 @@ var lunarInfo = new Array(
   0x05aa0, 0x076a3, 0x096d0, 0x04bd7, 0x04ad0, 0x0a4d0, 0x1d0b6, 0x0d250, 0x0d520, 0x0dd45,
   0x0b5a0, 0x056d0, 0x055b2, 0x049b0, 0x0a577, 0x0a4b0, 0x0aa50, 0x1b255, 0x06d20, 0x0ada0)
   var sTermInfo = new Array(0, 21208, 42467, 63836, 85337, 107014, 128867, 150921, 173149, 195551, 218072, 240693, 263343, 285989, 308563, 331033, 353350, 375494, 397447, 419210, 440795, 462224, 483532, 504758);
- //公历节日
+  
+  // 放假的节气
+  const ofd = {
+    '清明': 3
+  }
+  //公历节日
  var sFtv = new Array(
   "0101 元旦",
   "0214 情人节",
@@ -58,11 +63,15 @@ var lFtv = new Array(
   "1208 腊八节",
   "1224 小年")
 
+  // if (solarTerms === '清明' || this.solarFestival === '劳动节') {
+  //   this.offday = true;
+  // }
+
  //返回某年的第n个节气为几日(从0小寒起算)
- function sTerm(y, n) {
-  var offDate = new Date((31556925974.7 * (y - 1900) + sTermInfo[n] * 60000) + Date.UTC(1900, 0, 6, 2, 5));
-  return (offDate.getUTCDate())
-}
+  function sTerm(y, n) {
+    var offDate = new Date((31556925974.7 * (y - 1900) + sTermInfo[n] * 60000) + Date.UTC(1900, 0, 6, 2, 5));
+    return (offDate.getUTCDate())
+  }
 
  //记录公历和农历某天的日期
  function calElement(sYear, sMonth, sDay, week, lYear, lMonth, lDay, isLeap, lunarDate, zodiacSign) {
@@ -83,6 +92,9 @@ var lFtv = new Array(
   this.lunarFestival = ''; //农历节日
   this.solarFestival = ''; //公历节日
   this.solarTerms = ''; //节气
+  // 休假
+  this.offday = ''
+  this.workday = ''
 }
 
  //返回农历y年m月的总天数
@@ -229,6 +241,7 @@ function nongliDay(lM, lD, SM, SD, sD, fat, mat) {
 
 function drawCld(SY, SM) {
   let cld = new calendar(SY, SM);
+  console.log('cld===>',cld)
    return cld
 }
 
@@ -275,12 +288,26 @@ function calendar(y, m) {
       if ((i + this.firstWeek) % 7 == 0) {
           this[i].color = 'red';  //周日颜色
       }
+      // 劳动节
+      if (this[i].sMonth == 5 && parseInt(this[i].sDay)+1 <= 5) {
+        this[i].offday = true
+      }
   }
   //节气
   tmp1 = sTerm(y, m * 2) - 1;
   tmp2 = sTerm(y, m * 2 + 1) - 1;
   this[tmp1].solarTerms = solarTerm[m * 2];
   this[tmp2].solarTerms = solarTerm[m * 2 + 1];
+  console.log('this[tmp1].solarTerms==>',this[tmp1].solarTerms)
+  console.log('this[tmp2].solarTerms===>',this[tmp2].solarTerms)
+  // 24节气的放假
+  if (this[tmp1].solarTerms === '清明') {
+    this[tmp1].offday = true;
+    this[tmp1-1].offday = true;
+    this[tmp1-2].offday = true;
+    this[tmp1-3].workday = true;
+  }
+
   if ((this.firstWeek + 12) % 7 == 5) {//黑色星期五
       this[12].solarFestival += '黑色星期五';
   }

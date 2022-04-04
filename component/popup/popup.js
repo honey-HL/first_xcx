@@ -15,6 +15,8 @@
   场馆 -> 发布 -> 选择使用物品
  */
 
+const {bus} = require('../../utils/bus.js');
+
 Component({
 
   /**
@@ -100,6 +102,8 @@ Component({
           show: false
         })
       }, 200)
+      wx.showTabBar();
+      bus.emit('onShowOperation')
     },
     clickMask() {
       // this.setData({show: false})

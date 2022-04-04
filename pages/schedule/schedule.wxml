@@ -63,16 +63,17 @@
 										<view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view> -->
 										<mp-slideview data-item="{{day_item}}" buttons="{{slideButtons}}"  bindbuttontap="slideButtonTap">
 												<view data-item="{{day_item}}" catchtap='onScheduleChange'  wx:if="{{day_item.schedule_type == 1}}" class="schedule_1">
-																<image class="img" src="../../images/gou.png"/>
-														</view>
+													<image class="img" src="../../images/gou.png"/>
+												</view>
 												<view data-item="{{day_item}}" wx:else catchtap='onScheduleChange' class="schedule_0"></view>
 												<view>
 													<view class="content_right">
-															<view data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
-																	{{day_item.content}}
-															</view>
-															<!-- <web-view src="https://juejin.cn/user/1978776660216136"></web-view> -->
-
+														<view wx:if="{{day_item.event_type === 'schedule'}}" data-item="{{day_item}}" catchtap='goDetail' class='content_inner'>
+																{{day_item.content}}
+														</view>
+														<view wx:if="{{day_item.event_type === 'daka'}}" style="background-color: {{day_item.tag_color}};" data-item="{{day_item}}" catchtap='goDetail' class='content_inner daka_inner'>
+																{{day_item.needCalDaka == 1?(day_item.tag_value + day_item.dakaDaseNum): day_item.content}}
+														</view>
 													</view>
 													<view class="create_time">{{day_item.date}} {{filter.getHourMinutes(day_item.create_time)}}</view>
 												</view>

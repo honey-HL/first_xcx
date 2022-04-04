@@ -85,7 +85,6 @@ Page({
       let results= []
       const openid = wx.getStorageSync('openid')
       let filters = {
-        event_type: 'schedule',
         _openid: openid,
       }
     
@@ -152,14 +151,6 @@ Page({
           this.getList()
         })
       } 
-      // else {
-        // wx.showToast({
-        //   title: '已经到底部了',
-        // })
-      // }
-      // wx.showToast({
-      //   title: '触发上拉加载',
-      // })
     },
 
     goCreate () {
@@ -285,7 +276,6 @@ Page({
           return item
         }
       }).filter(item => item)
-      debugger
       bus.emit('goDelete', {delItem: willDeleteItem})
       _this.setData({
         list: _list,
@@ -359,6 +349,7 @@ Page({
     onScheduleChange (event) {
       const _this = this;
       const cur_item = event.currentTarget.dataset.item;
+      if (cur_item.event_type === 'daka') return;
       const _origin_schedule_type = cur_item.schedule_type;
       const changed_list = this.data.changed_list || [];
       console.log('_cur==>',cur_item)

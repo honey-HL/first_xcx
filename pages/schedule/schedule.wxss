@@ -167,6 +167,7 @@
   -webkit-box-orient:vertical; */
 }
 
+
 .content_right {
   display: flex;
   width: 100%;
@@ -176,7 +177,15 @@
   width: calc(100% - 20px);
   padding-top: 10px;
 }
-
+.daka_inner {
+  width: 150px;
+  border-radius: 20px;
+  width: 140px;
+  border-radius: 30px;
+  padding: 2px 8px;
+  /* font-size: 14px !important; */
+  /* font-weight: 200 !important; */
+}
 .create_time {
     /* position: absolute;
     left: 45px;

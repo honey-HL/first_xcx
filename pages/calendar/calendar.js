@@ -8,11 +8,17 @@ const {bus} = require('../../utils/bus.js');
 
 Page({
   data: {
+    dakaRecords: [], // 打卡记录
+    scheRecords: [], // 日程记录
+    dakaAddNum: 0, // 打卡增加值
+    tags:[],
+    curClickedTag: '',
+    showDaka: false,
     rowHeight: '',
     isStretch: false,
     activeDate: {},
     hasSchedule: {},
-    recordsList: [],
+    // recordsList: [],
     defaultClickedRowIndex: '',// 默认值不会变的
     clickedRowIndex: '',
     isShrink: false,
@@ -99,7 +105,6 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   onPageScroll: function (e) {
-    debugger
     let _this = this
     wx.createSelectorQuery().select('#index').boundingClientRect(function (rect) {
       const scrollTop = e.scrollTop
@@ -137,13 +142,19 @@ Page({
     // debugger
     // debugger
     const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
-    let curRowIndex;let activeDate;
-    curRowIndex = 0
-    activeDate = curMonData[0]
-
-    console.log('_curMonthIndex=========+>',_curMonthIndex)
-    let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    // debugger
+    let curRowIndex;let activeDate;let nian_yue_ri;
+    curRowIndex = 0 // curRowIndex需要改还没改
+    activeDate = curMonData.find(item => item.isToday);
+    if (!activeDate){
+      activeDate = curMonData[0]
+      console.log('_curMonthIndex=========+>',_curMonthIndex)
+      nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    } else {
+      nian_yue_ri =  (_year + '-') + (_month >= 10 ?_month:'0'+_month) + '-' +(activeDate.sDay >=10?activeDate.sDay:'0'+activeDate.sDay);
+    }
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+
     this.setData({
       activeDate,
       clickedRowIndex: curRowIndex,
@@ -179,13 +190,19 @@ Page({
     console.log('arr==============>',arr)
     let _curMonthIndex = arr.length - 2;
     const curMonData =  Array.from(app.globalData.monthsObj[`${_year}_${_month}`])
-    let curRowIndex;let activeDate;
+    let curRowIndex;let activeDate;let nian_yue_ri;
     curRowIndex = 0
-    activeDate = curMonData[0]
-
-    console.log('194====================current===>',current)
-    let nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    activeDate = curMonData.find(item => item.isToday);
+    if (!activeDate){
+      activeDate = curMonData[0]
+      console.log('_curMonthIndex=========+>',_curMonthIndex)
+      nian_yue_ri = _year + '-' + (_month >= 10 ?_month:'0'+_month) + '-01';
+    } else {
+      nian_yue_ri =  (_year + '-') + (_month >= 10 ?_month:'0'+_month) + '-' +(activeDate.sDay >=10?activeDate.sDay:'0'+activeDate.sDay);
+    }
+    
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+
     this.setData({
       clickedRowIndex: curRowIndex,
       activeDate,
@@ -288,7 +305,6 @@ Page({
       let results= []
       const openid = wx.getStorageSync('openid')
       let filters = {
-        event_type: 'schedule',
         _openid: openid,
       }
       wx.cloud.callFunction({
@@ -340,6 +356,7 @@ Page({
     const {offsetTop} = e.currentTarget;
     const ele = wx.createSelectorQuery().select('#index');
     let calBtmHeight =`${(parseInt(windowHeight) - 127 - 65)}px`
+    // debugger
     const nian_yue = `${full_year}-${cur_month>=10?cur_month:'0'+cur_month}`
     const nian_yue_ri = `${activeDate.sYear}-${parseInt(activeDate.sMonth)>= 10 ?activeDate.sMonth: '0' + activeDate.sMonth}-${activeDate.sDay >=10?activeDate.sDay:'0'+activeDate.sDay}`;
     let curMonArr = months_arr[swiperCurrent];
@@ -353,7 +370,7 @@ Page({
         calHeight:months_arr[swiperCurrent].length * 60 + 'px',
         calPosition: '',
         calTop:'',
-        calBtmHeight: '320px'
+        calBtmHeight
       })
     }
 
@@ -401,14 +418,11 @@ Page({
       this.getRecordList(nian_yue_ri);
     } 
     if (absY > absX && tmY > 0) { // pull 日历下拉
-      
       if (!hasSchedule[nian_yue]) {
         this.getScheIntoMonArr()
       }
       if(calTop && !isStretch) {
-      
-        this.setData({ // 
-          // calHeight,
+        this.setData({
           isStretch: false,
           rowHeight: calHeight / rowLen + 'px'
         })
@@ -429,7 +443,7 @@ Page({
     const nian_yue = `${full_year}-${cur_month>=10?cur_month:'0'+cur_month}`
     let curMonArr = months_arr[swiperCurrent];
     let _hasSchedule = hasSchedule;
-    // debugger
+  
     await this.getMonthSchedule({nian_yue}).then(s_list => {
       console.log('s_list===>',s_list)
       s_list.map(schedule => {
@@ -439,8 +453,16 @@ Page({
               item.sDay:'0'+item.sDay}`
             if (date === schedule.date) {
               let _schedule = schedule;
-              _schedule.dt.reverse();
+              const data_list = schedule.dt.filter(it => it.event_type === 'daka').reverse();
+              const sche_list = schedule.dt.filter(it => it.event_type === "schedule").reverse();
+              _schedule.dt = [...data_list, ...sche_list]
+              // debugger
+              // debugger data_list.concat(sche_list);
+              // _schedule.dt.reverse();
+              // let _sList = [...data_list, ...sche_list];
+            //  console.log()
               curMonArr[r][i].sList = _schedule;
+              console.log('461=======curMonArr===>',curMonArr)
             }
           })
         })
@@ -537,6 +559,72 @@ Page({
   //     is_show_picker: true
   //   })
   // },
+  onClickTag (e) {
+    const cur_item = e.currentTarget.dataset.item;
+    let curClickedTag;
+    const {tags} = this.data;
+    const new_arr = tags.map(it => {
+      let item = it
+      if (it._id === cur_item._id) {
+        item = {
+          ...it, clicked:true
+        }
+        curClickedTag = item;
+      } else {
+        item = {
+          ...it, clicked:false
+        }
+      }
+      return item
+    })
+    this.setData({tags: new_arr, curClickedTag})
+  },
+  updateTagOnRecord (cur_tag) {
+    const db = wx.cloud.database()
+    db.collection('todo_list').where({
+      _openid: wx.getStorageSync('openid'),
+      tag_id: cur_tag.tag_id
+    })
+    .update({
+      data:{
+        tag_value: cur_tag.tag_value,
+        tag_color: cur_tag.tag_color
+      },
+      success:() => {
+        // wx.navigateBack({
+        //   delta: 2
+        // })
+      }
+    })
+  },
+  updateUserTag (cur_tag) {
+    const db = wx.cloud.database()
+    db.collection('tag_list').where({
+      _openid: wx.getStorageSync('openid'),
+      _id: cur_tag.tag_id
+    })
+    .update({
+      data: {
+        dakaDaseNum:cur_tag.dakaDaseNum,
+      }
+    })
+  },
+  getUserTags () {
+    const db = wx.cloud.database()
+    db.collection('tag_list').where({
+      _openid: wx.getStorageSync('openid')
+    }).get().then(res => {
+      const arr = res.data.map(item => {
+        return {
+          ...item,
+          clicked: false
+        }
+      })
+      this.setData({tags: arr}, () => {
+        console.log('this.data.tags==>',this.data.tags)
+      })
+    })
+  },
   hideOperation () {
     var animation1 = wx.createAnimation({
       duration: 500,
@@ -677,7 +765,59 @@ Page({
       show_date_popup: false,
     })
   },
+  bindAddInput (e) {
+    this.setData({dakaAddNum: Number(e.detail.value)})
+  },
+  saveDakaTag () { // 选择打卡标签后点保存
+    const {activeDate,dakaAddNum, tags} = this.data;
+    const arr = tags.filter(it => it.clicked);
+    let clicked_tag = arr[0];
+    let content;
+    if (clicked_tag.needCalDaka == 1) {
+      // content = Number(clicked_tag.dakaDaseNum) + dakaAddNum;
+      // clicked_tag.dakaDaseNum = content;
+      this.updateUserTag(clicked_tag)
+      // content = clicked_tag.tag_value + content;
+    } else {
+      content =  clicked_tag.tag_value
+    }
+    let start_riqi = activeDate.sYear +'-'+ (activeDate.sMonth >= 10 ?activeDate.sMonth:'0'+activeDate.sMonth) + '-' + (activeDate.sDay>=10?activeDate.sDay:'0'+activeDate.sDay);
+    const obj = {
+      tag_color: clicked_tag.tag_color,
+      tag_id: clicked_tag._id,
+      schedule_type: '1', // 1已完成 0未完成
+      needCalDaka: clicked_tag.needCalDaka,
+      tag_value: clicked_tag.tag_value,
+      dakaDaseNum: Number(clicked_tag.dakaDaseNum) + dakaAddNum,
+      content,
+      month: activeDate.sMonth,
+      date: start_riqi,
+      create_time: new Date().getTime(),
+      _open_id: wx.getStorageSync('openid'),
+      event_type: 'daka'
+    }
+    const db = wx.cloud.database()
+    db.collection('todo_list').add({
+      data: obj,
+      success: res => {
+        console.log('add success res ==>',res)
+        // 更新record_list的数据
+        bus.emit('onUpdateRecord', {_id: res._id, activeData: activeDate})
+        // 更新tag中最新的dakaBaseNum
+        this.updateUserTag(obj)
+      },
+      fail: err => {
+        wx.showToast({
+          icon: 'none',
+          title: '新增记录失败'
+        })
+        console.error('[数据库] [新增记录] 失败：', err)
+      }
+    })
+    this.closeModal()
+  },
   closeModal() {
+    const {tags} = this.data;
     const new_payments = this.data.payments.map(item => {
       let new_item = item;
       if (item.type === 'expend') {
@@ -687,8 +827,16 @@ Page({
       }
       return new_item
     })
+    const new_tags = tags.map(item => {
+      return {
+        ...item,
+        clicked: false,
+      }
+    })
     setTimeout(() => {
       this.setData({
+        tags: new_tags,
+        curClickedTag: {},
         chooseSize: false,
         showOperation: true,
         clicked_num:'',
@@ -701,18 +849,27 @@ Page({
   getOperation(e) {
     const {type, active} = e.currentTarget.dataset
     let activeData = JSON.stringify(active)
+    let _this = this;
     if (type == 'schedule') {
       wx.navigateTo({
         url: '../new_schedule/new_schedule?activeData=' + activeData + '&type=' + type
       })
     }
     if (type == 'consume') {
+      // debugger
       // wx.navigateTo({
       //   url: '../new_consumption/new_consumption?cur_date=' + this.data.cur_date + '&cur_month=' + this.data.cur_month + '&' + 'full_year=' + this.data.full_year + '&type=' + type
       // })
       const child = this.selectComponent('#myComponent');
       child.chooseSezi();
       this.setData({chooseSize: true, showOperation: false})
+      wx.hideTabBar();
+    }
+    if (type === 'daka') {
+      this.getUserTags()
+      const child = this.selectComponent('#myComponent');
+      child.chooseSezi();
+      this.setData({showDaka: true, showOperation: false})
       wx.hideTabBar();
     }
     // if (type == 3 || type == 4) {
@@ -900,32 +1057,17 @@ Page({
     }).get({
       success: function(res) {
      
-        let results = res.data.reverse();
+        const results = res.data.reverse();
         console.log('results==>',results)
-        let _types = [
-          {data: []},
-          {data: []},
-          {data: []},
-      ]
-        results.forEach(item => {
-          if (item.event_type === "schedule") { // 0 schedule
-            _types[0].data.push(item)
-            _types[0].type = 0
-          } else if (Number(item.type) == 1) {
-            _types[1].data.push(item)
-            _types[1].type = 1
-          } else if (Number(item.type) == 2) {
-            _types[2].data.push(item)
-            _types[2].type = 2
-          }
-        })
-        console.log('_types==>',_types)
-        // debugger
-
-      
+        
+        const dakaRecords = results.filter(item => item.event_type === 'daka')
+        const scheRecords = results.filter(item => item.event_type === "schedule")
+      // debugger
         _this.setData({
-          recordsList: results,
-          itemList: _types
+          // recordsList: results,
+          dakaRecords,
+          scheRecords,
+          // itemList: _types
         })
       }
     })
@@ -1095,7 +1237,7 @@ Page({
   },
 
   // 获取到新增的那条数据，加到当前的数组里面
-  updateMonthData (params) {
+  updateMonthRecordData (params) {
     const {_id, activeData: {rowIndex, colIndex, sYear, sMonth, sDay}} = params;
     const {months_arr,hasSchedule, swiperCurrent} = this.data;
     const nian_yue_ri = `${sYear}-${sMonth>=10?sMonth:'0'+sMonth}-${sDay>=10?sDay:'0'+sDay}`
@@ -1110,7 +1252,6 @@ Page({
 
       const openid = wx.getStorageSync('openid')
       let filters = {
-        event_type: 'schedule',
         _openid: openid,
       }
       wx.cloud.callFunction({
@@ -1145,9 +1286,7 @@ Page({
     wx.setNavigationBarTitle({
       title: this.data.full_year + '年' + this.data.cur_month + '月'
     })
-   
-    
-    //    isShrink: true
+
     let clickedRowIndex;
     months_arr[1].map((row, rowIndex) => {
      row.map((item, colIndex) => {
@@ -1164,95 +1303,29 @@ Page({
       month_arr: months_arr[1],
       zhou_ji: days.calculateDays(full_year, cur_month, cur_date),
       min_height:Math.floor((wx.getSystemInfoSync().windowWidth - 75)/7) + 'px',
-      // windowHeight: app.globalData.windowHeight,
       windowWidth: wx.getSystemInfoSync().windowWidth,
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
 
     console.log('bus===>',bus)
-    bus.on('onUpdate',(params) => {
-      console.log('onUpdate')
-      this.updateMonthData(params)
+    bus.on('onUpdateRecord',(params) => {
+      this.updateMonthRecordData(params)
+    })
+    bus.on('onUpdateTag',(params) => {
+      this.updateTagOnRecord(params)
+    })
+    bus.on('onShowOperation',(params) => {
+     this.setData({showOperation: true})
     })
     bus.on('goDelete',(params) => {
       console.log('goDelete')
       this.deleteMonthData(params)
     })
 
+    this.getUserTags()
     this.getScheIntoMonArr(); // 给months_arr添加sList
     
     console.log('windowHeight=======>',wx.getSystemInfoSync().windowHeight);
-    // clearInterval(this.data.interval);
-    // this.getYears();
-    // this.setData({
-    //     lunar_arr: lunar.showCal()
-    // }, () => {
-    //   console.log('lunar_arr1111=>',this.data.lunar_arr)
-    // })
-    
-   
-   
-    // this.setData({months_arr: months_arr[0]}, () => {
-    //   console.log('months_arr==>',this.data.months_arr[0].sDay)
-    // })
-
-    
-
-    // wx.getUserInfo({
-    //   success:function(res){
-    //     console.log(res);
-    //     var avatarUrl = 'userInfo.avatarUrl';
-    //     var nickName = 'userInfo.nickName';
-    //     that.setData({
-    //       [avatarUrl]: res.userInfo.avatarUrl,
-    //       [nickName]:res.userInfo.nickName,
-    //     })
-    //   }
-    // })
-
-    // 查看是否授权
-    // wx.getSetting({
-    //   success(res) {
-    //     if (res.authSetting['scope.userInfo']) {
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       wx.getUserInfo({
-    //         success(res) {
-    //           console.log(res.userInfo)
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
-
-    // wx.login({
-    //   success (res) {
-    //     if (res.code) {
-    //       console.log(res.code)
-    //       //发起网络请求
-    //       wx.request({
-    //         url: 'https://test.com/onLogin',
-    //         data: {
-    //           code: res.code
-    //         }
-    //       })
-    //     } else {
-    //       console.log('登录失败！' + res.errMsg)
-    //     }
-    //   }
-    // })
-
-
-
-    /**********初始化  先获取当前月份 上月 下月  的数据************/ 
-    // let cur_swiper_month_arr = []
-    // let last_month_data = []
-    // let next_month_data = []
-    // this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
-    //   this.setData({
-    //     month_arr: res
-    //   })
-    // })
-
   },
 
 

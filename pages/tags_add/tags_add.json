@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "com-header": "../../component/com-header/com-header"
+  },
+  "enablePullDownRefresh": false,
+  "disableScroll":true
+}

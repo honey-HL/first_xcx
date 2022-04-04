@@ -1,12 +1,39 @@
 // pages/my/my.js
+const app = getApp()
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    tags: [],
     windowHeight: '',
-    mainHeight:''
+    mainHeight:'',
+    avatarUrl: ''
+  },
+
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail 
+    this.setData({
+      avatarUrl,
+    })
+  },
+
+  onTagsAdd() {
+    wx.navigateTo({
+      url: '../tags_add/tags_add'
+    })
+  },
+  onTagsDelete () {
+debugger
+  },
+
+  onClickTag (e) {
+    const item = e.currentTarget.dataset.item
+    wx.navigateTo({
+      url: '../tags_add/tags_add?clicked_tag='+JSON.stringify(item)
+    })
   },
 
   /**
@@ -17,17 +44,17 @@ Page({
       mainHeight: wx.getSystemInfoSync().windowHeight - app.globalData.navHeight - 10 +'px',
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
-    console.log(' wx.cloud==>', wx)
-    wx.cloud.callFunction({
-      name: 'add',
-      data: {
-        a: 12,
-        b: 19
-      }
-    }).then(res => {
-      console.log('res ==> sum ==>', res);
-      wx.showToast({
-        title: res,
+    this.getUserTags()
+  },
+
+  getUserTags () {
+    const db = wx.cloud.database()
+    db.collection('tag_list').where({
+      _openid: wx.getStorageSync('openid')
+    }).get().then(res => {
+      // debugger
+      this.setData({tags: res.data}, () => {
+        console.log('this.data.tags==>',this.data.tags)
       })
     })
   },
@@ -43,7 +70,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    this.getUserTags()
   },
 
   /**

@@ -117,7 +117,8 @@ Page({
   },
 
   saveItem () {
-    const {activeData} = this.data;
+    const {activeData, evaContent} = this.data;
+    if (!evaContent) return;
     let start_time = this.data.start.full_year +'-'+ (this.data.start.cur_month >= 10 ?this.data.start.cur_month:'0'+this.data.start.cur_month) + '-' + (this.data.start.cur_date>=10?this.data.start.cur_date:'0'+this.data.start.cur_date) + ' '+this.data.start.hour + ':' + this.data.start.minute;
     let end_time = this.data.end.full_year +'-'+ (this.data.end.cur_month >= 10 ?this.data.end.cur_month:'0'+this.data.end.cur_month) + '-' + (this.data.end.cur_date>=10?this.data.end.cur_date:'0'+this.data.end.cur_date) + ' '+this.data.end.hour + ':' + this.data.end.minute;
     let start_riqi = activeData.sYear +'-'+ (activeData.sMonth >= 10 ?activeData.sMonth:'0'+activeData.sMonth) + '-' + (activeData.sDay>=10?activeData.sDay:'0'+activeData.sDay);
@@ -130,7 +131,7 @@ Page({
         location: this.data.location,
         startTime: start_time,
         endTime: end_time,
-        content: this.data.evaContent,
+        content: evaContent,
         month: activeData.sMonth,
         date: start_riqi,
         create_time: new Date().getTime(),
@@ -181,7 +182,7 @@ Page({
             // url: '../schedule/schedule'
           })
           // 更新表格的数据
-          bus.emit('onUpdate', {_id: res._id, activeData})
+          bus.emit('onUpdateRecord', {_id: res._id, activeData})
         },
         fail: err => {
           wx.showToast({
@@ -324,6 +325,7 @@ Page({
     }
     let date_2 = 'picker_value_start[' + 1 + "]";
     let date_3 = 'picker_value_end[' + 1 + "]";
+    // picker_value_start
     this.setData({
       [date_2]: date.getDate() - 1,
       ['start.datesArr']: arr,
@@ -482,6 +484,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    const {cur_month, cur_date} = this.data.start;
     const activeData = JSON.parse(options.activeData)
     // debugger
     let start_month_index = 'picker_value_start[' + 0 + "]";
@@ -566,10 +569,10 @@ Page({
     } else { // 不是修改操作
       console.log(this.data.picker_value_start);
       this.setData({
-        [start_month_index]: options.cur_month - 1,
-        [start_date_index]: options.cur_date - 1,
-        [end_month_index]: options.cur_month - 1,
-        [end_date_index]: options.cur_date - 1,
+        [start_month_index]:cur_month - 1,
+        [start_date_index]: cur_date - 1,
+        [end_month_index]: cur_month - 1,
+        [end_date_index]: cur_date - 1,
         [start_hour_index]: date.getHours(),
         [end_hour_index]: date.getHours() + 1,
         pictures: app.globalData.pictures_arr
