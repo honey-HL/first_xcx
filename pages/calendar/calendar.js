@@ -8,6 +8,7 @@ const {bus} = require('../../utils/bus.js');
 
 Page({
   data: {
+    milestone: [],
     dakaRecords: [], // 打卡记录
     scheRecords: [], // 日程记录
     dakaAddNum: 0, // 打卡增加值
@@ -154,6 +155,8 @@ Page({
       nian_yue_ri =  (_year + '-') + (_month >= 10 ?_month:'0'+_month) + '-' +(activeDate.sDay >=10?activeDate.sDay:'0'+activeDate.sDay);
     }
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+     // 刷新里程碑天数
+     this.getMilestone(nian_yue_ri)
 
     this.setData({
       activeDate,
@@ -202,6 +205,8 @@ Page({
     }
     
     this.getRecordList(nian_yue_ri); // 获取当月第一天的日程数据
+     // 刷新里程碑天数
+     this.getMilestone(nian_yue_ri)
 
     this.setData({
       clickedRowIndex: curRowIndex,
@@ -965,6 +970,8 @@ Page({
     }
     // 去掉clicked
     this.getStyle(status);
+    // 刷新里程碑天数
+    this.getMilestone(nian_yue_ri)
     this.setData({
       clickedRowIndex: item.rowIndex,
       activeDate: item
@@ -1275,8 +1282,55 @@ Page({
     //   this.getScheIntoMonArr();
     // }
   },
+
+goMilestone () {
+  wx.navigateTo({
+    url: '../milestone/milestone'
+  })
+},
+
+daysDistance(year,month,day, dateEnd) {     
+  const isStr = typeof(dateEnd) === 'string'
+  let d =  isStr? dateEnd.split('-'):dateEnd;
+  let date1;
+  if (!isStr) {
+    date1 = dateEnd;
+  } else {
+    date1 = new Date(parseInt(d[0]),parseInt(d[1])-1,parseInt(d[2]));
+    // debugger
+  }
+  const date2 = new Date(year,month,day);
+  const date = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000);
+  return isStr? Math.ceil(date) + 1 : Math.ceil(date);
+},
+
+
+getMilestone(str) {
+  const days1 = this.daysDistance(2022,2,21, str?str:new Date());
+  const days2 = this.daysDistance(2022,1,20, str?str:new Date());
+  const milestone = [
+    {
+      name: '入职活跃网络',
+      conj: '已经坚持了',
+      start: '2022年3月21日',
+      end:'',
+      status: 'pending', // fulfilled
+      days: days1,
+    },
+    {
+      name: '婆在我们家🏠',
+      conj: '已经住了',
+      start: '2022年2月20日',
+      end:'',
+      status: 'pending', // fulfilled
+      days: days2,
+    }
+  ]
+  this.setData({milestone})
+},
   
   onLoad: function (options) {
+    this.getMilestone()
     const {full_year, cur_month, cur_date} = this.data;
     app.getCalTableData(full_year, cur_month);
     const {months_arr} = app.globalData;

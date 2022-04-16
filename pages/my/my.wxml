@@ -30,7 +30,31 @@
               <image class="add-img" src="../../images/add_.png"></image>
             </view> -->
           </view>
-         
+        </view>
+        <view class="milestone_wrapper">
+          <view class="milestone_top">
+            <view class="habit-tag">我的里程碑</view>
+            <!-- <view catchtap='onTagsAdd' class="add-tag">
+              <image class="add-img" src="../../images/add_.png"></image>
+            </view> -->
+          </view>
+          <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' class="milestone_box">
+            <view class="mile_left">
+              <view  class="mile_title">{{item.name}}</view>
+              <view class="start_date">始于{{item.start}}</view>
+              <!-- <view class="start_date">结束日期：2022.08.1</view> -->
+              <view class="start_date">持续进行中...</view>
+            </view>
+            <!-- <view class="milestone_status">
+              <view class="has_pass">已经过了</view>
+              <view class="mile_days">18天</view>
+            </view> -->
+            <view class="mile_right">
+              <view>{{item.conj}}</view>
+              <view class="mile_days">{{item.days}}天</view>
+              <!-- <view class="has_pass">已经过了</view> -->
+            </view>
+          </view>
         </view>
     </view>
 </view>

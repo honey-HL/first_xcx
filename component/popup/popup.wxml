@@ -14,7 +14,7 @@
 <!-- 遮罩层 -->
   <view class="shadow" wx:if="{{show}}" bindtap='hideModal'></view>
   <!-- 上滑高度 -->
-  <view style='height:{{height}}' class='choosen' wx:if="{{show}}" animation='{{animationData}}'>
+  <view style='height:{{height}};overflow-y: auto;' class='choosen' wx:if="{{show}}" animation='{{animationData}}'>
   <!-- 内容 -->
     <view class="container-box">
       <slot class="contant-box" name="header"></slot>

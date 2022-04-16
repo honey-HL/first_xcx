@@ -130,7 +130,7 @@
         <block wx:for="{{months_arr}}" wx:for-item="month_row" wx:key="month{{index}}">
           <swiper-item>
             <table class="table">
-              <tbody style="overflow: hidden;display: flex;flex-direction: column;" class="tbody">
+              <tbody style="overflow: auto;display: flex;flex-direction: column;" class="tbody">
                 <tr style="flex-grow: 1;border-top: {{isStretch ? '1px solid #eee':''}};" catchtap="onClickRow" wx:for="{{month_row}}" class="date_tr {{(clickedRowIndex == index) && isShrink ? sticky_row: ''}} {{(clickedRowIndex !== index) && isShrink ? 'hide_row':''}}" wx:for-item="tr_week" mark:row="{{index}}" data-index="{{index}}" wx:key="{{index}}">
                   <td style="border-right: {{isStretch && (index % 6 !== 0 || index == 0) ? '1px solid #eee':''}};" bindtap="onClickDate" data-item="{{td_item}}" class="td {{td_item.gray?'gray':''}} {{td_item.is_clicked?'clicked_ear':''}}" wx:key="{{index}}" data-col="{{index}}" wx:for-item="td_item" wx:for="{{tr_week}}">
                     <view class="ear_left {{td_item.sMonth == cur_month && td_item.sDay == activeDate.sDay?'active_ear':'is_clicked'}} {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked_ear':''}}">
@@ -179,14 +179,34 @@
       style="height: {{calBtmHeight}};" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}"> -->
       <!-- toptoptoptoptoptoptoptoptoptop -->
       <!-- <view wx:if="{{scheRecords.length >0}}"> -->
-      <view  bindtouchend="touchCalTopEnd"
+      <view  bindtouchend="touchCalTopEnd" bindtouchstart="touchCalTopStart" class='milestone_out'>
+      我的里程碑
+        <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' class="milestone_box">
+            <view class="mile_left">
+              <view  class="mile_title">{{item.name}}</view>
+              <view class="start_date">始于{{item.start}}</view>
+              <!-- <view class="start_date">结束日期：2022.08.1</view> -->
+              <view class="start_date">持续进行中...</view>
+            </view>
+            <!-- <view class="milestone_status">
+              <view class="has_pass">已经过了</view>
+              <view class="mile_days">18天</view>
+            </view> -->
+            <view class="mile_right">
+              <view>{{item.conj}}</view>
+              <view class="mile_days">{{item.days}}天</view>
+              <!-- <view class="has_pass">已经过了</view> -->
+            </view>
+          </view>
+      </view>
+      <view bindtouchend="touchCalTopEnd"
     bindtouchstart="touchCalTopStart" wx:if="{{dakaRecords.length > 0}}" class='daka_box'>
         <span>今日已打卡</span>
         <view class="tag_daka" wx:for="{{dakaRecords}}" wx:for-item="item" wx:key="item{{index}}">
           <view class="schedule_1">
             <image class="img" src="../../images/gou.png"/>
           </view>
-          <view>
+          <view class="tag_item_wrapper">
             <view class="tag_item" style="background-color: {{item.tag_color}};">{{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum: item.content}}</view>
             <view class="item_time daka_time">{{item.date}} {{filter.getHourMinutes(item.create_time)}} {{filter.calculateDays(item.date)}} {{filter.timeFormat(item.start_time, item.end_time)}}</view>
           </view>
@@ -431,7 +451,7 @@
     </popup>
 
       
-    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'230px'}}">
+    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'280px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">

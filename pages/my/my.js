@@ -8,6 +8,7 @@ Page({
    */
   data: {
     tags: [],
+    milestone: [],
     windowHeight: '',
     mainHeight:'',
     avatarUrl: ''
@@ -23,6 +24,11 @@ Page({
   onTagsAdd() {
     wx.navigateTo({
       url: '../tags_add/tags_add'
+    })
+  },
+  goMilestone () {
+    wx.navigateTo({
+      url: '../milestone/milestone'
     })
   },
   onTagsDelete () {
@@ -45,6 +51,38 @@ debugger
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
     this.getUserTags()
+    this.getMilestone()
+  },
+
+  daysDistance(year,month,day) {     
+    var date1 = new Date();
+    var date2 = new Date(year,month,day);
+    var date = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000);
+    return Math.ceil(date)
+  },
+
+  getMilestone() {
+    const days1 = this.daysDistance(2022,2,21);
+    const days2 = this.daysDistance(2022,1,20);
+    const milestone = [
+      {
+        name: '入职活跃网络',
+        conj: '已经坚持了',
+        start: '2022年3月21日',
+        end:'',
+        status: 'pending', // fulfilled
+        days:days1,
+      },
+      {
+        name: '婆在我们家🏠',
+        conj: '已经住了',
+        start: '2022年2月20日',
+        end:'',
+        status: 'pending', // fulfilled
+        days: days2,
+      }
+    ]
+    this.setData({milestone})
   },
 
   getUserTags () {

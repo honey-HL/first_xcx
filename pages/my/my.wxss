@@ -5,18 +5,51 @@
   background: -webkit-gradient(linear,100% 0%,0 100%,from(rgb(221, 171, 95)),to(rgb(148, 197, 216)));
   margin: 0 7px;
   border-radius: 5px;
-  padding: 10px 0 10px 10px;
+  padding: 10px 0 14px 10px;
+}
+
+.milestone_wrapper {
+  width: calc(100% - 24px);
+  background: -webkit-gradient(linear,100% 0%,0 100%,from(rgb(130 193 190)),to(rgb(245 170 170)));
+  margin: 7px 7px;
+  border-radius: 5px;
+  padding: 10px 0 14px 10px;
+}
+.milestone_top {
+  display: flex;
+}
+.milestone_box {
+  display: flex;
+  justify-content: space-between;
+  border:1px solid #fff;
+  margin-top:5px;
+  margin-right: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+}
+.mile_title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.mile_days {
+  font-size: 20px;
+  font-weight: bold;
+}
+.has_pass, .start_date {
+  font-size: 16px;
 }
 
 .habit-tag {
   color: #fff;
+  margin-right: 10px;
   /* width:calc(100% - 34px); */
 }
 .add-tag {
   color: #fff;
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   border: 1px solid #fff;
   display: flex;
@@ -69,6 +102,7 @@
 .tags_wrapper {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 .tag_item {
   color: #000;
@@ -78,7 +112,7 @@
   margin-right: 8px;
   border-radius: 16px;
   font-size: 14px;
-  margin-top: 8px;
+  margin-top: 5px;
   position: relative;
 }
 .userAvatarUrl .avatar {

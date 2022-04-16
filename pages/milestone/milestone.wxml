@@ -1,0 +1,53 @@
+<view style="height:{{windowHeight}}px;" class="milestone">
+
+  <com-header show="{{true}}"/>
+  <view class="milestone_box">
+    <view class="mile_left">
+      <view class="mile_title">
+        {{formData.name}}
+      </view>
+      <view class="start_date">始于2021.08.1</view>
+      <!-- <view class="start_date">结束日期：2022.08.1</view> -->
+      <view class="start_date">持续进行中...</view>
+    </view>
+    <!-- <view class="milestone_status">
+      <view class="has_pass">已经过了</view>
+      <view class="mile_days">18天</view>
+    </view> -->
+    <view class="mile_right">
+      <view>已经坚持了</view>
+      <view class="mile_days">18天</view>
+      <!-- <view class="has_pass">已经过了</view> -->
+    </view>
+  </view>
+
+  <view class="mile_form">
+    <view class="mile_form_wrapper">
+      <view class="title_box">
+        <span>里程碑名称</span>
+        <view class="wrapper_input">
+            <input bindconfirm="confirmMileTitle" value="{{formData.name}}" bindinput="bindKeyInput" class="input-inner" placeholder="输入里程碑名称"/>
+        </view>
+      </view>
+      <view class="title_box">
+        <span>开始时间</span>
+      </view>
+      <view class="title_box">
+        <span>结束时间</span>
+      </view>
+      <view class="title_box">
+        <span>状态</span>
+      </view>
+      <view class="title_box">
+        <span>连接描述语</span>
+        <view class="wrapper_input">
+            <input value="{{formData.conj}}" bindinput="bindKeyInput" class="input-inner" placeholder="输入连接描述语"/>
+        </view>
+      </view>
+      <view class="title_box">
+        <span>是否于在首页显示</span>
+      </view>
+    </view>
+  </view>
+
+</view>

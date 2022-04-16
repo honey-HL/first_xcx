@@ -1536,9 +1536,12 @@ z-index: 0;
   border-radius: 6px;
 }
 .stretch-content {
+  /* style="height:{{isStretch?'calc(100% - 20px - 20rpx)':'inherit'}};"  */
   height: inherit;
+  /* padding-bottom: 5px; */
+  /* height: calc(100% - 20px - 20rpx); */
 }
-.daka_box {
+.daka_box, .milestone_out  {
   border-top: none;
   width: inherit;
   background: #fff;
@@ -1549,6 +1552,36 @@ z-index: 0;
   padding: 10px;
   border-radius: 6px;
   padding-bottom: 26px;
+}
+.milestone_out {
+  font-family: Microsoft YaHei;
+}
+
+.milestone_top {
+  display: flex;
+}
+.milestone_box {
+  display: flex;
+  justify-content: space-between;
+  /* border:1px solid #333; */
+  margin-top:5px;
+  margin-right: 14px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: rgb(3, 3, 3);
+  background-color: rgb(34 116 238 / 20%);
+  /* background-color:rgba(34,153,238,.1); */
+}
+.mile_title {
+  font-size: 16px;
+  font-weight: bold;
+}
+.mile_days {
+  font-size: 20px;
+  font-weight: bold;
+}
+.has_pass, .start_date {
+  font-size: 15px;
 }
 .z_index {
   z-index: 9;
@@ -1568,6 +1601,9 @@ z-index: 0;
   /* padding: 6px 10px; */
   border-radius: 16px;
 }
+.tag_item_wrapper {
+  position: relative;
+}
 .tag_item {
   color: #000;
   overflow: hidden;
@@ -1585,6 +1621,7 @@ z-index: 0;
   font-size: 14px;
   margin-right: 5px;
   margin-left: 8px;
+  margin-top: 8px;
 }
 .daka_time {
   margin-left: 10px;
