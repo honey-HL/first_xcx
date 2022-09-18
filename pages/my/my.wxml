@@ -17,7 +17,7 @@
         <view class="tags-box">
           <view class="habit-tag">我的打卡标签
             <view class="operation-btn">
-              <view catchtap='onTagsDelete' class="add-tag delete-btn">
+              <view wx:if="{{tags.length}}" catchtap='onTagsDelete' class="add-tag delete-btn">
                 <image class="add-img" src="../../images/minus.png"></image>
               </view>
               <view catchtap='onTagsAdd' class="add-tag">
@@ -38,7 +38,7 @@
             </view> -->
           </view>
         </view>
-        <view wx:if="{{milestone.length}}" class="milestone_wrapper">
+        <view class="milestone_wrapper">
           <view class="milestone_top">
             <view class="habit-tag">我的里程碑
               <view catchtap='onMilestoneAdd' class="add-tag">
@@ -49,7 +49,7 @@
               <image class="add-img" src="../../images/add_.png"></image>
             </view> -->
           </view>
-          <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' data-item="{{item}}" class="milestone_box">
+          <view wx:if="{{milestone.length}}" wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' data-item="{{item}}" class="milestone_box">
             <view class="mile_left">
               <view  class="mile_title">{{item.name}}
                 <view wx:if="{{item.status === 'fulfilled'}}"  class="finish">(已完成)</view>
