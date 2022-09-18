@@ -3,32 +3,31 @@
 	<com-header title="{{title}}" show="{{true}}"/>
     <view style="height: {{mainHeight}};overflow-y: auto;" class='container-tag' >
       <view style="margin-top:15px;margin-bottom: 10px;">
-        <view wx:if="{{tags.length > 0}}">
+        <view wx:if="{{is_delete && tags.length > 0}}">
           <span class="has-tags">已有标签</span>
           <view class="all-tags">
             <view catchtap='onTagsDelete' class="tag_item" style="background-color: {{item.tag_color}};" wx:for="{{tags}}" data-item="{{item}}" wx:key="{{item}}">
               {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
               <view class="del-btn">
-                <image class="del-img" src="../../images/close.png"></image>
+                <image class="del-img" src="../../images/add_.png"></image>
               </view>
             </view>
           </view>
         </view>
-        <span>标签名称</span>
-        <view class="tag weui-cell weui-cell_input" style="background: {{tagColor?tagColor:palette[0]}};">
+        <span wx:if="{{!is_delete}}">标签名称</span>
+        <view wx:if="{{!is_delete}}" class="tag weui-cell weui-cell_input" style="background: {{tagColor?tagColor:palette[0]}};">
             <input value="{{tagValue}}" bindinput="bindKeyInput" class="weui-input" placeholder="输入标签名称"/>
           </view>
       </view>
-      <view class="picker" id="color-picker">
+      <view wx:if="{{!is_delete}}" class="picker" id="color-picker">
         <span>选择标签背景颜色</span>
         <view class="color-box">
           <view catchtap="changeColor" data-color="{{color}}" wx:for="{{palette}}" wx:for-item="color" wx:key="{{index}}" class="color-item">
             <span class="color-span" style="background-color: {{color}};"></span>
           </view>
         </view>
-       
       </view>
-      <view class="daka_group">
+      <view wx:if="{{!is_delete}}" class="daka_group">
         <view class='daka_title'>
           是否需要累计打卡
           </view>
@@ -67,8 +66,12 @@
         <view class="btn_save">保存</view>
       </view> -->
     </view>
-    <view class="last_btn">
+    <view wx:if="{{!is_delete}}" class="last_btn">
       <view class="last_btn_save" catchtap='saveItem'>完 成</view>
     </view>
+    <!--删除确认弹窗-->
+			<modal-delete modal="{{modal}}" bindsuccess='modalOperate' catchtouchmove="ture">
+					<view class='modal-text' wx:for="{{modal.content}}">{{item.text}}</view>
+			</modal-delete>
 </view>
 

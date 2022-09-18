@@ -11,6 +11,11 @@ Page({
     milestone: [],
     windowHeight: '',
     mainHeight:'',
+    willDeleteItem: {},
+    modal: {
+      show: false
+    },
+    cur_item: {},
     avatarUrl: ''
   },
 
@@ -23,16 +28,80 @@ Page({
 
   onTagsAdd() {
     wx.navigateTo({
-      url: '../tags_add/tags_add'
+      url: '../tags_add/tags_add?isAddBtn='+JSON.stringify(1)
     })
   },
-  goMilestone () {
+  onMilestoneAdd() {
     wx.navigateTo({
       url: '../milestone/milestone'
     })
   },
+  goMilestone (e) {
+    const data = e.currentTarget.dataset.item;
+    wx.navigateTo({
+      url: '../milestone/milestone?data=' + JSON.stringify(data)
+    })
+  },
+
+   /**
+   * 打开弹框
+   */
+  showDelConfirmModal () {
+    let objModal = {
+      show: true,
+      showCancel: true,
+      cancelColor: '#fff',
+      confirmColor: '#fff',
+      title: '确定删除此里程碑?',
+      content: [{text: '删除了就再也找不回来了～'}]
+      // height: '70%',
+      // confirmText: '我知道了'
+    }
+    this.setData({
+      modal: objModal
+    })
+  },
+
+   /**
+   * 弹框按钮操作事件
+   * @res 取消/确定按钮的相关信息
+   */
+  modalOperate (res) {
+    if (res.detail.res == 'confirm') {
+      this.sureToDelete()
+      console.log('点确定')
+    } else if (res.detail.res == 'cancel') {
+      console.log('cancel')
+    }
+  },
+
+  async sureToDelete() {
+    const { willDeleteItem, milestone } = this.data;
+    const _this = this;
+    const db = wx.cloud.database();
+    await db.collection('milestone_list').where({
+      _openid: wx.getStorageSync('openid'),
+      _id: willDeleteItem._id
+    }).remove().then(res => {
+     
+      const newMilestone = milestone.filter(it => it._id !== willDeleteItem._id)
+      // bus.emit('goDelete', {delItem: willDeleteItem})
+      _this.setData({
+        milestone: newMilestone
+      })
+    })
+  },
+
+  onDeleteMilestone (e) {
+    const cur_item = e.currentTarget.dataset.item;
+    this.showDelConfirmModal();
+    this.setData({willDeleteItem: cur_item})
+  },
+
   onTagsDelete () {
-debugger
+    wx.navigateTo({
+      url: '../tags_add/tags_add?delete_tag=1'
+    })
   },
 
   onClickTag (e) {
@@ -51,38 +120,39 @@ debugger
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
     this.getUserTags()
-    this.getMilestone()
+    this.getMilestoneList()
   },
 
-  daysDistance(year,month,day) {     
-    var date1 = new Date();
-    var date2 = new Date(year,month,day);
-    var date = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000);
-    return Math.ceil(date)
+  daysDistance(year,month,day, dateEnd) {     
+    const isStr = typeof(dateEnd) === 'string'
+    let d =  isStr? dateEnd.split('-'):dateEnd;
+    let date1;
+    if (!isStr) {
+      date1 = dateEnd;
+    } else {
+      date1 = new Date(parseInt(d[0]),parseInt(d[1])-1,parseInt(d[2]));
+    }
+    const date2 = new Date(year,month-1,day);
+    const date = (date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000);
+    return isStr? Math.ceil(date) + 1 : Math.ceil(date);
   },
 
-  getMilestone() {
-    const days1 = this.daysDistance(2022,2,21);
-    const days2 = this.daysDistance(2022,1,20);
-    const milestone = [
-      {
-        name: '入职活跃网络',
-        conj: '已经坚持了',
-        start: '2022年3月21日',
-        end:'',
-        status: 'pending', // fulfilled
-        days:days1,
-      },
-      {
-        name: '婆在我们家🏠',
-        conj: '已经住了',
-        start: '2022年2月20日',
-        end:'',
-        status: 'pending', // fulfilled
-        days: days2,
+  getMilestoneList () {
+    const _openid = wx.getStorageSync('openid')
+    wx.cloud.callFunction({
+      name: 'get_milestone_list',
+      data: {
+        filter: {
+          _openid
+        }
       }
-    ]
-    this.setData({milestone})
+    }).then((res) => {
+      const { result } = res;
+      const fulfilledData = result.filter(item => item.status === "fulfilled");
+      const pendingData = result.filter(item => item.status === "pending");
+      const resultData = pendingData.concat(fulfilledData);
+      this.setData({ milestone: resultData })
+    })
   },
 
   getUserTags () {
@@ -90,7 +160,7 @@ debugger
     db.collection('tag_list').where({
       _openid: wx.getStorageSync('openid')
     }).get().then(res => {
-      // debugger
+      
       this.setData({tags: res.data}, () => {
         console.log('this.data.tags==>',this.data.tags)
       })
@@ -109,6 +179,7 @@ debugger
    */
   onShow: function () {
     this.getUserTags()
+    this.getMilestoneList()
   },
 
   /**

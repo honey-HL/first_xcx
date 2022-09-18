@@ -41,6 +41,7 @@
 .del-img {
   width: 100%;
   height: 100%;
+  transform: rotate(45deg);
 }
 .baseNum {
   height: 36px;
@@ -104,4 +105,11 @@
 .daka_group {
   margin-top:10px;
   margin-bottom: 30px;
+}
+/****删除弹窗*****/
+.modal-text {
+  text-align: center;
+  color: gray;
+  margin-bottom: 18rpx;
+  font-size: 26rpx;
 }

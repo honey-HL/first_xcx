@@ -101,7 +101,7 @@
 
         </view>
 
-        <view  catchtap='' class='start_time'>
+        <view  catchtap='' class='end_time'>
 
           <view catchtap="switchStartBox" data-type="1" class='start_box'>
             <view class='location_icon'><image style="width:100%;height:100%;" src="../../images/icon_end.png"></image></view>

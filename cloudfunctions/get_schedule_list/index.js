@@ -34,10 +34,10 @@ exports.main = async (event, context) => {
     hasMore = true;
   }
   console.log('filter=====>',filter)
-  // debugger
+  
   
   let res = await db.collection(dbName).orderBy('date','desc').where(filter).skip((pageIndex - 1)*pageSize).limit(pageSize).get();
-  // debugger
+  
   // console.log('get_schedule_list res===>',res)
 
   res = {

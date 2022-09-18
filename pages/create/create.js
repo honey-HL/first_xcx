@@ -106,7 +106,7 @@ Page({
     const ctx = wx.createCameraContext()
     ctx.stopRecord({
       success: (res) => {
-        // debugger
+        
         console.log(res);
         this.setData({
           src: res.tempThumbPath,

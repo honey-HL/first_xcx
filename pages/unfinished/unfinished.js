@@ -28,9 +28,7 @@ Page({
     let current = e.detail.current;
     console.log('current', current);
     console.log('old_cur', this.data.old_cur);
-    // debugger
     if (current < this.data.old_cur) { // 右滑  删除数组末尾元素  数组前面增加元素
-    // debugger
       arr.splice(arr.length-1,1);
       jian = jian - 1;
       arr.unshift(jian);
@@ -40,8 +38,6 @@ Page({
       })
       console.log(this.data.imgUrls);
     } else if (current > this.data.old_cur) { // 左滑  删除数组前面元素   增加数组末尾元素
-  
-    // debugger
       arr.splice(0,1);
       add = add + 1;
       arr.push(add);

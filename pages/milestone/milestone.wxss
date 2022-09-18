@@ -3,30 +3,56 @@
   background-color: #ddd;
   overflow: hidden;
 }
+.last_btn {
+  /* padding-bottom: 100px; */
+  /* margin-top: 30px; */
+  display: flex;
+  justify-content: center;
+  /* position: absolute; */
+  /* bottom: 100px; */
+  padding-top: 20px;
+  width: 100%;
+}
+.last_btn_save {
+  padding:10px 60px;
+  background:#70baf1;
+  color:#fff;
+  border-radius:25px;
+  /* margin-top:25px; */
+}
 .mile_form {
-  height: calc(100% - 94px);
+  /* height:100%; */
+  height: calc(100% - 94px - 20px);
   background-color: #fff;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 .mile_form_wrapper {
-  padding: 8px 14px;
+  /* height: calc(100% - 94px - 20px - 90px); */
+  height: calc(100% - 280px);
+  overflow-y: auto;
+  padding: 10px 20px 60px;
+  /* padding: 10px 20px; */
 }
 .wrapper_input {
   padding: 6px;
   border: 1px solid #000;
   border-radius: 43px;
-  margin-left: 10px;
   width: 70%;
 }
 .input-inner {
   color: #828282;
 }
 .title_box {
+  margin-top: 10px;
+  padding-bottom: 10px;
   display: flex;
   align-items: center;
-  margin-top: 10px;
+}
+.title_box span:first-child {
+  display: inline-block;
+  margin-right: 10px;
 }
 .milestone_box {
   display: flex;

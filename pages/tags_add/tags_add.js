@@ -1,6 +1,4 @@
-// pages/tags_add/tags_add.js
-// var Colorpicker = require('../../utils/colorpicker').Colorpicker
-// debugger
+
 const app = getApp()
 const {bus} = require('../../utils/bus.js');
 
@@ -10,6 +8,11 @@ Page({
    * 页面的初始数据
    */
   data: {
+    modal: {
+      show: false
+    },
+    is_add: false, // 是否是添加标签
+    is_delete: false, // 是否是删除标签
     tags: '', // 所以标签
     cur_edit_tag: '', // 当前编辑的tag
     title: '添加打卡标签',
@@ -37,23 +40,52 @@ Page({
     tagDelIds: [],
   },
 
+   /**
+   * 弹框按钮操作事件
+   * @res 取消/确定按钮的相关信息
+   */
+  modalOperate (res) {
+    if (res.detail.res == 'confirm') {
+      this.handleTagDele()
+    } else if (res.detail.res == 'cancel') {
+      console.log('cancel')
+    }
+  },
+
+     /**
+   * 打开弹框
+   */
+  showDelConfirmModal (cur_item) {
+    let objModal = {
+      show: true,
+      showCancel: true,
+      cancelColor: '#fff',
+      confirmColor: '#fff',
+      title: '确定删除此标签?',
+      content: [{text: '删除了就再也找不回来了～'}]
+    }
+    this.setData({
+      willDeleteItem: cur_item,
+      modal: objModal
+    })
+  },
+
   onTagsDelete (e) {
     const cur_item = e.currentTarget.dataset.item;
-    const {tags} = this.data;
-    const _tags = tags.filter(tag => tag._id !== cur_item._id)
-    let tagDelIds = [];
-    tagDelIds.push(cur_item._id)
-    this.setData({tags: _tags, tagDelIds})
+    this.showDelConfirmModal(cur_item);
   },
 
   handleTagDele () {
-    const {tagDelIds} = this.data;
+    const {willDeleteItem} = this.data;
+    const id = willDeleteItem._id;
     const db = wx.cloud.database()
-    tagDelIds.forEach(id => {
-      db.collection('tag_list').where({
-        _openid: wx.getStorageSync('openid'),
-        _id: id
-      }).remove()
+    db.collection('tag_list').where({
+      _openid: wx.getStorageSync('openid'),
+      _id: id
+    }).remove().then(() => {
+      wx.navigateBack({
+        delta: 2
+      })
     })
   },
 
@@ -86,43 +118,36 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    const {clicked_tag} = options;
+    const {delete_tag, clicked_tag, isAddBtn} = options;
     const {count_daka_opt, title} = this.data;
     const cur_edit_tag = clicked_tag && JSON.parse(clicked_tag);
-
-    this.getUserTags()
-    
-    const _count_daka_opt = count_daka_opt.map(item => {
-      if (cur_edit_tag && cur_edit_tag.needCalDaka == 1) {
-        if (item.name === '是') {
-          return {
-            ...item,
-            checked: true
-          }
-        } else {
-          return {
-            ...item,
-            checked: false
-          }
+    const is_add_btn = isAddBtn && JSON.parse(isAddBtn)
+    let _count_daka_opt = [];
+    let currentTitle = '';
+    if (cur_edit_tag) {// 编辑
+      currentTitle = '编辑打卡标签';
+      this.getUserTags()
+      _count_daka_opt = count_daka_opt.map(item => {
+        return {
+          ...item,
+          checked: cur_edit_tag.needCalDaka && item.name === '是' ?
+                  true: item.name === '否'? true: false
         }
-      } else {
-        if (item.name === '否') {
-          return {
-            ...item,
-            checked: true
-          }
-        } else {
-          return {
-            ...item,
-            checked: false
-          }
-        }
-      }
-    })
-    // debugger
+      })
+    } else if (parseInt(delete_tag) === 1) {// 删除
+      currentTitle = '删除已有标签'
+      this.getUserTags()
+      this.setData({ 
+        is_delete: true
+      })
+    } else { // 添加
+      _count_daka_opt = count_daka_opt
+      currentTitle = title;
+    }
     this.setData({
+      is_add: is_add_btn,
       cur_edit_tag,
-      title: !cur_edit_tag? title: '编辑打卡标签',
+      title: currentTitle,
       count_daka_opt: _count_daka_opt,
       dakaDaseNum: cur_edit_tag ?cur_edit_tag.dakaDaseNum:'',
       needCalDaka: cur_edit_tag ? cur_edit_tag.needCalDaka:'',
@@ -149,8 +174,11 @@ Page({
     }
     if (needCalDaka == 1) {
       obj.dakaDaseNum = dakaDaseNum;
+    } else {
+      obj.dakaDaseNum && delete obj.dakaDaseNum;
+      obj.needCalDaka && delete obj.needCalDaka;
     }
-    this.handleTagDele()
+    // this.handleTagDele()
     const db = wx.cloud.database()
     if (cur_edit_tag) { // 编辑标签
        // 如果tag_color或者tag_value有任意一个发生了改变就要去更新record list中对应tag的这2个字段
@@ -197,7 +225,6 @@ Page({
   },
   changeColor (eve) {
     const color = eve.currentTarget.dataset.color;
-    // debugger
     this.setData({
       tagColor: color
     })

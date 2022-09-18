@@ -1,7 +1,7 @@
 <!--pages/my/my.wxml-->
 <view style="height: {{windowHeight}}">
 	<com-header/>
-    <view style="height: {{mainHeight}};" class='container-my' >
+    <view style="height: {{mainHeight}};overflow: auto;" class='container-my' >
         <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" class="save-btn">授权登录</button>
         <view class='infor_card'>
           <button class="userAvatarUrl" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
@@ -15,35 +15,51 @@
             </view>
         </view>
         <view class="tags-box">
-          <view class="habit-tag">我的打卡标签</view>
+          <view class="habit-tag">我的打卡标签
+            <view class="operation-btn">
+              <view catchtap='onTagsDelete' class="add-tag delete-btn">
+                <image class="add-img" src="../../images/minus.png"></image>
+              </view>
+              <view catchtap='onTagsAdd' class="add-tag">
+                <image class="add-img" src="../../images/add_.png"></image>
+              </view>
+            </view>
+         
+          </view>
           <view class="tags_wrapper">
-              <view catchtap='onClickTag' class="tag_item" style="background-color: {{item.tag_color}};" wx:for="{{tags}}" data-item="{{item}}" wx:key="{{item}}">
+            <view catchtap='onClickTag' class="tag_item" style="background-color: {{item.tag_color}};" wx:for="{{tags}}" data-item="{{item}}" wx:key="{{item}}">
               {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
-              <!-- <view catchtap='onTagsDelete' class="del-btn">
-                <image class="del-img" src="../../images/close.png"></image>
-              </view> -->
             </view>
-            <view catchtap='onTagsAdd' class="add-tag">
+            <!-- <view catchtap='onTagsAdd' class="add-tag">
               <image class="add-img" src="../../images/add_.png"></image>
-            </view>
+            </view> -->
             <!-- <view catchtap='onTagsAdd' class="add-tag">
               <image class="add-img" src="../../images/add_.png"></image>
             </view> -->
           </view>
         </view>
-        <view class="milestone_wrapper">
+        <view wx:if="{{milestone.length}}" class="milestone_wrapper">
           <view class="milestone_top">
-            <view class="habit-tag">我的里程碑</view>
+            <view class="habit-tag">我的里程碑
+              <view catchtap='onMilestoneAdd' class="add-tag">
+                <image class="add-img" src="../../images/add_.png"></image>
+              </view>
+            </view>
             <!-- <view catchtap='onTagsAdd' class="add-tag">
               <image class="add-img" src="../../images/add_.png"></image>
             </view> -->
           </view>
-          <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' class="milestone_box">
+          <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' data-item="{{item}}" class="milestone_box">
             <view class="mile_left">
-              <view  class="mile_title">{{item.name}}</view>
-              <view class="start_date">始于{{item.start}}</view>
-              <!-- <view class="start_date">结束日期：2022.08.1</view> -->
-              <view class="start_date">持续进行中...</view>
+              <view  class="mile_title">{{item.name}}
+                <view wx:if="{{item.status === 'fulfilled'}}"  class="finish">(已完成)</view>
+              </view>
+              <view class="start_date">开始时间 {{item.start.year}}年{{item.start.month}}月{{item.start.date}}日</view>
+              <view wx:if="{{item.status === 'fulfilled'}}"  class="start_date">
+                结束时间 {{item.end.year}}年{{item.end.month}}月{{item.end.date}}日
+              </view>
+              <view wx:if="{{item.status === 'pending'}}"  class="start_date">持续进行中...
+              </view>
             </view>
             <!-- <view class="milestone_status">
               <view class="has_pass">已经过了</view>
@@ -52,9 +68,16 @@
             <view class="mile_right">
               <view>{{item.conj}}</view>
               <view class="mile_days">{{item.days}}天</view>
+              <view catchtap='onDeleteMilestone' data-item="{{item}}" class="delete_button">
+                <image style="width: 20px;height: 20px;" src="../../images/delete_white1.png"></image>
+              </view>
               <!-- <view class="has_pass">已经过了</view> -->
             </view>
           </view>
         </view>
     </view>
+    <!--删除确认弹窗-->
+    <modal-delete modal="{{modal}}" bindsuccess='modalOperate' catchtouchmove="ture">
+        <view class='modal-text' wx:for="{{modal.content}}">{{item.text}}</view>
+    </modal-delete>
 </view>

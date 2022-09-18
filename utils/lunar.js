@@ -2,6 +2,15 @@
 var nStr1 = new Array('日', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十');
 var nStr2 = new Array('初', '十', '廿', '三');
 var solarTerm = new Array("小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "冬至");
+const weekMap = {
+  "一": 1,
+  "二": 2,
+  "三": 3,
+  "四": 4,
+  "五": 5,
+  "六": 6,
+  "日": 7,
+}
 var solarMonth = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 var weekString = "日一二三四五六";
 var sx = "鼠牛虎兔龙蛇马羊猴鸡狗猪";
@@ -265,7 +274,6 @@ function calendar(y, m) {
   if ((m + 1) == 6) { mat = sDObj.getDay() }
   for (let i = 0; i < this.length; i++) {
     sD = i - this.firstWeek;
-  // debugger
     let lunarDate;
     let  zodiacSign='';
       if (lD > lX) {
@@ -292,6 +300,43 @@ function calendar(y, m) {
       if (this[i].sMonth == 5 && parseInt(this[i].sDay)+1 <= 5) {
         this[i].offday = true
       }
+      // 5月的第一个周六上班
+      if (this[i].sMonth == 5 && this[i].sDay == (1 + (6-this.firstWeek))) {
+        this[i].workday = true
+      }
+
+      // 4月最后一天也放假
+      if (this[i].sMonth == 4 && parseInt(this[i].sDay) == this.length) {
+        this[i].offday = true
+      }
+       // 4月最后一个星期天上班
+      if (this[i].sMonth == 4 && this[i].sDay == (this.length - this.lastWeek)) {
+        this[i].workday = true
+      }
+      // 端午节
+      if (this[i].lunarDate === '端午节') {
+        this[i].offday = true
+      }
+      if (this[i].lMonth == 5) {
+        if (this[i].lunarDate === "初六" || this[i].lunarDate === "初七") {
+          this[i].offday = true
+        }
+      }
+      // 中秋节
+      if (this[i].lunarDate === '中秋节') {
+        this[i].offday = true
+      }
+      if (this[i].lMonth == 8) {
+        if (this[i].lunarDate === "十六" || this[i].lunarDate === "十七") {
+          this[i].offday = true
+        }
+      }
+      // 国庆节
+      if (this[i].sMonth == 10 && parseInt(this[i].sDay)+1 <= 7) {
+        this[i].offday = true
+      }
+      // 国庆节后的第一个周六周天上班
+      // ???
   }
   //节气
   tmp1 = sTerm(y, m * 2) - 1;

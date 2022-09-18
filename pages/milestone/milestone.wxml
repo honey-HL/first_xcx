@@ -6,18 +6,18 @@
       <view class="mile_title">
         {{formData.name}}
       </view>
-      <view class="start_date">始于2021.08.1</view>
+      <view class="start_date">开始时间：{{formData.start.year}}年{{formData.start.month}}月{{formData.start.date}}日 {{formData.start.hour}}时{{formData.start.minute}}分</view>
       <!-- <view class="start_date">结束日期：2022.08.1</view> -->
-      <view class="start_date">持续进行中...</view>
+      <view wx:if="{{formData.status === 'fulfilled'}}" class="start_date">
+      结束时间：{{formData.end.year}}年{{formData.end.month}}月{{formData.end.date}}日 {{formData.end.hour}}时{{formData.end.minute}}分
+      </view>
+      <view wx:else="" class="start_date">
+      持续进行中...
+      </view>
     </view>
-    <!-- <view class="milestone_status">
-      <view class="has_pass">已经过了</view>
-      <view class="mile_days">18天</view>
-    </view> -->
     <view class="mile_right">
-      <view>已经坚持了</view>
-      <view class="mile_days">18天</view>
-      <!-- <view class="has_pass">已经过了</view> -->
+      <view>{{formData.conj}}</view>
+      <view class="mile_days">{{formData.days}}天</view>
     </view>
   </view>
 
@@ -30,24 +30,43 @@
         </view>
       </view>
       <view class="title_box">
-        <span>开始时间</span>
-      </view>
-      <view class="title_box">
-        <span>结束时间</span>
-      </view>
-      <view class="title_box">
         <span>状态</span>
+        <view class='type_radio'>
+          <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio" data-index="{{index}}" wx:key="{{index}}" wx:for="{{statusItems}}">
+              <radio color="#29E" value="{{item.value}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="title_box">
+        <picker-date-time pickerType="start" wx:if="{{isPickerShow}}" pickerArr="{{formData.start}}" pickerLabel="开始时间" picker="{{formData.start}}"/>
+      </view>
+      <view wx:if="{{formData.status === 'fulfilled'}}" class="title_box">
+        <picker-date-time pickerType="end" wx:if="{{isPickerShow}}" picker="{{formData.end}}" pickerLabel="结束时间"/>
       </view>
       <view class="title_box">
         <span>连接描述语</span>
         <view class="wrapper_input">
-            <input value="{{formData.conj}}" bindinput="bindKeyInput" class="input-inner" placeholder="输入连接描述语"/>
+            <input value="{{formData.conj}}" bindinput="bindConjKeyInput" class="input-inner" placeholder="输入连接描述语"/>
         </view>
       </view>
       <view class="title_box">
         <span>是否于在首页显示</span>
+        <view class='type_radio'>
+          <radio-group class="radio-group" bindchange="showIndexRadioChange">
+            <label class="radio" data-index="{{index}}" wx:key="{{index}}" wx:for="{{showIndexItems}}">
+              <radio color="#29E" value="{{item.value}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </radio-group>
+        </view>
       </view>
+     
     </view>
+    <view class="last_btn">
+        <view class="last_btn_save" catchtap='onSave'>保 存</view>
+      </view>
   </view>
-
 </view>

@@ -1,6 +1,7 @@
 {
   "usingComponents": {
-    "com-header":"../../component/com-header/com-header"
+    "com-header":"../../component/com-header/com-header",
+    "picker-date-time": "../../component/picker-date-time/picker-date-time"
   },
   "enablePullDownRefresh": false,
   "disableScroll":true

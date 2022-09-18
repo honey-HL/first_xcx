@@ -108,7 +108,7 @@ App({
     const {next_month_year, next_month} = this.getNextMonYear(cur_year, cur_month);
     const {next_2month_year, next_2month} = this.getNext2MonYear(cur_year, cur_month);
 
-    // debugger
+    
 
     let last_2month_key = `${last_2month_year}_${last_2month}`;
     let last_month_key = `${last_month_year}_${last_month}`;
@@ -213,7 +213,7 @@ App({
       console.log('===this.globalData.monthsObj===>',this.globalData.monthsObj)
       console.log('_savedMonkeys=========666=====>', _savedMonkeys)
       console.log('monthsArr=========222===>',monthsArr)
-      // debugger
+      
       
       
       return monthsArr;

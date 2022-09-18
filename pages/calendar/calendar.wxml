@@ -140,8 +140,8 @@
                     <a style="height:{{min_height}}px;" class="td_a {{td_item.gray?'gray':''}} {{td_item.sMonth == cur_month && td_item.sDay == activeDate.sDay?'active':'is_clicked'}} {{td_item.isToday && td_item.sDay !== activeDate.sDay ?'clicked':''}}" >
                   
                       <span class="date_num">
-                        <span class="offday" wx:if="{{td_item.offday}}">休</span>
-                        <span class="workday" wx:if="{{td_item.workday}}">班</span>
+                        <span class="offday {{td_item.sDay >=10?'day_r':''}}" wx:if="{{td_item.offday}}">休</span>
+                        <span class="workday {{td_item.sDay >=10?'day_r':''}}" wx:if="{{td_item.workday}}">班</span>
                       {{td_item.sDay}}</span>
                       <span class="lunar_date">{{td_item.solarTerms || td_item.lunarDate}}</span>
                     </a>
@@ -179,23 +179,23 @@
       style="height: {{calBtmHeight}};" class="cal_bottom_box {{ isShrink ? 'mg_top':''}}"> -->
       <!-- toptoptoptoptoptoptoptoptoptop -->
       <!-- <view wx:if="{{scheRecords.length >0}}"> -->
-      <view  bindtouchend="touchCalTopEnd" bindtouchstart="touchCalTopStart" class='milestone_out'>
+      <view wx:if="{{milestone.length}}" bindtouchend="touchCalTopEnd" bindtouchstart="touchCalTopStart" class='milestone_out'>
       我的里程碑
-        <view wx:for="{{milestone}}" wx:key="{{item}}" catchtap='goMilestone' class="milestone_box">
-            <view class="mile_left">
-              <view  class="mile_title">{{item.name}}</view>
-              <view class="start_date">始于{{item.start}}</view>
-              <!-- <view class="start_date">结束日期：2022.08.1</view> -->
-              <view class="start_date">持续进行中...</view>
+        <view wx:for="{{milestone}}" wx:key="{{item}}" data-item="{{item}}" catchtap='goMilestone' class="milestone_box">
+          <view class="mile_left">
+            <view  class="mile_title">{{item.name}}
+              <view wx:if="{{item.status === 'fulfilled'}}"  class="finish">(已完成)</view>
             </view>
-            <!-- <view class="milestone_status">
-              <view class="has_pass">已经过了</view>
-              <view class="mile_days">18天</view>
-            </view> -->
+            <view class="start_date">开始时间 {{item.start.year}}年{{item.start.month}}月{{item.start.date}}日</view>
+            <view wx:if="{{item.status === 'fulfilled'}}"  class="start_date">
+              结束时间 {{item.end.year}}年{{item.end.month}}月{{item.end.date}}日
+            </view>
+            <view wx:if="{{item.status === 'pending'}}"  class="start_date">持续进行中...
+            </view>
+          </view>
             <view class="mile_right">
               <view>{{item.conj}}</view>
               <view class="mile_days">{{item.days}}天</view>
-              <!-- <view class="has_pass">已经过了</view> -->
             </view>
           </view>
       </view>
@@ -213,6 +213,7 @@
         
         </view>
       </view>
+      
       <view wx:if="{{scheRecords.length >0}}" class='schedule_box'>
         <span>今日日程/心得</span>
         <view wx:for="{{scheRecords}}" wx:for-item="item" wx:key="item{{index}}">
@@ -239,7 +240,7 @@
         </view>
       </view>
       <!-- </view> -->
-      <view wx:if="{{scheRecords.length == 0}}"  class="bottom_box_inner">
+      <view wx:if="{{!scheRecords.length && !milestone.length && !dakaRecords.length}}"  class="bottom_box_inner">
           <view class="empty_row">
             <view class="empty_box">
                 <image class="bgImg" src="../../images/empty.png"></image>
@@ -451,7 +452,7 @@
     </popup>
 
       
-    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'280px'}}">
+    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'330px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">
@@ -464,8 +465,8 @@
         <view class="selected_tag">选择今日打卡标签：</view>
         <view class="tags_wrapper">
           <view wx:for="{{tags}}" wx:key="{{item}}">
-            <view class="tag_item_popup" style="background-color: {{item.tag_color}};padding: {{item.clicked?'':'6px 10px'}}">
-              <view catchtap='onClickTag' data-item="{{item}}" style="padding:{{item.clicked?'6px 10px;':'0'}}" class="{{item.clicked ? 'tag_cover':''}}">
+            <view catchtap='onClickTag' data-item="{{item}}" class="{{item.clicked ? 'tag_cover':'tag_item_popup'}}" style="background-color: {{item.tag_color}};padding: {{item.clicked?'':'6px 10px'}}">
+              <view style="padding:{{item.clicked?'6px 8px;':'0'}};margin: {{item.clicked? '4px':'0'}};">
                 {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
               </view>
             </view>
@@ -474,13 +475,13 @@
         <view class="add_box" wx:if="{{curClickedTag.needCalDaka == 1}}">
           请输入增加值：
           <view class="baseNum weui-cell weui-cell_input" style="">
-            <input bindinput="bindAddInput" class="weui-input" auto-focus placeholder="请输入增加值"/>
+            <input bindinput="bindAddInput" class="weui-input" placeholder="请输入增加值"/>
           </view>
         </view>
-        <view class="last_btn">
-          <view style="margin-top: {{curClickedTag.needCalDaka?'25px':'50px'}};" class="last_btn_save" catchtap='saveDakaTag'>保存</view>
-        </view>
       </view>
+      <view class="last_btn">
+          <view class="last_btn_save" catchtap='saveDakaTag'>保存</view>
+        </view>
     </popup>
 
     <popup catchtap='hideDateModal' show="{{show_date_popup}}" height="{{'430px'}}">

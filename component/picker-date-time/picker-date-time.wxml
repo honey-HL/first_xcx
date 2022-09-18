@@ -1,0 +1,22 @@
+<view class="picker-view">
+  <view catchtap="onExpandPicker" class="picker-view-title">{{pickerLabel}} {{picker.year || initialPicker.year}}年{{picker.month || initialPicker.month}}月{{picker.date || initialPicker.date}}日 {{picker.hour || initialPicker.hour}}时 {{picker.minute || initialPicker.minute}}分</view>
+  <picker-view indicator-style="height: 50px;" 
+    class="{{show? 'showPicker': 'hidePicker'}}"
+    value="{{value}}" bindchange="bindPickerChange">
+    <picker-view-column>
+      <view wx:for="{{years}}" class="picker-item-view">{{item}}年</view>
+    </picker-view-column>
+    <picker-view-column>
+      <view wx:for="{{months}}" class="picker-item-view">{{item}}月</view>
+    </picker-view-column>
+    <picker-view-column>
+      <view wx:for="{{days}}" class="picker-item-view">{{item}}日</view>
+    </picker-view-column>
+    <picker-view-column>
+      <view wx:for="{{hours}}" class="picker-item-view">{{item}}时</view>
+    </picker-view-column>
+    <picker-view-column>
+      <view wx:for="{{minutes}}" class="picker-item-view">{{item}}分</view>
+    </picker-view-column>
+  </picker-view>
+</view>

@@ -1,0 +1,26 @@
+.intro {
+  margin: 30px;
+  text-align: center;
+}
+.picker-view {
+  display: block;
+}
+.showPicker {
+  width: 100%; height: 180px;padding-left: 70px;
+  transition: height ease-out 0.2s;
+}
+.hidePicker {
+  width: 100%;padding-left: 70px;
+  height:0;
+  overflow: hidden;
+  transition: height ease-out 0.2s; 
+}
+.picker-item-view{
+  line-height: 50px;
+  text-align: center;
+  margin-right: 10px;
+}
+.picker-view-title {
+  width: 100%;
+  padding-right: 30px;
+}

@@ -363,7 +363,6 @@ Page({
       let that = this;
       wx.getSetting({
       success(res) {
-        // debugger
         if (res.authSetting['scope.userLocation']) {
           wx.authorize({
             scope: 'scope.userLocation',
@@ -376,7 +375,6 @@ Page({
               //   success: (res) => {
               //   }
               // })
-              // debugger
               wx.chooseLocation({
                 type: 'wgs84',
                 success(res) {

@@ -1,5 +1,6 @@
 {
   "usingComponents": {
+    "modal-delete": "../../component/modal-delete/modal-delete",
     "com-header": "../../component/com-header/com-header"
   },
   "enablePullDownRefresh": false,

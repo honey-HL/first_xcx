@@ -19,7 +19,7 @@ Page({
     })
     // 当code获取到后 就可以直接跳转到你的小程序主页了 我的小程序主页是pages下的index
     if (app.globalData.userInfo.code) {
-      // debugger
+      
       // wx.switchTab({
       //     url: '../calendar/calendar'
       // })

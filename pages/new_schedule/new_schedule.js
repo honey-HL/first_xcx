@@ -168,7 +168,7 @@ Page({
         data: obj,
         success: res => {
           console.log('add success res ==>',res)
-          // debugger
+          
           // // 在返回结果中会包含新创建的记录的 _id
           // this.setData({
           //   counterId: res._id,
@@ -388,7 +388,7 @@ Page({
       let that = this;
       wx.getSetting({
       success(res) {
-        // debugger
+        
         if (res.authSetting['scope.userLocation']) {
           wx.authorize({
             scope: 'scope.userLocation',
@@ -401,7 +401,6 @@ Page({
               //   success: (res) => {
               //   }
               // })
-              // debugger
               wx.chooseLocation({
                 type: 'wgs84',
                 success(res) {
@@ -484,9 +483,8 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    const {cur_month, cur_date} = this.data.start;
+    const {cur_month, cur_date, picker_value_start} = this.data.start;
     const activeData = JSON.parse(options.activeData)
-    // debugger
     let start_month_index = 'picker_value_start[' + 0 + "]";
     let end_month_index = 'picker_value_end[' + 0 + "]";
     let start_date_index = 'picker_value_start[' + 1 + "]";

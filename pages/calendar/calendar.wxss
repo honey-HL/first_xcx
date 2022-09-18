@@ -1228,6 +1228,8 @@ z-index: 0;
 
   .main {
     padding: 0 10px;
+    overflow: auto;
+    padding-bottom: 50px;
   }
   .offday {
     display: inline-block;
@@ -1257,6 +1259,9 @@ z-index: 0;
     bottom: 25px;
     border-radius: 20px;
   }
+  .day_r {
+    right: -7px;
+  }
   .baseNum {
     height: 34px;
     padding: 0px 10px;
@@ -1275,9 +1280,7 @@ z-index: 0;
   .last_btn {
     display: flex;
     justify-content: center;
-    /* position: absolute;
-    bottom: 100px; */
-    /* width: 100%; */
+    padding: 10px 0 22px;
   }
   .last_btn_save {
     padding:10px 60px;
@@ -1575,10 +1578,16 @@ z-index: 0;
 .mile_title {
   font-size: 16px;
   font-weight: bold;
+  display: flex;
 }
 .mile_days {
   font-size: 20px;
   font-weight: bold;
+  text-align: right;
+}
+.finish {
+  font-weight: normal;
+  margin-left: 10px;
 }
 .has_pass, .start_date {
   font-size: 15px;
@@ -1595,9 +1604,11 @@ z-index: 0;
   flex-wrap: wrap;
   margin-top: 5px;
   border-radius: 16px;
+  justify-content: center;
 }
 .tag_cover {
-  background-color:rgba(0, 0, 0, 0.5);
+  /* background-color:rgba(0, 0, 0, 0.5); */
+  background-color: rgb(199 86 86 / 50%);
   /* padding: 6px 10px; */
   border-radius: 16px;
 }
@@ -1621,7 +1632,7 @@ z-index: 0;
   font-size: 14px;
   margin-right: 5px;
   margin-left: 8px;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 .daka_time {
   margin-left: 10px;

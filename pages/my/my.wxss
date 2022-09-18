@@ -31,10 +31,20 @@
 .mile_title {
   font-size: 16px;
   font-weight: bold;
+  display: flex;
+}
+.finish {
+  font-weight: normal;
+  margin-left: 10px;
+}
+.delete_button {
+  display: flex;
+  justify-content: flex-end;
 }
 .mile_days {
   font-size: 20px;
   font-weight: bold;
+  text-align: right;
 }
 .has_pass, .start_date {
   font-size: 16px;
@@ -44,6 +54,11 @@
   color: #fff;
   margin-right: 10px;
   /* width:calc(100% - 34px); */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  width: calc(100% - 10px);
 }
 .add-tag {
   color: #fff;
@@ -55,7 +70,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 8px;
+  margin-left: 8px;
+  /* margin-right: 10px; */
+}
+.delete-btn {
+  margin-right: 6px;
 }
 .add-img {
   width: 80%;
@@ -121,4 +140,14 @@
   position: absolute;
   left: 0;
   top: 0;
+}
+/****删除弹窗*****/
+.modal-text {
+  text-align: center;
+  color: gray;
+  margin-bottom: 18rpx;
+  font-size: 26rpx;
+}
+.operation-btn {
+  display: flex;
 }

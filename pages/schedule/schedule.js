@@ -213,13 +213,12 @@ Page({
       if (text === '编辑'){
         this.onEdit(cur_item)
       } else if (text === '删除'){
-        this.onDelete(cur_item)
+        this.onClickDelete(cur_item)
       }
     },
 
     /********编辑*******/
     onEdit (cur_item) {
-      debugger
     },
 
     /**
@@ -255,6 +254,7 @@ Page({
 
   async sureToDelete() {
     const {willDeleteItem, list, raw_list} = this.data;
+    const {schedule_type, tag_id, lastDakaDaseNum, needCalDaka} = willDeleteItem;
     const _this = this;
     let _list = list
     let _raw_list = raw_list
@@ -263,6 +263,9 @@ Page({
       _openid: wx.getStorageSync('openid'),
       _id: willDeleteItem._id
     }).remove().then(res => {
+      if (schedule_type == 1 && needCalDaka == 1) { // 删除的是累计打卡
+        bus.emit('onUpdateUserTag', {tag_id, dakaDaseNum: lastDakaDaseNum})
+      }
       _raw_list = _raw_list.filter(it => it._id !== willDeleteItem._id)
       _list= _list.map(item => {
         if (item.date === willDeleteItem.date) {
@@ -285,7 +288,7 @@ Page({
   },
 
      /********删除*******/
-     onDelete (cur_item) {
+     onClickDelete (cur_item) {
        this.showDelConfirmModal()
        this.setData({willDeleteItem: cur_item})
      },
