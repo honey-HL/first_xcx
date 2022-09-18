@@ -1,9 +1,6 @@
 {
   "usingComponents": {
-    "popup": "../../component/popup/popup",
-    "undone-icon": "../../component/undone-icon/undone-icon",
-    "pending-icon": "../../component/pending-icon/pending-icon",
-    "done-icon": "../../component/done-icon/done-icon"
+    "popup": "../../component/popup/popup"
   },
   "enablePullDownRefresh": false,
   "disableScroll":true

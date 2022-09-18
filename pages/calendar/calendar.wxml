@@ -101,7 +101,6 @@
                   <done-icon wx:if="{{td_item.status == 'done'}}" />
                 </span>
                 <span class="mark_schedule_undone">
-                  <undone-icon wx:if="{{td_item.status == 'undone'}}" />
                 </span>
                 <span class="mark_schedule_pending">
                   <pending-icon wx:if="{{td_item.status == 'pending'}}" />
