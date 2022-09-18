@@ -67,7 +67,7 @@
       </view> -->
     </view>
     <view wx:if="{{!is_delete}}" class="last_btn">
-      <view class="last_btn_save" catchtap='saveItem'>完 成</view>
+      <view class="last_btn_save" catchtap='saveItem'>保 存</view>
     </view>
     <!--删除确认弹窗-->
 			<modal-delete modal="{{modal}}" bindsuccess='modalOperate' catchtouchmove="ture">

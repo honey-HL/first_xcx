@@ -71,7 +71,6 @@ Component({
         // 通过export()方法导出数据
         animationData: animation.export(),
         // 改变view里面的Wx：if
-        // chooseSize: true,
         show: true
       })
       // 设置setTimeout来改变y轴偏移量，实现有感觉的滑动 滑动时间

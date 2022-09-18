@@ -214,7 +214,7 @@
       </view>
       
       <view wx:if="{{scheRecords.length >0}}" class='schedule_box'>
-        <span>今日日程/心得</span>
+        <span>我的日程（心得感悟）</span>
         <view wx:for="{{scheRecords}}" wx:for-item="item" wx:key="item{{index}}">
           <view  class="list_box">
             <view class="list_item_box" data-index="{{index}}">
@@ -400,7 +400,7 @@
   </view>
 
     
-    <popup catchtap='hideJiShiModal' show="{{chooseSize}}" id="myComponent1" height="{{'430px'}}">
+    <popup catchtap='hideJiShiModal' show="{{showDakaPopup}}" id="myComponent1" height="{{'430px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">
@@ -451,7 +451,7 @@
     </popup>
 
       
-    <popup style="z-index: {{showDaka? 999: 0}};" show="{{chooseSize}}" id="myComponent" height="{{'330px'}}">
+    <popup style="z-index: {{showDaka? 999: 0}};" show="{{showDakaPopup}}" id="myComponent" height="{{'330px'}}">
       <view slot="header" class="sticky_header">
         <view class="top-bar">
           <view catchtap='closeModal' class="close">
@@ -460,7 +460,7 @@
         </view>
       </view>
     
-      <view class="main">
+      <view wx:if="{{tags.length}}" class="main">
         <view class="selected_tag">选择今日打卡标签：</view>
         <view class="tags_wrapper">
           <view wx:for="{{tags}}" wx:key="{{item}}">
@@ -478,9 +478,21 @@
           </view>
         </view>
       </view>
-      <view class="last_btn">
-          <view class="last_btn_save" catchtap='saveDakaTag'>保存</view>
-        </view>
+      <view wx:if="{{tags.length}}" class="last_btn">
+        <view class="last_btn_save" catchtap='saveDakaTag'>保存</view>
+      </view>
+      <view wx:if="{{!tags.length}}"  class="bottom_box_inner">
+          <view class="empty_row">
+            <view class="empty_box_create_daka">
+                <image class="bgImg" src="../../images/empty.png"></image>
+              </view>
+          </view>
+          <view class="empty_tip">没有可选标签～</view>
+          <view class="tip_add">点击按钮标签🏷️</view>
+          <view class="last_btn">
+            <view class="last_btn_save" catchtap='createDakaTag'>创建</view>
+          </view>
+      </view>
     </popup>
 
     <popup catchtap='hideDateModal' show="{{show_date_popup}}" height="{{'430px'}}">

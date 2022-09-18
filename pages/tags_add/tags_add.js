@@ -134,7 +134,7 @@ Page({
                   true: item.name === '否'? true: false
         }
       })
-    } else if (parseInt(delete_tag) === 1) {// 删除
+    } else if (delete_tag && parseInt(delete_tag) === 1) {// 删除
       currentTitle = '删除已有标签'
       this.getUserTags()
       this.setData({ 
@@ -153,7 +153,7 @@ Page({
       needCalDaka: cur_edit_tag ? cur_edit_tag.needCalDaka:'',
       tagValue: cur_edit_tag ? cur_edit_tag.tag_value: '',
       tagColor: cur_edit_tag ? cur_edit_tag.tag_color:this.data.palette[0],
-      mainHeight: wx.getSystemInfoSync().windowHeight - app.globalData.navHeight - 10 - 145+'px',
+      mainHeight: wx.getSystemInfoSync().windowHeight - app.globalData.navHeight - 10 - 85 - 20 +'px',
       windowHeight: wx.getSystemInfoSync().windowHeight + 'px'
     })
     // Colorpicker.create({
@@ -203,7 +203,6 @@ Page({
       db.collection('tag_list').add({
         data: obj,
         success: res => {
-          console.log('add success res ==>',res)
           wx.navigateBack({
             delta: 2
           })

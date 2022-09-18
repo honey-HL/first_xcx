@@ -1214,6 +1214,7 @@ left:22%;
   border-radius: 15rpx;
   margin: 0 auto;
   z-index: 98;
+  position: relative;
 }
 .month_item_last {
   margin-bottom: 30px;
@@ -1229,7 +1230,8 @@ z-index: 0;
   .main {
     padding: 0 10px;
     overflow: auto;
-    padding-bottom: 50px;
+    height: calc(100% - 95px);
+    /* padding-bottom: 50px; */
   }
   .offday {
     display: inline-block;
@@ -1278,9 +1280,13 @@ z-index: 0;
     align-items: center;
   }
   .last_btn {
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    padding: 10px 0 22px;
+    padding: 10px 0 22px; */
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    margin-left: -76px;
   }
   .last_btn_save {
     padding:10px 60px;
@@ -1517,6 +1523,11 @@ z-index: 0;
 }
 .empty_box {
   margin-top: 40px;
+  width: 150px;
+  height: 150px;
+}
+.empty_box_create_daka {
+  margin-top: 20px;
   width: 150px;
   height: 150px;
 }

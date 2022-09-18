@@ -41,7 +41,7 @@ Page({
     show_date_popup: false,
     input_numbers: [1,2,3,4,5,6,7,8,9],
     clicked_num: '',
-    chooseSize: false,
+    showDakaPopup: false,
     showOperation: true,
     zhou_ji: '',
     batch_text: '批量',
@@ -744,7 +744,12 @@ Page({
    
     console.log('new_data==>',new_data)
     wx.hideTabBar();
-    this.setData({choose_date_dt: new_data,show_date_popup: true, chooseSize: true,showOperation: false})
+    this.setData({
+      choose_date_dt: new_data,
+      show_date_popup: true, 
+      showDakaPopup: true,
+      showOperation: false
+    })
   },
   hideJiShiModal () {
     this.setData({
@@ -753,9 +758,9 @@ Page({
     wx.showTabBar();
   },
   hideDateModal () {
-    if (this.data.chooseSize) {
+    if (this.data.showDakaPopup) {
       this.setData({
-        chooseSize: true,
+        showDakaPopup: true,
         showOperation: false
       })
       wx.hideTabBar();
@@ -774,19 +779,21 @@ Page({
     const arr = tags.filter(it => it.clicked);
     let clicked_tag = arr[0];
     let content;
+    if (!clicked_tag) {
+      return;
+    }
     if (!clicked_tag.needCalDaka) {
       content =  clicked_tag.tag_value
     }
     let start_riqi = activeDate.sYear +'-'+ (activeDate.sMonth >= 10 ?activeDate.sMonth:'0'+activeDate.sMonth) + '-' + (activeDate.sDay>=10?activeDate.sDay:'0'+activeDate.sDay);
     const baseNum = parseFloat(Number(clicked_tag.dakaDaseNum + dakaAddNum).toFixed(10));
-    console.log('saveDakaTag===baseNum===>',baseNum)
     const obj = {
       tag_color: clicked_tag.tag_color,
       tag_id: clicked_tag._id,
       schedule_type: '1', // 1已完成 0未完成
       needCalDaka: clicked_tag.needCalDaka,
       tag_value: clicked_tag.tag_value,
-      dakaDaseNum: baseNum,
+      dakaDaseNum: baseNum || '',
       lastDakaDaseNum: Number(clicked_tag.dakaDaseNum),
       content,
       month: activeDate.sMonth,
@@ -800,11 +807,15 @@ Page({
       data: obj,
       success: res => {
         console.log('add success res ==>',res)
-         // 更新tag中最新的dakaBaseNum
-        this.updateUserTag({ 
-          dakaDaseNum: baseNum,
-          tag_id: obj.tag_id
-        })
+        if (baseNum) {
+          // 更新tag中最新的dakaBaseNum
+          this.updateUserTag({ 
+            dakaDaseNum: baseNum,
+            tag_id: obj.tag_id
+          })
+        }
+        // 获取当前选中日期的tag
+        this.getRecordList (start_riqi)
         // 更新record_list的数据
         bus.emit('onUpdateRecord', {_id: res._id, activeData: activeDate})
       },
@@ -839,7 +850,7 @@ Page({
       this.setData({
         tags: new_tags,
         curClickedTag: {},
-        chooseSize: false,
+        showDakaPopup: false,
         showOperation: true,
         clicked_num:'',
         checked_payments: 'expend',
@@ -864,7 +875,7 @@ Page({
       // })
       const child = this.selectComponent('#myComponent');
       child.chooseSezi();
-      this.setData({chooseSize: true, showOperation: false})
+      this.setData({showDakaPopup: true, showOperation: false})
       wx.hideTabBar();
     }
     if (type === 'daka') {
@@ -1273,6 +1284,12 @@ Page({
         this.setData({months_arr: _months_arr})
       })
   },
+
+createDakaTag () {
+  wx.navigateTo({
+    url: '../tags_add/tags_add?isAddBtn='+JSON.stringify(1)
+  })
+},
 
 goMilestone (e) {
   const data = e.currentTarget.dataset.item;
@@ -1683,6 +1700,7 @@ getMilestoneList () {
     let nian_yue_ri = full_year + '-' + (cur_month >= 10 ?cur_month:'0'+cur_month) + '-' + (cur_date>=10?cur_date:'0'+cur_date);
     this.getRecordList(nian_yue_ri);
     this.getMilestoneList()
+    this.getUserTags()
     // this.getTableData(this.data.cur_month, this.data.full_year).then(res => {
     //   this.setData({
     //     month_arr: res
