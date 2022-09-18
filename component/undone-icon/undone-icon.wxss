@@ -1,7 +1,0 @@
-/* component/undone-icon/undone-icon.wxss */
-
-.done_icon {
-  display: inline-block;
-  width: 22rpx;
-  height: 22rpx;
-}
