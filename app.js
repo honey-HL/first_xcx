@@ -346,6 +346,7 @@ App({
   checkSessionAndLogin () {
     let that = this;
     let thisOpenId = wx.getStorageSync('openid');
+    this.globalData.openid = thisOpenId;
     if (thisOpenId) {
       console.log('have openid')
       wx.checkSession({
@@ -443,6 +444,7 @@ App({
 
 
   globalData: {
+    openid: '',
     code: '',
     // url: 'https://honney.xyz/',
     // url: 'http://taili-xcx.com/',

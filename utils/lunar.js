@@ -332,11 +332,14 @@ function calendar(y, m) {
         }
       }
       // 国庆节
-      if (this[i].sMonth == 10 && parseInt(this[i].sDay)+1 <= 7) {
+      if (this[i].sMonth == 10 && (parseInt(this[i].sDay)+1 <= 8)) {
         this[i].offday = true
       }
       // 国庆节后的第一个周六周天上班
-      // ???
+      if (this[i].sMonth == 10 && ((parseInt(this[i].sDay) === 8) || 
+      (parseInt(this[i].sDay) === 9))) {
+        this[i].workday = true
+      }
   }
   //节气
   tmp1 = sTerm(y, m * 2) - 1;

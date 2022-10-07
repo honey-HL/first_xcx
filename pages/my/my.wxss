@@ -135,11 +135,8 @@
   position: relative;
 }
 .userAvatarUrl .avatar {
-  width:80px;
-  height:80px;
-  position: absolute;
-  left: 0;
-  top: 0;
+  width:100%;
+  height:100%;
 }
 /****删除弹窗*****/
 .modal-text {

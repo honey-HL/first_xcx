@@ -2,17 +2,16 @@
 <view style="height: {{windowHeight}}">
 	<com-header/>
     <view style="height: {{mainHeight}};overflow: auto;" class='container-my' >
-        <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo" class="save-btn">授权登录</button>
         <view class='infor_card'>
-          <button class="userAvatarUrl" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-            <image class="avatar" src="{{avatarUrl}}"></image>
-          </button> 
-            <view>
-              <view class='nickname'>
-               <input type="nickname" class="weui-input" placeholder="请输入昵称"/>
-              </view>
-              <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
-            </view>
+          <view class="userAvatarUrl" catchtap='tapAvatar'>
+            <image class="avatar" src="{{avatar}}"></image>
+          </view>
+          <view>
+            <view class='nickname'>{{nickname}}</view>
+            <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
+          </view>
+        </view>
+        <view>
         </view>
         <view class="tags-box">
           <view class="habit-tag">我的打卡标签
