@@ -16,7 +16,6 @@
   margin: 7px 7px;
   border-radius: 5px;
   padding: 10px 0 14px 10px;
-  height: 1000px;
 }
 .milestone_top {
   display: flex;
