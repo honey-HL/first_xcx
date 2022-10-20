@@ -1,14 +1,16 @@
 <!--pages/my/my.wxml-->
 <view style="height: {{windowHeight}}">
-	<com-header/>
-    <view style="height: {{mainHeight}};overflow: auto;" class='container-my' >
+	<!-- <com-header/> -->
+    <view style="height: inherit;overflow: auto;" class='container-my' >
         <view class='infor_card'>
-          <view class="userAvatarUrl" catchtap='tapAvatar'>
-            <image class="avatar" src="{{avatar}}"></image>
-          </view>
-          <view>
-            <view class='nickname'>{{nickname}}</view>
-            <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
+          <view class="infor_card_wrapper">
+            <view class="userAvatarUrl" catchtap='tapAvatar'>
+              <image mode="widthFix" class="avatar" src="{{avatar}}"></image>
+            </view>
+            <view>
+              <view class='nickname'>{{nickname}}</view>
+              <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
+            </view>
           </view>
         </view>
         <view>

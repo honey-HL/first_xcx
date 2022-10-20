@@ -461,7 +461,13 @@
       </view>
     
       <view wx:if="{{tags.length}}" class="main">
-        <view class="selected_tag">选择今日打卡标签：</view>
+        <view class="selected_tag">选择今日打卡标签</view>
+        <view class="add_box" wx:if="{{curClickedTag.needCalDaka == 1}}">
+          请输入增加值：
+          <view class="baseNum weui-cell weui-cell_input" style="">
+            <input bindinput="bindAddInput" class="weui-input" placeholder="请输入增加值"/>
+          </view>
+        </view>
         <view class="tags_wrapper">
           <view wx:for="{{tags}}" wx:key="{{item}}">
             <view catchtap='onClickTag' data-item="{{item}}" class="{{item.clicked ? 'tag_cover':'tag_item_popup'}}" style="background-color: {{item.tag_color}};padding: {{item.clicked?'':'6px 10px'}}">
@@ -469,12 +475,6 @@
                 {{item.needCalDaka == 1? item.tag_value + item.dakaDaseNum : item.tag_value}}
               </view>
             </view>
-          </view>
-        </view>
-        <view class="add_box" wx:if="{{curClickedTag.needCalDaka == 1}}">
-          请输入增加值：
-          <view class="baseNum weui-cell weui-cell_input" style="">
-            <input bindinput="bindAddInput" class="weui-input" placeholder="请输入增加值"/>
           </view>
         </view>
       </view>

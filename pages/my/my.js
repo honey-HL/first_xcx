@@ -16,8 +16,8 @@ Page({
       show: false
     },
     cur_item: {},
-    avatar: '',
-    nickname: '暂无昵称',
+    avatar: 'cloud://honney-f0fvn.686f-honney-f0fvn-1304118050/a0.6746206021223087.jpg',
+    nickname: '获取昵称/头像',
     isLogin: false,
   },
 

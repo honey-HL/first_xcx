@@ -1230,7 +1230,7 @@ z-index: 0;
   .main {
     padding: 0 10px;
     overflow: auto;
-    height: calc(100% - 95px);
+    height: calc(100% - 100px);
     /* padding-bottom: 50px; */
   }
   .offday {
@@ -1284,7 +1284,7 @@ z-index: 0;
     justify-content: center;
     padding: 10px 0 22px; */
     position: absolute;
-    bottom: 22px;
+    bottom: 24px;
     left: 50%;
     margin-left: -76px;
   }
@@ -1609,6 +1609,7 @@ z-index: 0;
 .selected_tag {
   display: flex;
   align-items: center;
+  font-weight: 600;
 }
 .tags_wrapper {
   display: flex;
@@ -1616,6 +1617,7 @@ z-index: 0;
   margin-top: 5px;
   border-radius: 16px;
   justify-content: center;
+  padding-bottom: 10px;
 }
 .tag_cover {
   /* background-color:rgba(0, 0, 0, 0.5); */
