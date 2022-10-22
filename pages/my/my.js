@@ -16,7 +16,7 @@ Page({
       show: false
     },
     cur_item: {},
-    avatar: 'cloud://honney-f0fvn.686f-honney-f0fvn-1304118050/a0.6746206021223087.jpg',
+    avatar: '../../images/avatar.jpeg',
     nickname: '获取昵称/头像',
     isLogin: false,
   },
@@ -260,7 +260,7 @@ Page({
       console.log(queryRes);
       if(queryRes.data.length != 0){ //已经注册过了
         this.setData({
-          avatar:queryRes.data[0].avatar ,
+          avatar: queryRes.data[0].avatar || this.data.avatar,
           nickname: queryRes.data[0].nickname,
           isLogin:true
         })
