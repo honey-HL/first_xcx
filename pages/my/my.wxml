@@ -9,7 +9,7 @@
             </view>
             <view>
               <view class='nickname'>{{nickname}}</view>
-              <view class='nickname'>拥有好习惯，就会拥有惊人的力量</view>
+              <view class='nickname'>不辜负每一个朝阳，不荒废每一个深夜</view>
             </view>
           </view>
         </view>

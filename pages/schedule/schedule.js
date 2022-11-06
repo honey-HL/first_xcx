@@ -18,10 +18,11 @@ Page({
       isSearch: false,  // 是不是搜索功能
       searchKey: '', // 搜索框输入的关键字
       delPopShow: true, // 删除确认弹窗显示
-      slideButtons: [{
-        text: '编辑',
-        extClass: 'edit_btn'
-      },
+      slideButtons: [
+        // {
+        //   text: '编辑',
+        //   extClass: 'edit_btn'
+        // },
       // {
       //   text: '未完成',
       //   extClass: 'unfinished_btn',
